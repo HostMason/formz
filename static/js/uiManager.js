@@ -71,14 +71,14 @@ export class UIManager {
             navList.appendChild(this.createNavItem(tool));
         });
 
-        this.addEventListenersToButtons(navList);
+        this.addEventListenersToButtons();
     }
 
     createNavItem(tool) {
         const li = document.createElement('li');
         li.className = 'nav-item';
         li.innerHTML = `
-            <button class="nav-btn" id="${tool.id}Btn">
+            <button class="nav-btn" id="${tool.id}Btn" data-tool-id="${tool.id}">
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
             </button>
         `;
@@ -95,8 +95,8 @@ export class UIManager {
         return li;
     }
 
-    addEventListenersToButtons(element) {
-        element.querySelectorAll('.nav-btn').forEach(btn => {
+    addEventListenersToButtons() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => this.handleNavItemClick(e));
         });
     }
@@ -104,7 +104,7 @@ export class UIManager {
     handleNavItemClick(e) {
         e.preventDefault();
         const button = e.currentTarget;
-        const toolId = button.id.replace('Btn', '');
+        const toolId = button.getAttribute('data-tool-id');
         const tool = this.toolManager.getTool(toolId);
         
         if (tool) {
@@ -114,6 +114,7 @@ export class UIManager {
             if (typeof tool.action === 'function') {
                 tool.action();
             }
+            this.highlightActiveButton(button);
         } else {
             console.error(`Tool not found: ${toolId}`);
         }
@@ -123,7 +124,18 @@ export class UIManager {
         const submenu = button.nextElementSibling;
         if (submenu && submenu.classList.contains('submenu')) {
             submenu.classList.toggle('expanded');
-            button.classList.toggle('active');
+        }
+    }
+
+    highlightActiveButton(button) {
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Expand parent submenus if any
+        let parent = button.closest('.submenu');
+        while (parent) {
+            parent.classList.add('expanded');
+            parent = parent.parentElement.closest('.submenu');
         }
     }
 

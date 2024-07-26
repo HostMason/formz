@@ -180,13 +180,15 @@ body {
 .submenu {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
     list-style-type: none;
     padding-left: 20px;
+    opacity: 0;
 }
 
 .submenu.expanded {
-    max-height: 500px; /* Adjust this value as needed */
+    max-height: 1000px; /* Increased max-height */
+    opacity: 1;
 }
 
 .submenu .nav-btn {
@@ -201,6 +203,11 @@ body {
 
 .nav-btn.active {
     background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+
+.submenu .nav-btn.active {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar.collapsed .submenu {
