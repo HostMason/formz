@@ -74,6 +74,14 @@
                     <div id="preview-content" class="form-field-container">
                         <p>Your form preview will appear here</p>
                     </div>
+                    <div class="form-navigation">
+                        <button id="prevBtn" onclick="navigateForm(-1)" class="action-button"><i class="fas fa-chevron-left"></i> Previous</button>
+                        <button id="nextBtn" onclick="navigateForm(1)" class="action-button">Next <i class="fas fa-chevron-right"></i></button>
+                        <button id="submitBtn" onclick="submitForm()" class="action-button" style="display: none;"><i class="fas fa-paper-plane"></i> Submit</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
                 </div>
             </div>
         </div>

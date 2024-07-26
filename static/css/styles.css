@@ -372,42 +372,34 @@ h1, h2 {
     outline: none;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2;
-    left: 0;
-    top: 0;
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.progress-bar {
     width: 100%;
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: 5px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
 }
 
-.modal-content {
-    background-color: var(--surface-color);
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid var(--border-color);
-    width: 80%;
-    max-width: 600px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+#submitBtn {
+    background-color: #28a745;
 }
 
-.close {
-    color: var(--text-secondary-color);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: var(--text-color);
-    text-decoration: none;
-    cursor: pointer;
+#submitBtn:hover {
+    background-color: #218838;
 }
 
 @media screen and (max-width: 1024px) {
