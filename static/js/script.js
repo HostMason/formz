@@ -12,12 +12,24 @@ function drag(event) {
     event.dataTransfer.setData("text", event.target.id);
 }
 
-function drop(event) {
-    event.preventDefault();
-    const data = event.dataTransfer.getData("text");
+function updateFormPreview() {
+    const previewContent = document.getElementById('preview-content');
+    previewContent.innerHTML = '';
+
+    formFields.forEach(field => {
+        const previewField = field.cloneNode(true);
+        previewField.removeAttribute('onclick');
+        previewField.querySelectorAll('input, textarea, select').forEach(input => {
+            input.setAttribute('disabled', 'disabled');
+        });
+        previewContent.appendChild(previewField);
+    });
+}
+
+function addField(fieldType) {
     let fieldElement;
 
-    switch (data) {
+    switch (fieldType) {
         case 'text-input':
             fieldElement = FieldModule.createInputField('text', 'Enter text');
             break;
@@ -50,8 +62,8 @@ function drop(event) {
     fieldElement.onclick = function() {
         FieldModule.selectField(fieldElement);
     };
-    event.target.appendChild(fieldElement);
     formFields.push(fieldElement);
+    updateFormPreview();
 }
 
 // Load saved forms on page load
@@ -104,9 +116,7 @@ window.onload = function() {
 }
 
 // Expose necessary functions to the global scope for HTML event handlers
-window.allowDrop = allowDrop;
-window.drag = drag;
-window.drop = drop;
+window.addField = addField;
 window.previewForm = UIModule.previewForm;
 window.submitPreviewForm = UIModule.submitPreviewForm;
 window.saveForm = FormModule.saveForm;

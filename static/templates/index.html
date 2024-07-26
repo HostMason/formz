@@ -37,14 +37,14 @@
                 <div id="fields" class="menu-panel">
                     <h2>Fields</h2>
                     <div class="fields-grid">
-                        <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
-                        <div id="number-input" class="draggable" draggable="true" ondragstart="drag(event)">Number Input</div>
-                        <div id="email-input" class="draggable" draggable="true" ondragstart="drag(event)">Email Input</div>
-                        <div id="textarea" class="draggable" draggable="true" ondragstart="drag(event)">Textarea</div>
-                        <div id="button" class="draggable" draggable="true" ondragstart="drag(event)">Button</div>
-                        <div id="radio-button" class="draggable" draggable="true" ondragstart="drag(event)">Radio Button</div>
-                        <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
-                        <div id="select-dropdown" class="draggable" draggable="true" ondragstart="drag(event)">Select Dropdown</div>
+                        <button onclick="addField('text-input')">Text Input</button>
+                        <button onclick="addField('number-input')">Number Input</button>
+                        <button onclick="addField('email-input')">Email Input</button>
+                        <button onclick="addField('textarea')">Textarea</button>
+                        <button onclick="addField('button')">Button</button>
+                        <button onclick="addField('radio-button')">Radio Button</button>
+                        <button onclick="addField('checkbox')">Checkbox</button>
+                        <button onclick="addField('select-dropdown')">Select Dropdown</button>
                     </div>
                 </div>
                 <div id="field-view" class="menu-panel">
@@ -66,9 +66,11 @@
                 </div>
             </div>
             <div class="right-panel">
-                <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h2>Form View</h2>
-                    <p>Drag and drop fields here</p>
+                <div id="form-preview" class="preview-area">
+                    <h2>Form Preview</h2>
+                    <div id="preview-content">
+                        <p>Your form preview will appear here</p>
+                    </div>
                 </div>
             </div>
         </div>
