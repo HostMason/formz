@@ -33,7 +33,19 @@ export class UIManager {
         formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
         formBuilder.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
 
+        const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
+        dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => console.log('Import data clicked')));
+        dataAnalyzer.addSubTool(new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => console.log('Analyze data clicked')));
+        dataAnalyzer.addSubTool(new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => console.log('Export results clicked')));
+
+        const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
+        reportGenerator.addSubTool(new Tool('createReport', 'Create Report', 'fas fa-plus', () => console.log('Create report clicked')));
+        reportGenerator.addSubTool(new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => console.log('Edit template clicked')));
+        reportGenerator.addSubTool(new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => console.log('Schedule report clicked')));
+
         toolbox.addSubTool(formBuilder);
+        toolbox.addSubTool(dataAnalyzer);
+        toolbox.addSubTool(reportGenerator);
 
         this.toolManager.addTool(toolbox);
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
