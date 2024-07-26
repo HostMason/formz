@@ -17,12 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeModules();
     initializeEventListeners();
     FormModule.loadSavedForms();
-    showFormBuilder(); // Show Form Builder by default
+    showLandingPage(); // Show Landing Page by default
 });
+
+function showLandingPage() {
+    document.title = "Welcome - BlueColar Form Builder";
+    document.getElementById('landing-page').style.display = 'block';
+    document.getElementById('form-builder').style.display = 'none';
+}
 
 function showFormBuilder() {
     document.title = "Form Builder - BlueColar";
-    // Add logic to show the form builder content
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('form-builder').style.display = 'block';
 }
 
 function initializeModules() {
@@ -225,4 +232,27 @@ function toggleSidebar() {
     const mainContent = document.querySelector('.main-content');
     sidebar.classList.toggle('collapsed');
     mainContent.classList.toggle('expanded');
+}
+
+// Add this function to the initializeEventListeners function
+function initializeEventListeners() {
+    // ... existing code ...
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling up
+        toggleSidebar();
+    });
+
+    // Close sidebar when clicking outside of it
+    document.addEventListener('click', (e) => {
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        if (!sidebar.contains(e.target) && !sidebar.classList.contains('collapsed')) {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
+        }
+    });
+
+    // ... existing code ...
 }
