@@ -19,10 +19,21 @@
             <button class="menu-option" data-target="fields">Fields</button>
         </div>
     </div>
+        <div class="menu-header">
+            <div class="menu-toggle">☰</div>
+            <div class="company-name">HostMason</div>
+        </div>
+        <div class="menu-content">
+            <h2>Menu</h2>
+            <button class="menu-option" data-target="form-options">Form Options</button>
+            <button class="menu-option" data-target="estimate-options">Estimate Options</button>
+            <button class="menu-option" data-target="fields">Fields</button>
+        </div>
+    </div>
     <div class="container">
-        <h1>Quote Form Creator</h1>
+        <h1 class="page-title">Quote Form Creator</h1>
         <div class="flex-container" style="display: flex; flex-direction: row; gap: 20px;">
-            <div id="form-options" class="menu-panel" style="flex: 1;">
+            <div id="form-options" class="menu-panel">
                 <h2>Form Options</h2>
                 <button onclick="previewForm()">Preview Form</button>
                 <button onclick="saveForm()">Save Form</button>
@@ -30,7 +41,7 @@
                 <button onclick="loadForm()">Load Form</button>
                 <button onclick="deleteForm()">Delete Form</button>
             </div>
-            <div id="fields" class="menu-panel" style="flex: 1;">
+            <div id="fields" class="menu-panel">
                 <h2>Fields</h2>
                 <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
                 <div id="number-input" class="draggable" draggable="true" ondragstart="drag(event)">Number Input</div>
@@ -41,11 +52,11 @@
                 <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
                 <div id="select-dropdown" class="draggable" draggable="true" ondragstart="drag(event)">Select Dropdown</div>
             </div>
-            <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)" style="flex: 2;">
+            <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <h2>Form View</h2>
                 <p>Drag and drop fields here</p>
             </div>
-            <div id="field-view" class="field-view" style="flex: 1;">
+            <div id="field-view" class="field-view">
                 <h2>Field View</h2>
                 <div id="field-details">
                     <p>Select a field to edit its details.</p>
