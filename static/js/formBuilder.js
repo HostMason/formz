@@ -48,45 +48,67 @@ export class FormBuilder {
     createField(type) {
         const field = document.createElement('div');
         field.className = 'form-field';
-        field.innerHTML = `<label>${type.charAt(0).toUpperCase() + type.slice(1)}:</label>`;
+        field.innerHTML = `<label>${this.capitalizeFirstLetter(type)}:</label>`;
         
-        let input;
-        switch(type) {
-            case 'text-input':
-            case 'number-input':
-            case 'email-input':
-                input = document.createElement('input');
-                input.type = type.split('-')[0];
-                break;
-            case 'textarea':
-                input = document.createElement('textarea');
-                break;
-            case 'checkbox':
-            case 'radio-button':
-                input = document.createElement('input');
-                input.type = type === 'radio-button' ? 'radio' : 'checkbox';
-                break;
-            case 'select-dropdown':
-                input = document.createElement('select');
-                input.innerHTML = '<option>Option 1</option><option>Option 2</option>';
-                break;
-            case 'button':
-                input = document.createElement('button');
-                input.textContent = 'Button';
-                break;
-        }
-        
+        const input = this.createInputElement(type);
         field.appendChild(input);
         return field;
     }
 
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    createInputElement(type) {
+        switch(type) {
+            case 'text-input':
+            case 'number-input':
+            case 'email-input':
+                return this.createBasicInput(type.split('-')[0]);
+            case 'textarea':
+                return document.createElement('textarea');
+            case 'checkbox':
+            case 'radio-button':
+                return this.createCheckboxOrRadio(type);
+            case 'select-dropdown':
+                return this.createSelectDropdown();
+            case 'button':
+                return this.createButton();
+            default:
+                console.warn(`Unknown field type: ${type}`);
+                return document.createElement('input');
+        }
+    }
+
+    createBasicInput(type) {
+        const input = document.createElement('input');
+        input.type = type;
+        return input;
+    }
+
+    createCheckboxOrRadio(type) {
+        const input = document.createElement('input');
+        input.type = type === 'radio-button' ? 'radio' : 'checkbox';
+        return input;
+    }
+
+    createSelectDropdown() {
+        const select = document.createElement('select');
+        select.innerHTML = '<option>Option 1</option><option>Option 2</option>';
+        return select;
+    }
+
+    createButton() {
+        const button = document.createElement('button');
+        button.textContent = 'Button';
+        return button;
+    }
+
     saveForm() {
-        const formData = Array.from(this.formFields.children).map(field => {
-            return {
-                type: field.querySelector('input, textarea, select, button').tagName.toLowerCase(),
-                label: field.querySelector('label').textContent
-            };
-        });
+        const formData = Array.from(this.formFields.children).map(field => ({
+            type: field.querySelector('input, textarea, select, button').tagName.toLowerCase(),
+            label: field.querySelector('label').textContent
+        }));
         console.log('Form saved:', formData);
         // Here you would typically send this data to a server
     }
