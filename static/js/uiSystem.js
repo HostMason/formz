@@ -19,7 +19,19 @@ export class UISystem {
             new Tool('templates', 'Templates', 'fas fa-file-code', () => this.showPage('templates'))
         ]);
 
-        this.toolManager.addTool(new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox(), [formBuilderTool]));
+        const dataAnalyzerTool = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'), [
+            new Tool('importData', 'Import Data', 'fas fa-file-import', () => console.log('Import data clicked')),
+            new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => console.log('Analyze data clicked')),
+            new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => console.log('Export results clicked'))
+        ]);
+
+        const reportGeneratorTool = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'), [
+            new Tool('createReport', 'Create Report', 'fas fa-plus', () => console.log('Create report clicked')),
+            new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => console.log('Edit template clicked')),
+            new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => console.log('Schedule report clicked'))
+        ]);
+
+        this.toolManager.addTool(new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox(), [formBuilderTool, dataAnalyzerTool, reportGeneratorTool]));
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
