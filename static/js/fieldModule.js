@@ -33,7 +33,27 @@ function createSelectField() {
     return fieldElement;
 }
 
-// Remove the selectField function as it's no longer needed
+function selectField(field) {
+    selectedField = field;
+    const fieldView = document.getElementById('field-view');
+    fieldView.style.display = 'block';
+    
+    const label = field.querySelector('label');
+    const input = field.querySelector('input, textarea, select');
+    
+    document.getElementById('fieldLabel').value = label ? label.innerText : '';
+    document.getElementById('fieldPlaceholder').value = input ? input.placeholder : '';
+    document.getElementById('fieldRequired').checked = input ? input.required : false;
+    
+    const fieldOptions = document.getElementById('fieldOptions');
+    if (input && input.tagName === 'SELECT') {
+        fieldOptions.style.display = 'block';
+        const options = Array.from(input.options).map(option => option.text).join('\n');
+        document.getElementById('fieldOptionsText').value = options;
+    } else {
+        fieldOptions.style.display = 'none';
+    }
+}
 
 function updateFieldStyle(property, value) {
     if (selectedField) {

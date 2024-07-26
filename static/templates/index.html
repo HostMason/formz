@@ -42,6 +42,21 @@
                 <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
                 <div id="select-dropdown" class="draggable" draggable="true" ondragstart="drag(event)">Select Dropdown</div>
             </div>
+            <div id="field-view" class="menu-panel">
+                <h2>Field Properties</h2>
+                <label for="fieldLabel">Label:</label>
+                <input type="text" id="fieldLabel" onchange="updateFieldLabel(this.value)">
+                <label for="fieldPlaceholder">Placeholder:</label>
+                <input type="text" id="fieldPlaceholder" onchange="updateFieldPlaceholder(this.value)">
+                <label for="fieldRequired">Required:</label>
+                <input type="checkbox" id="fieldRequired" onchange="updateFieldRequired(this.checked)">
+                <div id="fieldOptions" style="display: none;">
+                    <label for="fieldOptions">Options:</label>
+                    <textarea id="fieldOptionsText" onchange="updateSelectOptions(this.value)"></textarea>
+                    <input type="text" id="newOption" placeholder="New option">
+                    <button onclick="addSelectOption()">Add Option</button>
+                </div>
+            </div>
             <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <h2>Form View</h2>
                 <p>Drag and drop fields here</p>
