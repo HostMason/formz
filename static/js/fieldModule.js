@@ -66,6 +66,30 @@ function selectField(field) {
             <button onclick="addSelectOption()">Add Option</button>
         `;
     }
+
+    // Add style modification section
+    fieldDetails.innerHTML += `
+        <h3>Style Modifications</h3>
+        <label>Font Size:</label> <input type="number" value="${getComputedStyle(field).fontSize.replace('px', '')}" onchange="updateFieldStyle('fontSize', this.value + 'px')">
+        <label>Font Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).color)}" onchange="updateFieldStyle('color', this.value)">
+        <label>Background Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).backgroundColor)}" onchange="updateFieldStyle('backgroundColor', this.value)">
+        <label>Border Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).borderColor)}" onchange="updateFieldStyle('borderColor', this.value)">
+        <label>Border Width:</label> <input type="number" value="${getComputedStyle(field).borderWidth.replace('px', '')}" onchange="updateFieldStyle('borderWidth', this.value + 'px')">
+        <label>Border Radius:</label> <input type="number" value="${getComputedStyle(field).borderRadius.replace('px', '')}" onchange="updateFieldStyle('borderRadius', this.value + 'px')">
+        <label>Padding:</label> <input type="number" value="${getComputedStyle(field).padding.replace('px', '')}" onchange="updateFieldStyle('padding', this.value + 'px')">
+    `;
+}
+
+function updateFieldStyle(property, value) {
+    if (selectedField) {
+        selectedField.style[property] = value;
+    }
+}
+
+function rgbToHex(rgb) {
+    if (rgb.startsWith('#')) return rgb;
+    const [r, g, b] = rgb.match(/\d+/g);
+    return "#" + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
 }
 
 function updateFieldLabel(value) {

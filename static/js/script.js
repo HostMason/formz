@@ -118,3 +118,4 @@ window.updateFieldRequired = FieldModule.updateFieldRequired;
 window.updateFieldValue = FieldModule.updateFieldValue;
 window.updateSelectOptions = FieldModule.updateSelectOptions;
 window.addSelectOption = FieldModule.addSelectOption;
+window.updateFieldStyle = FieldModule.updateFieldStyle;
