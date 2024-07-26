@@ -9,234 +9,41 @@ moduleManager.registerModule('field', FieldModule);
 moduleManager.registerModule('ui', UIModule);
 
 let formFields = [];
-let formHierarchy = [];
+let selectedField = null;
 
-function updateHierarchyView() {
-    const hierarchyList = document.getElementById('hierarchy-list');
-    hierarchyList.innerHTML = '';
-    
-    function createHierarchyItem(field, parent) {
-        const li = document.createElement('li');
-        li.textContent = field.querySelector('label').textContent;
-        li.onclick = () => selectField(field);
-        
-        if (field.classList.contains('group-field')) {
-            const ul = document.createElement('ul');
-            field.querySelectorAll('.form-field').forEach(childField => {
-                createHierarchyItem(childField, ul);
-            });
-            li.appendChild(ul);
-        }
-        
-        parent.appendChild(li);
-    }
-    
-    formFields.forEach(field => createHierarchyItem(field, hierarchyList));
-}
-
-function updateFormPreview() {
-    const previewContent = document.getElementById('preview-content');
-    previewContent.innerHTML = '';
-
-    formFields.forEach((field, index) => {
-        const previewField = field.cloneNode(true);
-        previewField.removeAttribute('onclick');
-        previewField.querySelectorAll('input, textarea, select').forEach(input => {
-            input.removeAttribute('disabled');
+function initializeEventListeners() {
+    document.querySelectorAll('.field-type-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const fieldType = button.getAttribute('data-field-type');
+            addFieldToPreview(fieldType);
         });
-        previewField.draggable = true;
-        previewField.id = `preview-field-${index}`;
-        previewField.ondragstart = drag;
-        previewField.ondragover = allowDrop;
-        previewField.ondrop = drop;
-        previewContent.appendChild(previewField);
-    });
-}
-
-function addFieldToPreview(fieldType) {
-    let fieldElement;
-
-    switch (fieldType) {
-        case 'text-input':
-            fieldElement = FieldModule.createInputField('text', 'Enter text');
-            break;
-        case 'number-input':
-            fieldElement = FieldModule.createInputField('number', 'Enter number');
-            break;
-        case 'email-input':
-            fieldElement = FieldModule.createInputField('email', 'Enter email');
-            break;
-        case 'textarea':
-            fieldElement = document.createElement('div');
-            fieldElement.className = 'form-field';
-            fieldElement.innerHTML = '<label>Textarea:</label><textarea placeholder="Enter text"></textarea>';
-            break;
-        case 'button':
-            fieldElement = document.createElement('div');
-            fieldElement.className = 'form-field';
-            fieldElement.innerHTML = '<button>Click Me</button>';
-            break;
-        case 'radio-button':
-            fieldElement = FieldModule.createOptionField('radio');
-            break;
-        case 'checkbox':
-            fieldElement = FieldModule.createOptionField('checkbox');
-            break;
-        case 'select-dropdown':
-            fieldElement = FieldModule.createSelectField();
-            break;
-        case 'group':
-            fieldElement = FieldModule.createGroupField();
-            break;
-    }
-
-    fieldElement.draggable = true;
-    fieldElement.ondragstart = drag;
-    fieldElement.ondragend = dragEnd;
-    fieldElement.ondragover = allowDrop;
-    fieldElement.ondrop = drop;
-    fieldElement.onclick = function() {
-        selectField(fieldElement);
-    };
-    formFields.push(fieldElement);
-    updateFormPreview();
-    updateHierarchyView();
-}
-
-function selectField(field) {
-    FieldModule.selectField(field);
-    updateFieldProperties(field);
-}
-
-function updateFieldProperties(field) {
-    const fieldLabel = document.getElementById('fieldLabel');
-    const fieldPlaceholder = document.getElementById('fieldPlaceholder');
-    const fieldRequired = document.getElementById('fieldRequired');
-    const fieldOptions = document.getElementById('fieldOptions');
-
-    fieldLabel.value = field.querySelector('label').textContent;
-    const input = field.querySelector('input, textarea, select');
-    fieldPlaceholder.value = input ? input.placeholder : '';
-    fieldRequired.checked = input ? input.required : false;
-
-    if (input && input.tagName === 'SELECT') {
-        fieldOptions.style.display = 'block';
-        const options = Array.from(input.options).map(option => option.text).join('\n');
-        document.getElementById('fieldOptionsText').value = options;
-    } else {
-        fieldOptions.style.display = 'none';
-    }
-
-    // Show the field properties panel
-    showPanel('field-properties');
-}
-
-function showPanel(panelId) {
-    document.querySelectorAll('.menu-panel').forEach(panel => {
-        panel.style.display = 'none';
-    });
-    document.getElementById(panelId).style.display = 'block';
-}
-
-let draggedElement = null;
-let dropTarget = null;
-
-function drag(ev) {
-    draggedElement = ev.target;
-    ev.dataTransfer.setData("text", ev.target.id);
-    setTimeout(() => {
-        draggedElement.classList.add('dragging');
-    }, 0);
-}
-
-function allowDrop(ev) {
-    ev.preventDefault();
-    if (draggedElement && ev.target.classList.contains('form-field') && ev.target !== draggedElement) {
-        const rect = ev.target.getBoundingClientRect();
-        const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
-
-        if (dropPosition < 0.5) {
-            ev.target.classList.remove('shift-down');
-            ev.target.classList.add('shift-up');
-        } else {
-            ev.target.classList.remove('shift-up');
-            ev.target.classList.add('shift-down');
-        }
-        dropTarget = ev.target;
-    }
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    const dropzone = document.getElementById('preview-content');
-
-    if (dropTarget && dropTarget !== draggedElement && dropzone.contains(dropTarget)) {
-        const rect = dropTarget.getBoundingClientRect();
-        const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
-
-        // Remove the dragged element from its original position
-        draggedElement.parentNode.removeChild(draggedElement);
-
-        if (dropPosition < 0.5) {
-            dropzone.insertBefore(draggedElement, dropTarget);
-        } else {
-            dropzone.insertBefore(draggedElement, dropTarget.nextSibling);
-        }
-
-        updateFormFieldsOrder();
-    }
-
-    // Reset styles and classes
-    draggedElement.classList.remove('dragging');
-    document.querySelectorAll('.form-field').forEach(field => {
-        field.classList.remove('shift-up', 'shift-down');
     });
 
-    draggedElement = null;
-    dropTarget = null;
-}
+    document.getElementById('previewFormBtn').addEventListener('click', UIModule.previewForm);
+    document.getElementById('saveFormBtn').addEventListener('click', FormModule.saveForm);
+    document.getElementById('loadFormBtn').addEventListener('click', FormModule.loadForm);
+    document.getElementById('deleteFormBtn').addEventListener('click', FormModule.deleteForm);
+    document.getElementById('submitPreviewFormBtn').addEventListener('click', UIModule.submitPreviewForm);
 
-function updateFormFieldsOrder() {
-    const previewContent = document.getElementById('preview-content');
-    formFields = Array.from(previewContent.children);
-}
+    document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
+    document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
+    document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
+    document.getElementById('fieldOptionsText').addEventListener('input', (e) => updateFieldProperty('options', e.target.value));
+    document.getElementById('addOptionBtn').addEventListener('click', addSelectOption);
 
-function dragEnd(ev) {
-    ev.target.classList.remove('dragging');
-    document.querySelectorAll('.form-field').forEach(field => {
-        field.classList.remove('shift-up', 'shift-down');
-    });
-}
-
-function updateFormFieldsOrder() {
-    const previewContent = document.getElementById('preview-content');
-    formFields = Array.from(previewContent.children);
-}
-
-// Add event listeners for drag and drop
-document.getElementById('preview-content').ondrop = drop;
-document.getElementById('preview-content').ondragover = allowDrop;
-
-// Load saved forms on page load
-window.onload = function() {
-    FormModule.loadSavedForms();
+    document.getElementById('prevBtn').addEventListener('click', () => navigateForm(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => navigateForm(1));
+    document.getElementById('submitBtn').addEventListener('click', submitForm);
 
     // Side menu functionality
     const menuToggle = document.querySelector('.menu-toggle');
     const sideMenu = document.querySelector('.side-menu');
     const container = document.querySelector('.container');
 
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            sideMenu.classList.toggle('open');
-            if (sideMenu.classList.contains('open')) {
-                container.style.marginLeft = '250px';
-            } else {
-                container.style.marginLeft = '50px';
-            }
-        });
-    }
+    menuToggle.addEventListener('click', () => {
+        sideMenu.classList.toggle('open');
+        container.style.marginLeft = sideMenu.classList.contains('open') ? '250px' : '60px';
+    });
 
     document.querySelectorAll('.menu-option, .submenu-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -258,21 +65,149 @@ window.onload = function() {
         if (event.target == modal) {
             UIModule.closeModal();
         }
+    };
+
+    // Initialize drag and drop
+    const previewContent = document.getElementById('preview-content');
+    previewContent.addEventListener('dragover', allowDrop);
+    previewContent.addEventListener('drop', drop);
+}
+
+function addFieldToPreview(fieldType) {
+    const fieldElement = FieldModule.createField(fieldType);
+    fieldElement.draggable = true;
+    fieldElement.addEventListener('dragstart', drag);
+    fieldElement.addEventListener('click', () => selectField(fieldElement));
+    formFields.push(fieldElement);
+    updateFormPreview();
+    updateHierarchyView();
+}
+
+function updateFormPreview() {
+    const previewContent = document.getElementById('preview-content');
+    previewContent.innerHTML = '';
+    formFields.forEach(field => previewContent.appendChild(field.cloneNode(true)));
+}
+
+function updateHierarchyView() {
+    const hierarchyList = document.getElementById('hierarchy-list');
+    hierarchyList.innerHTML = '';
+    formFields.forEach((field, index) => {
+        const li = document.createElement('li');
+        li.textContent = field.querySelector('label').textContent || `Field ${index + 1}`;
+        li.addEventListener('click', () => selectField(field));
+        hierarchyList.appendChild(li);
+    });
+}
+
+function selectField(field) {
+    selectedField = field;
+    updateFieldProperties(field);
+    document.querySelectorAll('.form-field').forEach(f => f.classList.remove('selected'));
+    field.classList.add('selected');
+}
+
+function updateFieldProperties(field) {
+    const fieldLabel = document.getElementById('fieldLabel');
+    const fieldPlaceholder = document.getElementById('fieldPlaceholder');
+    const fieldRequired = document.getElementById('fieldRequired');
+    const fieldOptions = document.getElementById('fieldOptions');
+
+    fieldLabel.value = field.querySelector('label').textContent;
+    const input = field.querySelector('input, textarea, select');
+    fieldPlaceholder.value = input ? input.placeholder : '';
+    fieldRequired.checked = input ? input.required : false;
+
+    if (input && input.tagName === 'SELECT') {
+        fieldOptions.style.display = 'block';
+        const options = Array.from(input.options).map(option => option.text).join('\n');
+        document.getElementById('fieldOptionsText').value = options;
+    } else {
+        fieldOptions.style.display = 'none';
+    }
+
+    UIModule.showMenuPanel('field-properties');
+}
+
+function updateFieldProperty(property, value) {
+    if (selectedField) {
+        FieldModule.updateField(selectedField, property, value);
+        updateFormPreview();
+        updateHierarchyView();
     }
 }
 
-// Expose necessary functions to the global scope for HTML event handlers
-window.addFieldToPreview = addFieldToPreview;
-window.previewForm = UIModule.previewForm;
-window.submitPreviewForm = UIModule.submitPreviewForm;
-window.saveForm = FormModule.saveForm;
-window.loadForm = FormModule.loadForm;
-window.deleteForm = FormModule.deleteForm;
-window.updateFieldLabel = FieldModule.updateFieldLabel;
-window.updateFieldPlaceholder = FieldModule.updateFieldPlaceholder;
-window.updateFieldRequired = FieldModule.updateFieldRequired;
-window.updateFieldValue = FieldModule.updateFieldValue;
-window.updateSelectOptions = FieldModule.updateSelectOptions;
-window.addSelectOption = FieldModule.addSelectOption;
-window.updateFieldStyle = FieldModule.updateFieldStyle;
-window.selectField = FieldModule.selectField;
+function addSelectOption() {
+    if (selectedField) {
+        const newOption = document.getElementById('newOption').value.trim();
+        if (newOption) {
+            const select = selectedField.querySelector('select');
+            const option = document.createElement('option');
+            option.text = newOption;
+            option.value = newOption;
+            select.add(option);
+            document.getElementById('newOption').value = '';
+            updateFieldProperties(selectedField);
+        }
+    }
+}
+
+let draggedElement = null;
+
+function drag(ev) {
+    draggedElement = ev.target;
+    ev.dataTransfer.setData('text/plain', '');
+    setTimeout(() => draggedElement.classList.add('dragging'), 0);
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+    const draggingElement = document.querySelector('.dragging');
+    if (draggingElement) {
+        const closestElement = getClosestElement(ev.clientY);
+        if (closestElement) {
+            closestElement.classList.add('drag-over');
+        }
+    }
+}
+
+function getClosestElement(y) {
+    const draggableElements = [...document.querySelectorAll('.form-field:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    const draggingElement = document.querySelector('.dragging');
+    if (draggingElement) {
+        const closestElement = getClosestElement(ev.clientY);
+        if (closestElement) {
+            closestElement.parentNode.insertBefore(draggingElement, closestElement);
+        } else {
+            ev.target.appendChild(draggingElement);
+        }
+        draggingElement.classList.remove('dragging');
+        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        updateFormFieldsOrder();
+    }
+}
+
+function updateFormFieldsOrder() {
+    const previewContent = document.getElementById('preview-content');
+    formFields = Array.from(previewContent.children);
+    updateHierarchyView();
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+    initializeEventListeners();
+    FormModule.loadSavedForms();
+});
