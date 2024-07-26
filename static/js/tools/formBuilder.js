@@ -1,13 +1,16 @@
 import { FormBuilder } from '../formBuilder.js';
 
-const formBuilder = {
+class FormBuilderTool {
+    constructor() {
+        this.formBuilder = new FormBuilder();
+    }
+
     init() {
         console.log('Form Builder initialized');
-        this.formBuilder = new FormBuilder();
         this.formBuilder.initialize();
         this.renderFormBuilder();
         this.attachEventListeners();
-    },
+    }
 
     renderFormBuilder() {
         const formBuilderHTML = `
@@ -34,7 +37,7 @@ const formBuilder = {
             </div>
         `;
         document.getElementById('toolbox-content').innerHTML = formBuilderHTML;
-    },
+    }
 
     attachEventListeners() {
         document.getElementById('preview-form-btn')?.addEventListener('click', () => this.formBuilder.previewForm());
@@ -46,6 +49,6 @@ const formBuilder = {
             button.addEventListener('click', (e) => this.formBuilder.addField(e.target.dataset.type));
         });
     }
-};
+}
 
-export default formBuilder;
+export default new FormBuilderTool();

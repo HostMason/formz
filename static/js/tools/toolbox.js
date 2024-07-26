@@ -1,13 +1,27 @@
-import { FormBuilder } from '../formBuilder.js';
 import { DataAnalyzer } from '../dataAnalyzer.js';
 import { ReportGenerator } from '../reportGenerator.js';
 
-const toolbox = {
-    init() {
+class Toolbox {
+    constructor() {
+        this.tools = {
+            formBuilder: null,
+            dataAnalyzer: null,
+            reportGenerator: null
+        };
+    }
+
+    async init() {
         console.log('Toolbox initialized');
+        await this.loadTools();
         this.renderToolboxContent();
         this.attachEventListeners();
-    },
+    }
+
+    async loadTools() {
+        this.tools.formBuilder = (await import('./formBuilder.js')).default;
+        this.tools.dataAnalyzer = new DataAnalyzer();
+        this.tools.reportGenerator = new ReportGenerator();
+    }
 
     renderToolboxContent() {
         const toolboxContent = `
@@ -27,14 +41,14 @@ const toolbox = {
             </div>
         `;
         document.querySelector('.main-content').innerHTML = toolboxContent;
-    },
+    }
 
     attachEventListeners() {
         const tabButtons = document.querySelectorAll('.tab-button');
         tabButtons.forEach(button => {
             button.addEventListener('click', (e) => this.switchTab(e.target.dataset.tool));
         });
-    },
+    }
 
     switchTab(tool) {
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -45,27 +59,12 @@ const toolbox = {
         toolboxContent.innerHTML = '';
         toolboxContent.style.opacity = '0';
 
-        setTimeout(async () => {
+        setTimeout(() => {
             try {
-                let module;
-                switch (tool) {
-                    case 'formBuilder':
-                        module = await import('../tools/formBuilder.js');
-                        break;
-                    case 'dataAnalyzer':
-                        module = await import('../tools/dataAnalyzer.js');
-                        break;
-                    case 'reportGenerator':
-                        module = await import('../tools/reportGenerator.js');
-                        break;
-                    default:
-                        throw new Error(`Unknown tool: ${tool}`);
-                }
-
-                if (module.default && typeof module.default.init === 'function') {
-                    module.default.init();
+                if (this.tools[tool] && typeof this.tools[tool].init === 'function') {
+                    this.tools[tool].init();
                 } else {
-                    throw new Error(`Module ${tool} does not have a valid initialization method`);
+                    throw new Error(`Tool ${tool} does not have a valid initialization method`);
                 }
 
                 toolboxContent.style.opacity = '1';
@@ -76,6 +75,6 @@ const toolbox = {
             }
         }, 300);
     }
-};
+}
 
-export default toolbox;
+export default new Toolbox();
