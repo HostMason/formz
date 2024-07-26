@@ -26,6 +26,7 @@ function showFormBuilder() {
 
 function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
+        button.setAttribute('draggable', 'true');
         button.addEventListener('dragstart', dragStart);
         button.addEventListener('dragend', dragEnd);
         button.addEventListener('click', addField);
@@ -111,18 +112,19 @@ function dragEnd(e) {
 
 function dragOver(e) {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
 }
 
 function dragEnter(e) {
     e.preventDefault();
-    if (e.target.classList.contains('form-field-container')) {
-        e.target.classList.add('drag-over');
+    if (e.target.closest('.form-field-container')) {
+        e.target.closest('.form-field-container').classList.add('drag-over');
     }
 }
 
 function dragLeave(e) {
-    if (e.target.classList.contains('form-field-container')) {
-        e.target.classList.remove('drag-over');
+    if (e.target.closest('.form-field-container')) {
+        e.target.closest('.form-field-container').classList.remove('drag-over');
     }
 }
 
@@ -131,14 +133,14 @@ function drop(e) {
     const formFieldContainer = document.getElementById('preview-content');
     formFieldContainer.classList.remove('drag-over');
 
-    const fieldType = e.dataTransfer.getData('text');
+    const fieldType = e.dataTransfer.getData('text/plain');
     addField(null, fieldType);
 }
 
 function addField(e, fieldType) {
-    if (e) {
+    if (e && e.type === 'click') {
         e.preventDefault();
-        fieldType = e.target.getAttribute('data-field-type');
+        fieldType = e.currentTarget.getAttribute('data-field-type');
     }
     const fieldElement = FieldModule.createField(fieldType);
     fieldElement.draggable = true;
