@@ -83,6 +83,17 @@ function selectField(field) {
 function updateFieldStyle(property, value) {
     if (selectedField) {
         selectedField.style[property] = value;
+        
+        // Update the corresponding field in the form view
+        const formView = document.getElementById('form-view');
+        const formFields = formView.querySelectorAll('.form-field');
+        const index = Array.from(formFields).indexOf(selectedField);
+        
+        if (index !== -1) {
+            const formViewField = formFields[index];
+            const elementToStyle = formViewField.querySelector('input, textarea, select, button') || formViewField;
+            elementToStyle.style[property] = value;
+        }
     }
 }
 
