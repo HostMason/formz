@@ -53,8 +53,11 @@ function initializeEventListeners() {
     // Sidebar nav items functionality
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
-            const target = e.target.getAttribute('data-target');
-            UIModule.showMenuPanel(target);
+            const target = e.currentTarget.getAttribute('data-target');
+            document.querySelectorAll('.builder-container > section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.querySelector(`.${target}`).style.display = 'block';
         });
     });
 
@@ -85,16 +88,21 @@ function dragOver(e) {
 
 function dragEnter(e) {
     e.preventDefault();
-    e.target.classList.add('drag-over');
+    if (e.target.classList.contains('form-field-container')) {
+        e.target.classList.add('drag-over');
+    }
 }
 
 function dragLeave(e) {
-    e.target.classList.remove('drag-over');
+    if (e.target.classList.contains('form-field-container')) {
+        e.target.classList.remove('drag-over');
+    }
 }
 
 function drop(e) {
     e.preventDefault();
-    e.target.classList.remove('drag-over');
+    const formFieldContainer = document.querySelector('.form-field-container');
+    formFieldContainer.classList.remove('drag-over');
 
     const fieldType = e.dataTransfer.getData('text');
     const fieldElement = FieldModule.createField(fieldType);
@@ -103,12 +111,7 @@ function drop(e) {
     fieldElement.addEventListener('dragend', dragEnd);
     fieldElement.addEventListener('click', () => selectField(fieldElement));
 
-    if (e.target.classList.contains('form-field-container')) {
-        e.target.appendChild(fieldElement);
-    } else if (e.target.closest('.form-field-container')) {
-        e.target.closest('.form-field-container').appendChild(fieldElement);
-    }
-
+    formFieldContainer.appendChild(fieldElement);
     formFields.push(fieldElement);
     updateHierarchyView();
 }
