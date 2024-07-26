@@ -1,6 +1,12 @@
+import { moduleManager } from './moduleManager.js';
 import * as FormModule from './formModule.js';
 import * as FieldModule from './fieldModule.js';
 import * as UIModule from './uiModule.js';
+
+// Register modules
+moduleManager.registerModule('form', FormModule);
+moduleManager.registerModule('field', FieldModule);
+moduleManager.registerModule('ui', UIModule);
 
 let formFields = [];
 
@@ -68,7 +74,7 @@ function addField(fieldType) {
 
 // Load saved forms on page load
 window.onload = function() {
-    FormModule.loadSavedForms();
+    moduleManager.initializeAllModules();
 
     // Side menu functionality
     const menuToggle = document.querySelector('.menu-toggle');
@@ -89,19 +95,17 @@ window.onload = function() {
         console.error('Menu toggle element not found'); // Debug log
     }
 
-    document.querySelectorAll('.menu-option').forEach(option => {
+    document.querySelectorAll('.menu-option, .submenu-option').forEach(option => {
         option.addEventListener('click', function() {
             const target = this.getAttribute('data-target');
-            UIModule.showMenuPanel(target);
+            if (target === 'creator-tools') {
+                document.getElementById('creator-tools-submenu').classList.toggle('show');
+            } else {
+                UIModule.showMenuPanel(target);
+            }
         });
     });
 
-    // Create the Estimate Options panel
-    const estimateOptionsPanel = document.createElement('div');
-    estimateOptionsPanel.id = 'estimate-options';
-    estimateOptionsPanel.className = 'menu-panel';
-    estimateOptionsPanel.innerHTML = '<h2>Estimate Options</h2><p>Estimate options will be added here.</p>';
-    document.querySelector('.flex-container').appendChild(estimateOptionsPanel);
 
     // Close modal when clicking on <span> (x)
     document.querySelector('.close').onclick = UIModule.closeModal;

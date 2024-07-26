@@ -57,7 +57,7 @@ body {
     transition: opacity 0.3s;
 }
 
-.menu-option {
+.menu-option, .submenu-option {
     display: block;
     color: white;
     padding: 12px 15px;
@@ -68,10 +68,19 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 0;
+    font-size: 16px;
     overflow: hidden;
     margin-bottom: 10px;
     border-radius: 5px;
+}
+
+.submenu {
+    display: none;
+    padding-left: 20px;
+}
+
+.submenu.show {
+    display: block;
 }
 
 .side-menu.open {
