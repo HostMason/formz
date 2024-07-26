@@ -29,14 +29,6 @@ export class UIManager {
     initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
-        this.addToolboxSubTools(toolbox);
-
-        this.toolManager.addTool(toolbox);
-        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
-        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
-    }
-
-    addToolboxSubTools(toolbox) {
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
         formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
         formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
@@ -58,13 +50,19 @@ export class UIManager {
         toolbox.addSubTool(dataAnalyzer);
         toolbox.addSubTool(reportGenerator);
 
-        // Add the subtools to the toolManager as well
-        this.toolManager.addTool(formBuilder);
-        this.toolManager.addTool(dataAnalyzer);
-        this.toolManager.addTool(reportGenerator);
-        formBuilder.subTools.forEach(subTool => this.toolManager.addTool(subTool));
-        dataAnalyzer.subTools.forEach(subTool => this.toolManager.addTool(subTool));
-        reportGenerator.subTools.forEach(subTool => this.toolManager.addTool(subTool));
+        this.toolManager.addTool(toolbox);
+        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
+        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
+
+        // Add all tools and subtools to the toolManager
+        this.addAllToolsToManager(toolbox);
+    }
+
+    addAllToolsToManager(tool) {
+        this.toolManager.addTool(tool);
+        tool.subTools.forEach(subTool => {
+            this.addAllToolsToManager(subTool);
+        });
     }
 
     renderBasicStructure() {
@@ -153,26 +151,7 @@ export class UIManager {
             }
             this.highlightActiveButton(button);
         } else {
-            // If the tool is not found in the main tools, check subtools
-            const parentToolId = button.closest('.submenu').previousElementSibling.getAttribute('data-tool-id');
-            const parentTool = this.toolManager.getTool(parentToolId);
-            if (parentTool && parentTool.subTools) {
-                const subTool = parentTool.subTools.find(st => st.id === toolId);
-                if (subTool) {
-                    if (typeof subTool.action === 'function') {
-                        subTool.action();
-                    } else {
-                        const pageId = toolId;
-                        this.router.navigateTo(`/${pageId}`);
-                        this.showPage(pageId);
-                    }
-                    this.highlightActiveButton(button);
-                } else {
-                    console.error(`Subtool not found: ${toolId}`);
-                }
-            } else {
-                console.error(`Tool not found: ${toolId}`);
-            }
+            console.error(`Tool not found: ${toolId}`);
         }
     }
 
