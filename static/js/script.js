@@ -29,13 +29,13 @@ function addFieldToPreview(fieldType) {
 
     switch (fieldType) {
         case 'text-input':
-            fieldElement = moduleManager.getModule('field').createInputField('text', 'Enter text');
+            fieldElement = FieldModule.createInputField('text', 'Enter text');
             break;
         case 'number-input':
-            fieldElement = moduleManager.getModule('field').createInputField('number', 'Enter number');
+            fieldElement = FieldModule.createInputField('number', 'Enter number');
             break;
         case 'email-input':
-            fieldElement = moduleManager.getModule('field').createInputField('email', 'Enter email');
+            fieldElement = FieldModule.createInputField('email', 'Enter email');
             break;
         case 'textarea':
             fieldElement = document.createElement('div');
@@ -48,18 +48,18 @@ function addFieldToPreview(fieldType) {
             fieldElement.innerHTML = '<button>Click Me</button>';
             break;
         case 'radio-button':
-            fieldElement = moduleManager.getModule('field').createOptionField('radio');
+            fieldElement = FieldModule.createOptionField('radio');
             break;
         case 'checkbox':
-            fieldElement = moduleManager.getModule('field').createOptionField('checkbox');
+            fieldElement = FieldModule.createOptionField('checkbox');
             break;
         case 'select-dropdown':
-            fieldElement = moduleManager.getModule('field').createSelectField();
+            fieldElement = FieldModule.createSelectField();
             break;
     }
 
     fieldElement.onclick = function() {
-        moduleManager.getModule('field').selectField(fieldElement);
+        FieldModule.selectField(fieldElement);
     };
     formFields.push(fieldElement);
     updateFormPreview();
@@ -67,7 +67,7 @@ function addFieldToPreview(fieldType) {
 
 // Load saved forms on page load
 window.onload = function() {
-    moduleManager.initializeAllModules();
+    FormModule.loadSavedForms();
 
     // Side menu functionality
     const menuToggle = document.querySelector('.menu-toggle');
@@ -76,7 +76,6 @@ window.onload = function() {
 
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
-            console.log('Menu toggle clicked'); // Debug log
             sideMenu.classList.toggle('open');
             if (sideMenu.classList.contains('open')) {
                 container.style.marginLeft = '250px';
@@ -84,8 +83,6 @@ window.onload = function() {
                 container.style.marginLeft = '50px';
             }
         });
-    } else {
-        console.error('Menu toggle element not found'); // Debug log
     }
 
     document.querySelectorAll('.menu-option, .submenu-option').forEach(option => {
@@ -98,7 +95,6 @@ window.onload = function() {
             }
         });
     });
-
 
     // Close modal when clicking on <span> (x)
     document.querySelector('.close').onclick = UIModule.closeModal;
@@ -113,7 +109,7 @@ window.onload = function() {
 }
 
 // Expose necessary functions to the global scope for HTML event handlers
-window.addField = addFieldToPreview;
+window.addFieldToPreview = addFieldToPreview;
 window.previewForm = UIModule.previewForm;
 window.submitPreviewForm = UIModule.submitPreviewForm;
 window.saveForm = FormModule.saveForm;

@@ -24,13 +24,12 @@ function saveForm() {
 function loadForm() {
     const formName = document.getElementById('form-list').value;
     if (formName && forms[formName]) {
-        document.getElementById('form-view').innerHTML = forms[formName].html;
-        formFields = [];
-        document.querySelectorAll('#form-view .form-field').forEach(field => {
+        document.getElementById('preview-content').innerHTML = forms[formName].html;
+        formFields = Array.from(document.querySelectorAll('#preview-content .form-field'));
+        formFields.forEach(field => {
             field.onclick = function() {
                 selectField(field);
             };
-            formFields.push(field);
         });
         currentFormName = formName;
         alert('Form loaded successfully!');
@@ -44,7 +43,7 @@ function deleteForm() {
         localStorage.setItem('forms', JSON.stringify(forms));
         updateFormList();
         if (currentFormName === formName) {
-            document.getElementById('form-view').innerHTML = '<p>Drag and drop fields here</p>';
+            document.getElementById('preview-content').innerHTML = '<p>Your form preview will appear here</p>';
             formFields = [];
             currentFormName = '';
         }
