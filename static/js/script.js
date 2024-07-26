@@ -11,15 +11,20 @@ moduleManager.registerModule('ui', UIModule);
 let formFields = [];
 let selectedField = null;
 
+document.addEventListener('DOMContentLoaded', () => {
+    initializeEventListeners();
+    FormModule.loadSavedForms();
+});
+
 function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
         button.addEventListener('dragstart', dragStart);
         button.addEventListener('dragend', dragEnd);
     });
 
-    document.getElementById('previewFormBtn').addEventListener('click', UIModule.previewForm);
-    document.getElementById('saveFormBtn').addEventListener('click', FormModule.saveForm);
-    document.getElementById('loadFormBtn').addEventListener('click', FormModule.loadForm);
+    document.getElementById('previewFormBtn').addEventListener('click', () => UIModule.previewForm(formFields));
+    document.getElementById('saveFormBtn').addEventListener('click', () => FormModule.saveForm(formFields));
+    document.getElementById('loadFormBtn').addEventListener('click', () => FormModule.loadForm(updateFormFields));
     document.getElementById('deleteFormBtn').addEventListener('click', FormModule.deleteForm);
     document.getElementById('submitPreviewFormBtn').addEventListener('click', UIModule.submitPreviewForm);
 
@@ -43,6 +48,14 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
         mainContent.classList.toggle('expanded');
+    });
+
+    // Sidebar nav items functionality
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const target = e.target.getAttribute('data-target');
+            UIModule.showMenuPanel(target);
+        });
     });
 
     // Close modal when clicking on <span> (x)
@@ -155,8 +168,12 @@ function addSelectOption() {
     }
 }
 
-// Initialize the application
-document.addEventListener('DOMContentLoaded', () => {
-    initializeEventListeners();
-    FormModule.loadSavedForms();
-});
+function updateFormFields(loadedFields) {
+    formFields = loadedFields;
+    const formFieldContainer = document.getElementById('preview-content');
+    formFieldContainer.innerHTML = '';
+    formFields.forEach(field => {
+        formFieldContainer.appendChild(field);
+    });
+    updateHierarchyView();
+}
