@@ -41,6 +41,10 @@ body {
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
 }
 
+.side-menu:hover {
+    width: 250px;
+}
+
 .menu-header {
     display: flex;
     align-items: center;
@@ -69,6 +73,11 @@ body {
     transition: opacity 0.3s;
 }
 
+.side-menu:hover .company-name,
+.side-menu:hover .menu-content {
+    opacity: 1;
+}
+
 .menu-option, .submenu-option {
     display: block;
     color: var(--text-color);
@@ -95,16 +104,7 @@ body {
     display: block;
 }
 
-.side-menu.open {
-    width: 250px;
-}
-
-.side-menu.open .company-name,
-.side-menu.open .menu-content {
-    opacity: 1;
-}
-
-.side-menu.open .menu-option {
+.side-menu:hover .menu-option {
     font-size: 16px;
     background-color: var(--surface-color);
 }
@@ -121,6 +121,7 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin-bottom: 25px;
     width: 100%;
+    transition: all 0.3s ease;
 }
 
 h1, h2 {
@@ -131,16 +132,21 @@ h1, h2 {
 
 .main-content {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 20px;
     justify-content: space-between;
 }
 
-.left-panel, .center-panel, .right-panel {
-    flex: 1 1 300px;
+.left-panel, .right-panel {
+    flex: 0 0 250px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.center-panel {
+    flex: 1;
+    min-width: 400px;
 }
 
 .menu-panel {
@@ -148,10 +154,6 @@ h1, h2 {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.center-panel {
-    flex: 2 1 400px;
 }
 
 .fields-grid {
