@@ -286,11 +286,6 @@ function toggleToolbox() {
     // Always collapse the forms subsection when toggling the toolbox
     formsSubsection.classList.remove('expanded');
     document.getElementById('formsBtn').classList.remove('active');
-
-    // If the toolbox is being expanded, make sure the form builder is shown
-    if (toolboxSection.classList.contains('expanded')) {
-        showFormBuilder();
-    }
 }
 
 function toggleFormsSubsection(event) {
