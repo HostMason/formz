@@ -100,9 +100,8 @@ export class UISystem {
         if (tool) {
             if (tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
-            } else {
-                tool.action();
             }
+            tool.action();
         }
     }
 
