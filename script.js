@@ -63,11 +63,30 @@ function selectField(field) {
     fieldDetails.innerHTML = '';
 
     if (field.tagName === 'INPUT' && field.type === 'text') {
-        fieldDetails.innerHTML = '<label>Text Input:</label> <input type="text" value="' + field.value + '" onchange="updateFieldValue(this.value)">';
+        fieldDetails.innerHTML = `
+            <label>Label:</label> <input type="text" value="Text Input" onchange="updateFieldLabel(this.value)">
+            <label>Placeholder:</label> <input type="text" value="${field.placeholder}" onchange="updateFieldPlaceholder(this.value)">
+        `;
     } else if (field.tagName === 'BUTTON') {
-        fieldDetails.innerHTML = '<label>Button Text:</label> <input type="text" value="' + field.innerText + '" onchange="updateFieldValue(this.value, true)">';
+        fieldDetails.innerHTML = `
+            <label>Button Text:</label> <input type="text" value="${field.innerText}" onchange="updateFieldValue(this.value, true)">
+        `;
     } else if (field.tagName === 'SELECT') {
-        fieldDetails.innerHTML = '<label>Select Options:</label> <input type="text" value="' + field.options[0].text + '" onchange="updateFieldValue(this.value, false, true)">';
+        fieldDetails.innerHTML = `
+            <label>Select Options:</label> <input type="text" value="${field.options[0].text}" onchange="updateFieldValue(this.value, false, true)">
+        `;
+    }
+}
+
+function updateFieldLabel(value) {
+    if (selectedField) {
+        selectedField.setAttribute('placeholder', value);
+    }
+}
+
+function updateFieldPlaceholder(value) {
+    if (selectedField) {
+        selectedField.placeholder = value;
     }
 }
 
