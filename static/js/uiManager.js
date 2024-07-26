@@ -13,20 +13,24 @@ export class UIManager {
         this.themeManager = new ThemeManager();
     }
 
-    initializeUI() {
+    async initializeUI() {
         this.renderBasicStructure();
-        this.sidebar = document.querySelector('.sidebar');
-        this.mainContent = document.querySelector('.main-content');
-        this.menuToggle = document.querySelector('.menu-toggle');
-        this.initializeTools();
+        this.cacheElements();
+        await this.initializeTools();
         this.attachEventListeners();
         this.renderNavigation();
         this.router.handleNavigation((pageId) => this.showPage(pageId));
-        this.showPage('landing');
+        await this.showPage('landing');
         this.updateMenuToggleIcon();
     }
 
-    initializeTools() {
+    cacheElements() {
+        this.sidebar = document.querySelector('.sidebar');
+        this.mainContent = document.querySelector('.main-content');
+        this.menuToggle = document.querySelector('.menu-toggle');
+    }
+
+    async initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
@@ -54,15 +58,14 @@ export class UIManager {
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
 
-        // Add all tools and subtools to the toolManager
-        this.addAllToolsToManager(toolbox);
+        await this.addAllToolsToManager(toolbox);
     }
 
-    addAllToolsToManager(tool) {
+    async addAllToolsToManager(tool) {
         this.toolManager.addTool(tool);
-        tool.subTools.forEach(subTool => {
-            this.addAllToolsToManager(subTool);
-        });
+        for (const subTool of tool.subTools) {
+            await this.addAllToolsToManager(subTool);
+        }
     }
 
     renderBasicStructure() {
