@@ -335,7 +335,13 @@ function handleNavItemClick(e) {
             initializeFormBuilder();
             break;
         case 'loadFormBtn':
-            showPage('loadForm');
+            loadForm();
+            break;
+        case 'saveFormBtn':
+            saveForm();
+            break;
+        case 'deleteFormBtn':
+            deleteForm();
             break;
         case 'customFieldsBtn':
             showPage('customFields');

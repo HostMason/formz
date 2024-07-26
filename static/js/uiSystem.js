@@ -55,45 +55,9 @@ export class UISystem {
     }
 
     handleNavItemClick(e) {
-        const action = e.currentTarget.id;
-
-        switch (action) {
-            case 'formsBtn':
-                this.toggleFormsSubsection(e);
-                return;
-            case 'formBuilderBtn':
-            case 'loadFormBtn':
-            case 'saveFormBtn':
-            case 'deleteFormBtn':
-            case 'customFieldsBtn':
-            case 'templatesBtn':
-            case 'settingsBtn':
-            case 'helpBtn':
-                this.showPage(action.replace('Btn', ''));
-                break;
-            default:
-                this.showPage('landing');
-                break;
-        }
-
-        document.querySelectorAll('.nav-item, .nav-subitem').forEach(item => item.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-
-        if (['formBuilderBtn', 'loadFormBtn', 'saveFormBtn', 'deleteFormBtn'].includes(action)) {
-            const toolboxSection = document.getElementById('toolboxSection');
-            const toolboxBtn = document.getElementById('toolboxBtn');
-            const formsSubsection = document.getElementById('formsSubsection');
-            const formsBtn = document.getElementById('formsBtn');
-
-            if (toolboxSection) toolboxSection.classList.add('expanded');
-            if (toolboxBtn) toolboxBtn.classList.add('active');
-            if (formsSubsection) formsSubsection.classList.add('expanded');
-            if (formsBtn) formsBtn.classList.add('active');
-        }
-
-        if (window.innerWidth <= 768) {
-            this.toggleSidebar();
-        }
+        // This method is now handled in script.js
+        // We'll keep this as a placeholder in case we need to add UI-specific logic later
+        console.log('Nav item clicked:', e.currentTarget.id);
     }
 
     showPage(pageId) {
