@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Quote Form Creator</title>
 </head>
 <body>
@@ -61,6 +61,9 @@
             <button onclick="submitPreviewForm()">Submit</button>
         </div>
     </div>
-    <script type="module" src="script.js"></script>
+    <script type="module" src="{{ url_for('static', filename='script.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='formModule.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='fieldModule.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='uiModule.js') }}"></script>
 </body>
 </html>
