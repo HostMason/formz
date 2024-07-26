@@ -21,7 +21,8 @@ export class UIManager {
         this.initializeTools();
         this.attachEventListeners();
         this.renderNavigation();
-        this.showLandingPage();
+        this.router.handleNavigation((pageId) => this.showPage(pageId));
+        this.showPage('landing');
         this.updateMenuToggleIcon();
     }
 
@@ -130,7 +131,8 @@ export class UIManager {
                 if (typeof tool.action === 'function') {
                     tool.action();
                 } else {
-                    this.showPage(toolId);
+                    const pageId = this.router.navigateTo(`/${toolId}`);
+                    this.showPage(pageId);
                 }
             }
             this.highlightActiveButton(button);
@@ -199,19 +201,30 @@ export class UIManager {
 
             // Load and execute the corresponding JavaScript file
             const scriptPath = `/static/js/tools/${pageId}.js`;
-            await this.loadScript(scriptPath);
-
-            // Initialize the page if an init function exists
-            if (window[pageId] && typeof window[pageId].init === 'function') {
-                window[pageId].init();
+            try {
+                await this.loadScript(scriptPath);
+                // Initialize the page if an init function exists
+                if (window[pageId] && typeof window[pageId].init === 'function') {
+                    window[pageId].init();
+                }
+            } catch (scriptError) {
+                console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
+                // Continue without the script if it fails to load
             }
 
             // Update active state in navigation
             this.updateActiveNavItem(pageId);
         } catch (error) {
             console.error(`Error loading page: ${pageId}`, error);
-            this.showErrorPage();
+            this.showErrorPage(pageId);
         }
+    }
+
+    showErrorPage(pageId) {
+        this.mainContent.innerHTML = `
+            <h1>Error 404: Page Not Found</h1>
+            <p>The requested page "${pageId}" could not be found.</p>
+        `;
     }
 
     loadScript(src) {
