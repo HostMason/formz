@@ -305,6 +305,13 @@ window.onload = function() {
             showMenuPanel(target);
         });
     });
+
+    // Create the Estimate Options panel
+    const estimateOptionsPanel = document.createElement('div');
+    estimateOptionsPanel.id = 'estimate-options';
+    estimateOptionsPanel.className = 'menu-panel';
+    estimateOptionsPanel.innerHTML = '<h2>Estimate Options</h2><p>Estimate options will be added here.</p>';
+    document.querySelector('.flex-container').appendChild(estimateOptionsPanel);
 }
 
 function toggleMenu() {
