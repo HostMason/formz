@@ -1,12 +1,11 @@
-import { ToolManager, Tool } from './toolManager.js';
 import { ThemeManager } from './themeManager.js';
 
 export class UIManager {
-    constructor(router) {
+    constructor(router, toolManager) {
         this.sidebar = null;
         this.mainContent = null;
         this.menuToggle = null;
-        this.toolManager = new ToolManager();
+        this.toolManager = toolManager;
         this.router = router;
         this.themeManager = new ThemeManager();
     }
@@ -14,7 +13,6 @@ export class UIManager {
     async initializeUI() {
         this.renderBasicStructure();
         this.cacheElements();
-        await this.initializeTools();
         this.attachEventListeners();
         this.renderNavigation();
         this.router.handleNavigation((pageId) => this.showPage(pageId));
@@ -26,16 +24,6 @@ export class UIManager {
         this.sidebar = document.querySelector('.sidebar');
         this.mainContent = document.querySelector('.main-content');
         this.menuToggle = document.querySelector('.menu-toggle');
-    }
-
-    async initializeTools() {
-        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.showPage('toolbox'));
-        const help = new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help'));
-        const settings = new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings'));
-
-        this.toolManager.addTool(toolbox);
-        this.toolManager.addTool(help);
-        this.toolManager.addTool(settings);
     }
 
     renderBasicStructure() {

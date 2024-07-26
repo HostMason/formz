@@ -6,13 +6,14 @@ import { ThemeManager } from './themeManager.js';
 class App {
     constructor() {
         this.router = new Router();
-        this.uiManager = new UIManager(this.router);
         this.toolManager = new ToolManager();
+        this.uiManager = new UIManager(this.router, this.toolManager);
         this.themeManager = new ThemeManager();
     }
 
     async init() {
         await this.router.initializeRoutes();
+        await this.toolManager.initializeTools();
         await this.uiManager.initializeUI();
         this.attachEventListeners();
         this.handleInitialRoute();

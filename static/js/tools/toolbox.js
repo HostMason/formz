@@ -1,40 +1,38 @@
-import { ToolManager } from '../toolManager.js';
+import { Tool } from './baseTool.js';
 
-class Toolbox {
+class Toolbox extends Tool {
     constructor() {
-        this.toolManager = new ToolManager();
+        super('toolbox', 'Toolbox', 'fas fa-toolbox');
     }
 
-    async init() {
+    init() {
         console.log('Toolbox initialized');
-        await this.loadTools();
         this.renderToolboxContent();
         this.attachEventListeners();
-    }
-
-    async loadTools() {
-        const tools = [
-            (await import('./formBuilder.js')).default,
-            (await import('./dataAnalyzer.js')).default,
-            (await import('./reportGenerator.js')).default
-        ];
-        tools.forEach(tool => this.toolManager.registerTool(tool));
     }
 
     renderToolboxContent() {
         const toolboxContent = `
             <div id="toolbox-container">
                 <div id="toolbox-tabs" class="blue-bar">
-                    ${this.toolManager.getAllTools().map(tool => `
-                        <button class="tab-button" data-tool="${tool.id}">
-                            <i class="${tool.icon}"></i> ${tool.name}
-                        </button>
-                    `).join('')}
+                    ${this.getToolButtons()}
                 </div>
                 <div id="toolbox-content"></div>
             </div>
         `;
         document.querySelector('.main-content').innerHTML = toolboxContent;
+    }
+
+    getToolButtons() {
+        const tools = ['formBuilder', 'dataAnalyzer', 'reportGenerator'];
+        return tools.map(toolId => {
+            const tool = window.app.toolManager.getTool(toolId);
+            return `
+                <button class="tab-button" data-tool="${tool.id}">
+                    <i class="${tool.icon}"></i> ${tool.name}
+                </button>
+            `;
+        }).join('');
     }
 
     attachEventListeners() {
@@ -55,7 +53,7 @@ class Toolbox {
 
         setTimeout(() => {
             try {
-                const tool = this.toolManager.getTool(toolId);
+                const tool = window.app.toolManager.getTool(toolId);
                 if (tool) {
                     tool.init();
                     toolboxContent.innerHTML = tool.render();
@@ -71,6 +69,10 @@ class Toolbox {
                 toolboxContent.style.opacity = '1';
             }
         }, 300);
+    }
+
+    render() {
+        return this.renderToolboxContent();
     }
 }
 
