@@ -194,15 +194,28 @@ export class UIManager {
         this.showPage('landing');
     }
 
-    showPage(pageId) {
-        import(`./components/${pageId.charAt(0).toUpperCase() + pageId.slice(1)}.js`).then(module => {
-            const page = new module.default();
-            this.mainContent.innerHTML = page.render();
-            if (page.afterRender) {
-                page.afterRender();
+    async showPage(pageId) {
+        try {
+            const response = await fetch(`/static/templates/${pageId}.html`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        }).catch(error => {
+            const html = await response.text();
+            this.mainContent.innerHTML = html;
+
+            const scriptPath = `/static/js/tools/${pageId}.js`;
+            const script = document.createElement('script');
+            script.src = scriptPath;
+            script.type = 'module';
+            document.body.appendChild(script);
+
+            script.onload = () => {
+                if (window[pageId] && typeof window[pageId].init === 'function') {
+                    window[pageId].init();
+                }
+            };
+        } catch (error) {
             console.error(`Error loading page: ${pageId}`, error);
-        });
+        }
     }
 }
