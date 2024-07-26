@@ -1,12 +1,14 @@
 import { UIManager } from './uiManager.js';
 import { ToolManager } from './toolManager.js';
 import { Router } from './router.js';
+import { ThemeManager } from './themeManager.js';
 
 class App {
     constructor() {
         this.router = new Router();
         this.uiManager = new UIManager(this.router);
         this.toolManager = new ToolManager();
+        this.themeManager = new ThemeManager();
         this.initializeApp();
     }
 
@@ -26,6 +28,10 @@ class App {
         window.addEventListener('popstate', (event) => {
             const path = event.state ? event.state.path : 'landing';
             this.router.navigateTo(path);
+        });
+
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            this.themeManager.toggleTheme();
         });
     }
 }
