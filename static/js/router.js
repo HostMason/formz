@@ -1,13 +1,13 @@
 export class Router {
     constructor() {
-        this.routes = {};
+        this.routes = new Map();
     }
 
     addRoute(path, pageId) {
-        this.routes[path] = pageId;
+        this.routes.set(path, pageId);
     }
 
-    initializeRoutes() {
+    async initializeRoutes() {
         this.addRoute('/', 'landing');
         this.addRoute('/form-builder', 'formBuilder');
         this.addRoute('/help', 'help');
@@ -16,14 +16,14 @@ export class Router {
     }
 
     navigateTo(path) {
-        const pageId = this.routes[path] || 'landing';
-        history.pushState({ path: path }, null, path);
+        const pageId = this.routes.get(path) || 'landing';
+        history.pushState({ path }, null, path);
         return pageId;
     }
 
     handleNavigation(callback) {
         window.addEventListener('popstate', (event) => {
-            const path = event.state ? event.state.path : '/';
+            const path = event.state?.path || '/';
             const pageId = this.navigateTo(path);
             callback(pageId);
         });
