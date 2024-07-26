@@ -104,8 +104,12 @@ body {
     transition: transform 0.3s;
 }
 
-.sidebar.collapsed .menu-toggle i {
+.menu-toggle i {
     transform: rotate(180deg);
+}
+
+.sidebar.collapsed .menu-toggle i {
+    transform: rotate(0deg);
 }
 
 .company-name {
