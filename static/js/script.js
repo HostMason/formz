@@ -46,6 +46,14 @@ function initializeEventListeners() {
         item.addEventListener('click', handleNavItemClick);
     });
 
+    // Initialize sidebar state
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        sidebar.classList.add('collapsed');
+        mainContent.classList.add('expanded');
+    }
+
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
     document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
@@ -264,6 +272,9 @@ function toggleSidebar() {
     const mainContent = document.querySelector('.main-content');
     sidebar.classList.toggle('collapsed');
     mainContent.classList.toggle('expanded');
+    
+    // Save sidebar state
+    localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
 }
 
 export { formFields, selectedField, updateFormFields };
