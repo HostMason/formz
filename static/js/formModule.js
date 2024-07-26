@@ -80,4 +80,14 @@ function loadSavedForms() {
     }
 }
 
+function deleteForm(formName) {
+    if (forms[formName]) {
+        delete forms[formName];
+        localStorage.setItem('forms', JSON.stringify(forms));
+        updateFormList();
+        return true;
+    }
+    return false;
+}
+
 export { saveForm, loadForm, deleteForm, updateFormList, loadSavedForms };

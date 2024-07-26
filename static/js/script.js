@@ -60,6 +60,9 @@ function initializeEventListeners() {
         mainContent.classList.add('expanded');
     }
 
+    // Initialize form builder view
+    showFormBuilder();
+
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
     document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
@@ -280,6 +283,10 @@ function handleNavItemClick(e) {
             openHelp();
             break;
     }
+    // Close the sidebar after clicking a nav item on mobile
+    if (window.innerWidth <= 768) {
+        toggleSidebar();
+    }
 }
 
 function updatePageTitle(title) {
@@ -294,6 +301,16 @@ function toggleSidebar() {
     
     // Save sidebar state
     localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+
+    // Update menu toggle icon
+    const menuToggle = document.querySelector('.menu-toggle i');
+    if (sidebar.classList.contains('collapsed')) {
+        menuToggle.classList.remove('fa-arrow-right');
+        menuToggle.classList.add('fa-arrow-left');
+    } else {
+        menuToggle.classList.remove('fa-arrow-left');
+        menuToggle.classList.add('fa-arrow-right');
+    }
 }
 
 export { formFields, selectedField, updateFormFields };
