@@ -234,7 +234,6 @@ function toggleSidebar() {
     mainContent.classList.toggle('expanded');
 }
 
-// Add this function to the initializeEventListeners function
 function initializeEventListeners() {
     // ... existing code ...
 
@@ -244,15 +243,23 @@ function initializeEventListeners() {
         toggleSidebar();
     });
 
-    // Close sidebar when clicking outside of it
-    document.addEventListener('click', (e) => {
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-        if (!sidebar.contains(e.target) && !sidebar.classList.contains('collapsed')) {
-            sidebar.classList.add('collapsed');
-            mainContent.classList.add('expanded');
-        }
+    // Toggle sections when clicking on section buttons
+    document.getElementById('formsBtn').addEventListener('click', () => toggleSection('formsSection'));
+    document.getElementById('settingsBtn').addEventListener('click', () => toggleSection('settingsSection'));
+
+    // Add click events for sidebar items
+    document.getElementById('formBuilderBtn').addEventListener('click', () => {
+        showFormBuilder();
+        updatePageTitle('Form Builder');
     });
+    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
+    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
+    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
+    document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
+    document.getElementById('helpBtn').addEventListener('click', openHelp);
 
     // ... existing code ...
 }
+
+// Call initializeEventListeners after DOM content is loaded
+document.addEventListener('DOMContentLoaded', initializeEventListeners);
