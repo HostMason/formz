@@ -46,6 +46,12 @@ function initializeEventListeners() {
         item.addEventListener('click', handleNavItemClick);
     });
 
+    // Add event listeners for form actions
+    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
+    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
+    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
+    document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
+
     // Initialize sidebar state
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
@@ -94,6 +100,16 @@ function loadForm() {
 
 function saveForm() {
     FormModule.saveForm(formFields);
+}
+
+function deleteForm() {
+    const formName = document.getElementById('form-list').value;
+    if (formName) {
+        FormModule.deleteForm(formName);
+        createNewForm();
+    } else {
+        alert('Please select a form to delete.');
+    }
 }
 
 function openCustomFields() {
@@ -247,6 +263,9 @@ function handleNavItemClick(e) {
             break;
         case 'saveFormBtn':
             saveForm();
+            break;
+        case 'deleteFormBtn':
+            deleteForm();
             break;
         case 'customFieldsBtn':
             openCustomFields();

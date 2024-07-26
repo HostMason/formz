@@ -1,11 +1,10 @@
 let forms = {};
 let currentFormName = '';
 
-function saveForm() {
+function saveForm(formFields) {
     const formName = prompt("Enter a name for this form:");
     if (formName) {
         forms[formName] = {
-            html: document.getElementById('form-view').innerHTML,
             fields: formFields.map(field => ({
                 type: field.querySelector('input, textarea, select, button')?.tagName.toLowerCase(),
                 label: field.querySelector('label')?.innerText || '',
@@ -18,6 +17,17 @@ function saveForm() {
         currentFormName = formName;
         updateFormList();
         alert('Form saved successfully!');
+    }
+}
+
+function deleteForm(formName) {
+    if (forms[formName]) {
+        delete forms[formName];
+        localStorage.setItem('forms', JSON.stringify(forms));
+        updateFormList();
+        alert('Form deleted successfully!');
+    } else {
+        alert('Form not found.');
     }
 }
 
