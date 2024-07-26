@@ -29,11 +29,18 @@ h1, h2 {
 }
 
 .drop-area {
-    width: 70%;
+    width: 40%;
     border: 2px dashed #ccc;
     padding: 20px;
     margin-left: 10px;
     text-align: center;
+}
+
+.field-view {
+    width: 30%;
+    padding: 10px;
+    margin-left: 10px;
+    border-left: 2px solid #ccc;
 }
 
 .draggable {

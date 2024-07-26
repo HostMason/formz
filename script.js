@@ -1,3 +1,5 @@
+let selectedField = null;
+
 function allowDrop(event) {
     event.preventDefault();
 }
@@ -49,5 +51,34 @@ function drop(event) {
     }
 
     fieldElement.setAttribute("contenteditable", "true");
+    fieldElement.onclick = function() {
+        selectField(fieldElement);
+    };
     event.target.appendChild(fieldElement);
+}
+
+function selectField(field) {
+    selectedField = field;
+    const fieldDetails = document.getElementById('field-details');
+    fieldDetails.innerHTML = '';
+
+    if (field.tagName === 'INPUT' && field.type === 'text') {
+        fieldDetails.innerHTML = '<label>Text Input:</label> <input type="text" value="' + field.value + '" onchange="updateFieldValue(this.value)">';
+    } else if (field.tagName === 'BUTTON') {
+        fieldDetails.innerHTML = '<label>Button Text:</label> <input type="text" value="' + field.innerText + '" onchange="updateFieldValue(this.value, true)">';
+    } else if (field.tagName === 'SELECT') {
+        fieldDetails.innerHTML = '<label>Select Options:</label> <input type="text" value="' + field.options[0].text + '" onchange="updateFieldValue(this.value, false, true)">';
+    }
+}
+
+function updateFieldValue(value, isButton = false, isSelect = false) {
+    if (selectedField) {
+        if (isButton) {
+            selectedField.innerText = value;
+        } else if (isSelect) {
+            selectedField.options[0].text = value;
+        } else {
+            selectedField.value = value;
+        }
+    }
 }
