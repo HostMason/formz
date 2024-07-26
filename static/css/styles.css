@@ -189,16 +189,21 @@ body {
 }
 
 .nav-section-content {
-    display: none;
-    transition: all 0.3s ease;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
 }
 
 .nav-section-content.expanded {
-    display: block;
+    max-height: 500px; /* Adjust this value as needed */
 }
 
 .sidebar.collapsed .nav-section-content {
-    display: none;
+    max-height: 0;
+}
+
+.nav-section-btn.active {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .nav-item i {

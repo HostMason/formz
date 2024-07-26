@@ -252,6 +252,8 @@ function toggleSection(e) {
 function toggleToolbox() {
     const toolboxSection = document.getElementById('toolboxSection');
     toolboxSection.classList.toggle('expanded');
+    const toolboxBtn = document.getElementById('toolboxBtn');
+    toolboxBtn.classList.toggle('active');
 }
 
 function handleNavItemClick(e) {
@@ -285,10 +287,11 @@ function handleNavItemClick(e) {
             openHelp();
             break;
     }
-    // Close the sidebar after clicking a nav item on mobile
-    if (window.innerWidth <= 768) {
-        toggleSidebar();
-    }
+    // Close the toolbox after clicking a nav item
+    const toolboxSection = document.getElementById('toolboxSection');
+    toolboxSection.classList.remove('expanded');
+    const toolboxBtn = document.getElementById('toolboxBtn');
+    toolboxBtn.classList.remove('active');
 }
 
 function updatePageTitle(title) {
