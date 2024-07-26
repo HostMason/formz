@@ -21,4 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show the landing page by default
     uiSystem.showPage('landing');
+
+    // Initialize menu toggle button
+    const menuToggle = document.getElementById('menuToggle');
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => uiSystem.toggleSidebar());
+    } else {
+        console.error('Menu toggle button not found');
+    }
 });

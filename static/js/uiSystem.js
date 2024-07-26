@@ -101,8 +101,10 @@ export class UISystem {
             }
             if (typeof tool.action === 'function') {
                 tool.action();
+            } else if (toolId === 'toolbox') {
+                this.toggleToolbox();
             } else {
-                console.error(`No action defined for tool: ${tool.name}`);
+                this.showPage(toolId);
             }
         } else {
             console.error(`Tool not found: ${toolId}`);
@@ -132,6 +134,13 @@ export class UISystem {
         this.mainContent.classList.toggle('expanded');
         localStorage.setItem('sidebarCollapsed', this.sidebar.classList.contains('collapsed'));
         this.updateMenuToggleIcon();
+        
+        // Adjust the margin of the main content
+        if (this.sidebar.classList.contains('collapsed')) {
+            this.mainContent.style.marginLeft = '60px';
+        } else {
+            this.mainContent.style.marginLeft = '250px';
+        }
     }
 
     updateMenuToggleIcon() {

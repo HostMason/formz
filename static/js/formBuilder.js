@@ -1,6 +1,6 @@
 export class FormBuilder {
     constructor() {
-        this.formFields = document.getElementById('form-fields');
+        this.formFields = document.getElementById('preview-content');
         this.fieldTypes = document.querySelectorAll('.field-type-button');
         this.initializeEventListeners();
     }
@@ -11,8 +11,12 @@ export class FormBuilder {
             fieldType.addEventListener('dragend', this.dragEnd.bind(this));
         });
 
-        this.formFields.addEventListener('dragover', this.dragOver.bind(this));
-        this.formFields.addEventListener('drop', this.drop.bind(this));
+        if (this.formFields) {
+            this.formFields.addEventListener('dragover', this.dragOver.bind(this));
+            this.formFields.addEventListener('drop', this.drop.bind(this));
+        } else {
+            console.error('Form fields container not found');
+        }
     }
 
     dragStart(e) {
