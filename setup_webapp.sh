@@ -53,6 +53,11 @@ reload_service() {
 }
 
 # Main script execution
+if [ "$1" == "reload" ]; then
+    reload_service
+    exit 0
+fi
+
 echo "Welcome to the Web Application Setup Script!"
 install_packages
 
