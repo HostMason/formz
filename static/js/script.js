@@ -26,10 +26,16 @@ function updateFormPreview() {
         const previewField = field.cloneNode(true);
         previewField.removeAttribute('onclick');
         previewField.querySelectorAll('input, textarea, select').forEach(input => {
-            input.setAttribute('disabled', 'disabled');
+            input.removeAttribute('disabled');
         });
         previewContent.appendChild(previewField);
     });
+}
+
+function addFieldToPreview(fieldType) {
+    const newField = addField(fieldType);
+    formFields.push(newField);
+    updateFormPreview();
 }
 
 function addField(fieldType) {
@@ -120,7 +126,7 @@ window.onload = function() {
 }
 
 // Expose necessary functions to the global scope for HTML event handlers
-window.addField = addField;
+window.addField = addFieldToPreview;
 window.previewForm = UIModule.previewForm;
 window.submitPreviewForm = UIModule.submitPreviewForm;
 window.saveForm = FormModule.saveForm;
