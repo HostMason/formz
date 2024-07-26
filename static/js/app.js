@@ -9,31 +9,35 @@ class App {
         this.uiManager = new UIManager(this.router);
         this.toolManager = new ToolManager();
         this.themeManager = new ThemeManager();
-        this.initializeApp();
     }
 
-    initializeApp() {
-        this.router.initializeRoutes();
-        this.uiManager.initializeUI();
-        this.toolManager.initializeTools();
+    async init() {
+        await this.router.initializeRoutes();
+        await this.uiManager.initializeUI();
+        await this.toolManager.initializeTools();
         this.attachEventListeners();
+        this.handleInitialRoute();
     }
 
     attachEventListeners() {
-        document.addEventListener('DOMContentLoaded', () => {
-            const path = window.location.pathname.substring(1) || 'landing';
-            this.router.navigateTo(path);
-        });
-
-        window.addEventListener('popstate', (event) => {
-            const path = event.state ? event.state.path : 'landing';
-            this.router.navigateTo(path);
-        });
-
-        document.getElementById('toggleTheme').addEventListener('click', () => {
+        window.addEventListener('popstate', this.handleRouteChange.bind(this));
+        document.getElementById('toggleTheme')?.addEventListener('click', () => {
             this.themeManager.toggleTheme();
         });
     }
+
+    handleInitialRoute() {
+        const path = window.location.pathname.substring(1) || 'landing';
+        this.router.navigateTo(path);
+    }
+
+    handleRouteChange(event) {
+        const path = event.state?.path || 'landing';
+        this.router.navigateTo(path);
+    }
 }
 
-const app = new App();
+document.addEventListener('DOMContentLoaded', async () => {
+    const app = new App();
+    await app.init();
+});
