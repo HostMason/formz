@@ -296,4 +296,32 @@ window.onload = function() {
         forms = JSON.parse(savedForms);
         updateFormList();
     }
+
+    // Side menu functionality
+    document.querySelector('.menu-toggle').addEventListener('click', toggleMenu);
+    document.querySelectorAll('.menu-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const target = this.getAttribute('data-target');
+            showMenuPanel(target);
+        });
+    });
+}
+
+function toggleMenu() {
+    const sideMenu = document.querySelector('.side-menu');
+    const container = document.querySelector('.container');
+    if (sideMenu.style.width === '250px') {
+        sideMenu.style.width = '50px';
+        container.style.marginLeft = '50px';
+    } else {
+        sideMenu.style.width = '250px';
+        container.style.marginLeft = '250px';
+    }
+}
+
+function showMenuPanel(panelId) {
+    document.querySelectorAll('.menu-panel').forEach(panel => {
+        panel.style.display = 'none';
+    });
+    document.getElementById(panelId).style.display = 'block';
 }
