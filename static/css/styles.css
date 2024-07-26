@@ -151,7 +151,7 @@ h1, h2 {
 
 .fields-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
 
@@ -266,7 +266,28 @@ h1, h2 {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    cursor: move;
+}
+
+.form-field:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.form-field.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.form-field-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-field-container .form-field {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 200px;
 }
 
 .form-field:hover {

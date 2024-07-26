@@ -14,12 +14,17 @@ function updateFormPreview() {
     const previewContent = document.getElementById('preview-content');
     previewContent.innerHTML = '';
 
-    formFields.forEach(field => {
+    formFields.forEach((field, index) => {
         const previewField = field.cloneNode(true);
         previewField.removeAttribute('onclick');
         previewField.querySelectorAll('input, textarea, select').forEach(input => {
             input.removeAttribute('disabled');
         });
+        previewField.draggable = true;
+        previewField.id = `preview-field-${index}`;
+        previewField.ondragstart = drag;
+        previewField.ondragover = allowDrop;
+        previewField.ondrop = drop;
         previewContent.appendChild(previewField);
     });
 }
@@ -77,12 +82,28 @@ function allowDrop(ev) {
 
 function drop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    var draggedElement = document.getElementById(data);
-    var dropzone = ev.target.closest('#preview-content');
-    if (dropzone) {
-        dropzone.appendChild(draggedElement);
+    const data = ev.dataTransfer.getData("text");
+    const draggedElement = document.getElementById(data);
+    const dropTarget = ev.target.closest('.form-field') || ev.target;
+    const dropzone = document.getElementById('preview-content');
+
+    if (dropTarget !== draggedElement && dropzone.contains(dropTarget)) {
+        const rect = dropTarget.getBoundingClientRect();
+        const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
+
+        if (dropPosition < 0.5) {
+            dropzone.insertBefore(draggedElement, dropTarget);
+        } else {
+            dropzone.insertBefore(draggedElement, dropTarget.nextSibling);
+        }
+
+        updateFormFieldsOrder();
     }
+}
+
+function updateFormFieldsOrder() {
+    const previewContent = document.getElementById('preview-content');
+    formFields = Array.from(previewContent.children);
 }
 
 // Add event listeners for drag and drop
