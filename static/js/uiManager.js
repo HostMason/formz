@@ -214,8 +214,26 @@ export class UIManager {
                     window[pageId].init();
                 }
             };
+
+            // Update active state in navigation
+            this.updateActiveNavItem(pageId);
         } catch (error) {
             console.error(`Error loading page: ${pageId}`, error);
+            this.showErrorPage();
         }
+    }
+
+    updateActiveNavItem(pageId) {
+        const navItems = document.querySelectorAll('.nav-btn');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.id === `${pageId}Btn`) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    showErrorPage() {
+        this.mainContent.innerHTML = '<h1>Error 404: Page Not Found</h1>';
     }
 }

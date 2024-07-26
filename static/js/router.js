@@ -1,40 +1,22 @@
 export class Router {
-    constructor(uiManager) {
+    constructor() {
         this.routes = {};
-        this.uiManager = uiManager;
     }
 
-    addRoute(path, component) {
-        this.routes[path] = component;
+    addRoute(path, pageId) {
+        this.routes[path] = pageId;
     }
 
     initializeRoutes() {
-        this.addRoute('/', 'LandingPage');
-        this.addRoute('/form-builder', 'FormBuilder');
-        this.addRoute('/help', 'HelpPage');
-        this.addRoute('/settings', 'SettingsPage');
-        // Add more routes as needed
+        this.addRoute('/', 'landing');
+        this.addRoute('/form-builder', 'formBuilder');
+        this.addRoute('/help', 'help');
+        this.addRoute('/settings', 'settings');
     }
 
     navigateTo(path) {
-        const component = this.routes[path];
-        if (component) {
-            history.pushState({ route: path }, null, path);
-            this.loadComponent(component);
-        } else {
-            console.error(`Route not found: ${path}`);
-        }
-    }
-
-    loadComponent(componentName) {
-        import(`./components/${componentName}.js`)
-            .then(module => {
-                const component = new module.default();
-                this.uiManager.mainContent.innerHTML = component.render();
-                if (component.afterRender) {
-                    component.afterRender();
-                }
-            })
-            .catch(error => console.error(`Error loading component: ${componentName}`, error));
+        const pageId = this.routes[path] || 'landing';
+        history.pushState({ path: path }, null, path);
+        document.dispatchEvent(new CustomEvent('navigate', { detail: { pageId: pageId } }));
     }
 }
