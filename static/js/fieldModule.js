@@ -1,8 +1,8 @@
 let selectedField = null;
-let formFields = [];
 
 function createInputField(type, placeholder) {
     const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field';
     const label = document.createElement('label');
     label.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Input:`;
     const input = document.createElement('input');
@@ -15,20 +15,24 @@ function createInputField(type, placeholder) {
 
 function createOptionField(type) {
     const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field';
+    const label = document.createElement('label');
+    label.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Option:`;
     const input = document.createElement('input');
     input.type = type;
     input.name = `${type}Group`;
-    const label = document.createElement('input');
-    label.type = 'text';
-    label.placeholder = `${type.charAt(0).toUpperCase() + type.slice(1)} Option Label`;
-    fieldElement.appendChild(input);
     fieldElement.appendChild(label);
+    fieldElement.appendChild(input);
     return fieldElement;
 }
 
 function createSelectField() {
     const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field';
+    const label = document.createElement('label');
+    label.innerText = 'Select Option:';
     const select = document.createElement('select');
+    fieldElement.appendChild(label);
     fieldElement.appendChild(select);
     return fieldElement;
 }

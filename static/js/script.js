@@ -10,14 +10,6 @@ moduleManager.registerModule('ui', UIModule);
 
 let formFields = [];
 
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-function drag(event) {
-    event.dataTransfer.setData("text", event.target.id);
-}
-
 function updateFormPreview() {
     const previewContent = document.getElementById('preview-content');
     previewContent.innerHTML = '';
@@ -33,46 +25,41 @@ function updateFormPreview() {
 }
 
 function addFieldToPreview(fieldType) {
-    const newField = addField(fieldType);
-    formFields.push(newField);
-    updateFormPreview();
-}
-
-function addField(fieldType) {
     let fieldElement;
 
     switch (fieldType) {
         case 'text-input':
-            fieldElement = FieldModule.createInputField('text', 'Enter text');
+            fieldElement = moduleManager.getModule('field').createInputField('text', 'Enter text');
             break;
         case 'number-input':
-            fieldElement = FieldModule.createInputField('number', 'Enter number');
+            fieldElement = moduleManager.getModule('field').createInputField('number', 'Enter number');
             break;
         case 'email-input':
-            fieldElement = FieldModule.createInputField('email', 'Enter email');
+            fieldElement = moduleManager.getModule('field').createInputField('email', 'Enter email');
             break;
         case 'textarea':
-            fieldElement = document.createElement('textarea');
-            fieldElement.placeholder = 'Enter text';
+            fieldElement = document.createElement('div');
+            fieldElement.className = 'form-field';
+            fieldElement.innerHTML = '<label>Textarea:</label><textarea placeholder="Enter text"></textarea>';
             break;
         case 'button':
-            fieldElement = document.createElement('button');
-            fieldElement.innerText = 'Click Me';
+            fieldElement = document.createElement('div');
+            fieldElement.className = 'form-field';
+            fieldElement.innerHTML = '<button>Click Me</button>';
             break;
         case 'radio-button':
-            fieldElement = FieldModule.createOptionField('radio');
+            fieldElement = moduleManager.getModule('field').createOptionField('radio');
             break;
         case 'checkbox':
-            fieldElement = FieldModule.createOptionField('checkbox');
+            fieldElement = moduleManager.getModule('field').createOptionField('checkbox');
             break;
         case 'select-dropdown':
-            fieldElement = FieldModule.createSelectField();
+            fieldElement = moduleManager.getModule('field').createSelectField();
             break;
     }
 
-    fieldElement.className = 'form-field';
     fieldElement.onclick = function() {
-        FieldModule.selectField(fieldElement);
+        moduleManager.getModule('field').selectField(fieldElement);
     };
     formFields.push(fieldElement);
     updateFormPreview();
