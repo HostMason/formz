@@ -57,7 +57,7 @@ body {
 }
 
 .nav-section {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .nav-section h2 {
@@ -66,6 +66,12 @@ body {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-section h2:hover {
+    color: var(--text-color);
 }
 
 .nav-section h2 i {
@@ -76,6 +82,19 @@ body {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.nav-section.expanded ul {
+    max-height: 500px; /* Adjust this value as needed */
+}
+
+.settings-section {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .nav-item {

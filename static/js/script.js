@@ -17,7 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeModules();
     initializeEventListeners();
     FormModule.loadSavedForms();
+    showFormBuilder(); // Show Form Builder by default
 });
+
+function showFormBuilder() {
+    document.title = "Form Builder - BlueColar";
+    // Add logic to show the form builder content
+}
 
 function initializeModules() {
     moduleManager.initializeAllModules();
@@ -38,6 +44,12 @@ function initializeEventListeners() {
             updateHierarchyView();
         });
     });
+
+    document.querySelectorAll('.nav-section.expandable h2').forEach(header => {
+        header.addEventListener('click', toggleSection);
+    });
+
+    document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
@@ -150,3 +162,11 @@ export function updateFormFields(loadedFields) {
 }
 
 export { formFields, selectedField };
+function toggleSection(event) {
+    const section = event.target.closest('.nav-section');
+    section.classList.toggle('expanded');
+}
+
+function updatePageTitle(title) {
+    document.title = `${title} - BlueColar`;
+}
