@@ -221,11 +221,11 @@ export { formFields, selectedField };
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
     const content = section.querySelector('.nav-section-content');
-    content.classList.toggle('expanded');
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
 }
 
 function updatePageTitle(title) {
-    document.title = `${title} - BlueColar`;
+    document.title = `${title} - HostMason`;
 }
 
 function toggleSidebar() {
@@ -236,15 +236,12 @@ function toggleSidebar() {
 }
 
 function initializeEventListeners() {
-    // ... existing code ...
-
     const menuToggle = document.getElementById('menuToggle');
     menuToggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent event from bubbling up
+        e.stopPropagation();
         toggleSidebar();
     });
 
-    // Toggle sections when clicking on section buttons
     document.querySelectorAll('.nav-section-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const sectionId = e.currentTarget.id.replace('Btn', 'Section');
@@ -252,7 +249,6 @@ function initializeEventListeners() {
         });
     });
 
-    // Add click events for sidebar items
     document.getElementById('formBuilderBtn').addEventListener('click', () => {
         showFormBuilder();
         updatePageTitle('Form Builder');
@@ -263,16 +259,17 @@ function initializeEventListeners() {
     document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
 
-    // Close sidebar when clicking outside
     document.addEventListener('click', (e) => {
         const sidebar = document.querySelector('.sidebar');
         if (!sidebar.contains(e.target) && !sidebar.classList.contains('collapsed')) {
             toggleSidebar();
         }
     });
-
-    // ... existing code ...
 }
 
-// Call initializeEventListeners after DOM content is loaded
-document.addEventListener('DOMContentLoaded', initializeEventListeners);
+document.addEventListener('DOMContentLoaded', () => {
+    initializeEventListeners();
+    initializeModules();
+    FormModule.loadSavedForms();
+    showLandingPage();
+});
