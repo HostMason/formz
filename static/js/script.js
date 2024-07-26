@@ -57,14 +57,20 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', toggleSidebar);
 
     // Add event listeners for nav section buttons
-    document.getElementById('formsBtn').addEventListener('click', () => toggleSection('formsSection'));
-    document.getElementById('settingsBtn').addEventListener('click', () => toggleSection('settingsSection'));
+    document.querySelectorAll('.nav-section-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const sectionId = e.currentTarget.id.replace('Btn', 'Section');
+            toggleSection(sectionId);
+        });
+    });
 
     // Add event listeners for nav items
     document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
+    document.getElementById('customFieldsBtn').addEventListener('click', openCustomFields);
+    document.getElementById('templatesBtn').addEventListener('click', openTemplates);
     document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
 
