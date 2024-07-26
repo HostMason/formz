@@ -20,7 +20,7 @@ Description=Flask Web Application
 [Service]
 User=$USER
 WorkingDirectory=$(pwd)
-ExecStart=/usr/bin/python3 app.py
+ExecStart=/usr/bin/python3 app/app.py
 Restart=always
 
 [Install]
