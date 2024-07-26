@@ -1,21 +1,31 @@
 export class ToolManager {
     constructor() {
-        this.tools = [];
-        this.initializeTools();
+        this.tools = new Map();
     }
 
-    initializeTools() {
-        this.addTool('Form Builder', 'fas fa-file-alt', '/form-builder');
-        this.addTool('Help', 'fas fa-question-circle', '/help');
-        this.addTool('Settings', 'fas fa-cog', '/settings');
-        // Add more tools as needed
+    addTool(tool) {
+        this.tools.set(tool.id, tool);
     }
 
-    addTool(name, icon, route) {
-        this.tools.push({ name, icon, route });
+    getTool(id) {
+        return this.tools.get(id);
     }
 
     getAllTools() {
-        return this.tools;
+        return Array.from(this.tools.values());
+    }
+}
+
+export class Tool {
+    constructor(id, name, icon, action) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.action = action;
+        this.subTools = [];
+    }
+
+    addSubTool(subTool) {
+        this.subTools.push(subTool);
     }
 }

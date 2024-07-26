@@ -1,4 +1,5 @@
-import { ToolManager } from './toolManager.js';
+import { ToolManager, Tool } from './toolManager.js';
+import { FormBuilder } from './formBuilder.js';
 
 export class UIManager {
     constructor(router) {
@@ -7,6 +8,7 @@ export class UIManager {
         this.menuToggle = null;
         this.toolManager = new ToolManager();
         this.router = router;
+        this.formBuilder = new FormBuilder();
     }
 
     initializeUI() {
@@ -14,20 +16,26 @@ export class UIManager {
         this.sidebar = document.querySelector('.sidebar');
         this.mainContent = document.querySelector('.main-content');
         this.menuToggle = document.querySelector('.menu-toggle');
+        this.initializeTools();
         this.attachEventListeners();
         this.renderNavigation();
-        this.showLandingPage(); // Show landing page by default
-        this.updateMenuToggleIcon(); // Set initial icon state
+        this.showLandingPage();
+        this.updateMenuToggleIcon();
     }
 
-    showLandingPage() {
-        import('./components/LandingPage.js').then(module => {
-            const landingPage = new module.default();
-            this.mainContent.innerHTML = landingPage.render();
-            if (landingPage.afterRender) {
-                landingPage.afterRender();
-            }
-        });
+    initializeTools() {
+        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
+        
+        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
+        formBuilder.addSubTool(new Tool('loadForm', 'Load Form', 'fas fa-folder-open', () => console.log('Load form clicked')));
+        formBuilder.addSubTool(new Tool('saveForm', 'Save Form', 'fas fa-save', () => this.formBuilder.saveForm()));
+        formBuilder.addSubTool(new Tool('deleteForm', 'Delete Form', 'fas fa-trash-alt', () => console.log('Delete form clicked')));
+
+        toolbox.addSubTool(formBuilder);
+
+        this.toolManager.addTool(toolbox);
+        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
+        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
 
     renderBasicStructure() {
@@ -52,65 +60,35 @@ export class UIManager {
 
     attachEventListeners() {
         this.menuToggle.addEventListener('click', () => this.toggleSidebar());
-    }
-
-    toggleSidebar() {
-        this.sidebar.classList.toggle('collapsed');
-        this.updateMenuToggleIcon();
-    }
-
-    updateMenuToggleIcon() {
-        const icon = this.menuToggle.querySelector('i');
-        if (this.sidebar.classList.contains('collapsed')) {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-        } else {
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
-        }
+        document.getElementById('hostMasonLogo').addEventListener('click', () => this.showLandingPage());
     }
 
     renderNavigation() {
         const navList = document.querySelector('.nav-list');
         navList.innerHTML = '';
-        const tools = this.toolManager.getAllTools();
-        
-        // Render all tools except settings
-        tools.filter(tool => tool.name !== 'Settings').forEach(tool => {
-            const li = this.createNavItem(tool);
-            navList.appendChild(li);
+
+        this.toolManager.getAllTools().forEach(tool => {
+            navList.appendChild(this.createNavItem(tool));
         });
 
-        // Render settings button at the bottom
-        const settingsSection = document.createElement('div');
-        settingsSection.className = 'settings-section';
-        const settingsTool = tools.find(tool => tool.name === 'Settings');
-        if (settingsTool) {
-            const settingsLi = this.createNavItem(settingsTool);
-            settingsSection.appendChild(settingsLi);
-        }
-        this.sidebar.appendChild(settingsSection);
-
-        this.addEventListenersToButtons(this.sidebar);
+        this.addEventListenersToButtons(navList);
     }
 
     createNavItem(tool) {
         const li = document.createElement('li');
         li.className = 'nav-item';
         li.innerHTML = `
-            <button class="nav-btn" data-route="${tool.route}">
+            <button class="nav-btn" id="${tool.id}Btn">
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
             </button>
         `;
         
-        if (tool.name === 'Form Builder') {
+        if (tool.subTools.length > 0) {
             const subMenu = document.createElement('ul');
             subMenu.className = 'submenu';
-            subMenu.innerHTML = `
-                <li><button class="nav-btn" data-route="/form-builder/load">Load Form</button></li>
-                <li><button class="nav-btn" data-route="/form-builder/save">Save Form</button></li>
-                <li><button class="nav-btn" data-route="/form-builder/delete">Delete Form</button></li>
-            `;
+            tool.subTools.forEach(subTool => {
+                subMenu.appendChild(this.createNavItem(subTool));
+            });
             li.appendChild(subMenu);
         }
         
@@ -125,68 +103,75 @@ export class UIManager {
 
     handleNavItemClick(e) {
         e.preventDefault();
-        const route = e.currentTarget.getAttribute('data-route');
-        if (route) {
-            this.navigateTo(route);
-        } else {
-            console.log(`No route defined for this button`);
-        }
-    }
-
-    navigateTo(route) {
-        switch (route) {
-            case '/help':
-                this.showPage('help');
-                break;
-            case '/settings':
-                this.showPage('settings');
-                break;
-            case '/form-builder':
-                this.showPage('formBuilder');
-                break;
-            case '/form-builder/load':
-                console.log('Load form clicked');
-                break;
-            case '/form-builder/save':
-                console.log('Save form clicked');
-                break;
-            case '/form-builder/delete':
-                console.log('Delete form clicked');
-                break;
-            default:
-                console.log(`Navigating to: ${route}`);
-                // Here you would typically use your router to navigate
-                if (this.router) {
-                    this.router.navigateTo(route);
-                } else {
-                    console.error('Router not initialized');
-                }
-        }
-    }
-
-    showPage(pageId) {
-        // Hide all pages
-        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+        const button = e.currentTarget;
+        const toolId = button.id.replace('Btn', '');
+        const tool = this.toolManager.getTool(toolId);
         
-        // Show the selected page
-        const page = document.getElementById(`${pageId}-page`);
-        if (page) {
-            page.style.display = 'block';
+        if (tool) {
+            if (tool.subTools.length > 0) {
+                this.toggleSubmenu(button);
+            }
+            if (typeof tool.action === 'function') {
+                tool.action();
+            }
         } else {
-            console.error(`Page not found: ${pageId}`);
+            console.error(`Tool not found: ${toolId}`);
         }
     }
 
-    addEventListenersToButtons(element) {
-        element.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleNavItemClick(e));
+    toggleSubmenu(button) {
+        const submenu = button.nextElementSibling;
+        if (submenu && submenu.classList.contains('submenu')) {
+            submenu.classList.toggle('expanded');
+            button.classList.toggle('active');
+        }
+    }
+
+    toggleSidebar() {
+        this.sidebar.classList.toggle('collapsed');
+        this.updateMenuToggleIcon();
+    }
+
+    updateMenuToggleIcon() {
+        const icon = this.menuToggle.querySelector('i');
+        if (this.sidebar.classList.contains('collapsed')) {
+            icon.classList.remove('fa-arrow-left');
+            icon.classList.add('fa-arrow-right');
+        } else {
+            icon.classList.remove('fa-arrow-right');
+            icon.classList.add('fa-arrow-left');
+        }
+    }
+
+    toggleToolbox() {
+        const toolboxBtn = document.getElementById('toolboxBtn');
+        const toolboxSubmenu = toolboxBtn.nextElementSibling;
+        
+        if (toolboxSubmenu) {
+            toolboxSubmenu.classList.toggle('expanded');
+            toolboxBtn.classList.toggle('active');
+        }
+    }
+
+    showLandingPage() {
+        import('./components/LandingPage.js').then(module => {
+            const landingPage = new module.default();
+            this.mainContent.innerHTML = landingPage.render();
+            if (landingPage.afterRender) {
+                landingPage.afterRender();
+            }
         });
     }
 
-    handleNavItemClick(e) {
-        e.preventDefault();
-        const route = e.currentTarget.getAttribute('data-route');
-        // Here you would typically use your router to navigate
-        console.log(`Navigating to: ${route}`);
+    showPage(pageId) {
+        import(`./components/${pageId.charAt(0).toUpperCase() + pageId.slice(1)}.js`).then(module => {
+            const page = new module.default();
+            this.mainContent.innerHTML = page.render();
+            if (page.afterRender) {
+                page.afterRender();
+            }
+        }).catch(error => {
+            console.error(`Error loading page: ${pageId}`, error);
+        });
     }
 }
