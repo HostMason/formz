@@ -1,5 +1,4 @@
 import { ToolManager, Tool } from './toolManager.js';
-import { FormBuilder } from './formBuilder.js';
 import { ThemeManager } from './themeManager.js';
 
 export class UIManager {
@@ -9,7 +8,6 @@ export class UIManager {
         this.menuToggle = null;
         this.toolManager = new ToolManager();
         this.router = router;
-        this.formBuilder = new FormBuilder();
         this.themeManager = new ThemeManager();
     }
 
@@ -31,27 +29,13 @@ export class UIManager {
     }
 
     async initializeTools() {
-        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
-        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
-        const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
-        const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
-
-        toolbox.addSubTool(formBuilder);
-        toolbox.addSubTool(dataAnalyzer);
-        toolbox.addSubTool(reportGenerator);
+        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.showPage('toolbox'));
+        const help = new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help'));
+        const settings = new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings'));
 
         this.toolManager.addTool(toolbox);
-        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
-        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
-    }
-
-    async addAllToolsToManager(tool, isTopLevel = false) {
-        if (isTopLevel) {
-            this.toolManager.addTool(tool);
-        }
-        for (const subTool of tool.subTools) {
-            await this.addAllToolsToManager(subTool);
-        }
+        this.toolManager.addTool(help);
+        this.toolManager.addTool(settings);
     }
 
     renderBasicStructure() {
@@ -98,16 +82,6 @@ export class UIManager {
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
             </button>
         `;
-        
-        if (tool.subTools.length > 0) {
-            const subMenu = document.createElement('ul');
-            subMenu.className = 'submenu';
-            tool.subTools.forEach(subTool => {
-                subMenu.appendChild(this.createNavItem(subTool));
-            });
-            li.appendChild(subMenu);
-        }
-        
         return li;
     }
 
@@ -124,39 +98,17 @@ export class UIManager {
         const tool = this.toolManager.getTool(toolId);
         
         if (tool) {
-            this.collapseAllSubmenus();
-            if (typeof tool.action === 'function') {
-                tool.action();
-            } else {
-                const pageId = toolId;
-                this.router.navigateTo(`/${pageId}`);
-                this.showPage(pageId);
-            }
+            this.router.navigateTo(`/${toolId}`);
+            this.showPage(toolId);
             this.highlightActiveButton(button);
         } else {
             console.error(`Tool not found: ${toolId}`);
         }
     }
 
-    toggleSubmenu(button) {
-        const submenu = button.nextElementSibling;
-        if (submenu && submenu.classList.contains('submenu')) {
-            submenu.classList.toggle('expanded');
-            // Prevent the click event from bubbling up to parent elements
-            event.stopPropagation();
-        }
-    }
-
     highlightActiveButton(button) {
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        
-        // Expand parent submenus if any
-        let parent = button.closest('.submenu');
-        while (parent) {
-            parent.classList.add('expanded');
-            parent = parent.parentElement.closest('.submenu');
-        }
     }
 
     toggleSidebar() {
@@ -173,30 +125,6 @@ export class UIManager {
             icon.classList.remove('fa-arrow-right');
             icon.classList.add('fa-arrow-left');
         }
-    }
-
-    toggleToolbox() {
-        const toolboxBtn = document.getElementById('toolboxBtn');
-        const toolboxSubmenu = toolboxBtn.nextElementSibling;
-        
-        if (toolboxSubmenu) {
-            if (toolboxSubmenu.classList.contains('expanded')) {
-                this.collapseAllSubmenus();
-            } else {
-                this.collapseAllSubmenus();
-                toolboxSubmenu.classList.add('expanded');
-                toolboxBtn.classList.add('active');
-            }
-        }
-    }
-
-    collapseAllSubmenus() {
-        document.querySelectorAll('.submenu').forEach(submenu => {
-            submenu.classList.remove('expanded');
-        });
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
     }
 
     showLandingPage() {
@@ -219,19 +147,7 @@ export class UIManager {
     updatePageTitle(pageId) {
         const pageTitles = {
             'landing': 'Welcome',
-            'formBuilder': 'Form Builder',
-            'createForm': 'Create Form',
-            'editForm': 'Edit Form',
-            'viewForms': 'View Forms',
-            'formTemplates': 'Form Templates',
-            'dataAnalyzer': 'Data Analyzer',
-            'importData': 'Import Data',
-            'analyzeData': 'Analyze Data',
-            'exportResults': 'Export Results',
-            'reportGenerator': 'Report Generator',
-            'createReport': 'Create Report',
-            'editTemplate': 'Edit Template',
-            'scheduleReport': 'Schedule Report',
+            'toolbox': 'Toolbox',
             'help': 'Help',
             'settings': 'Settings'
         };
@@ -269,7 +185,6 @@ export class UIManager {
             }
         } catch (scriptError) {
             console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
-            // If the script doesn't exist, we'll just render the basic page content
             this.renderBasicPageContent(pageId);
         }
     }
@@ -291,17 +206,6 @@ export class UIManager {
             <h1>Error 404: Page Not Found</h1>
             <p>The requested page "${pageId}" could not be found.</p>
         `;
-    }
-
-    loadScript(src) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = src;
-            script.type = 'module';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script);
-        });
     }
 
     updateActiveNavItem(pageId) {
