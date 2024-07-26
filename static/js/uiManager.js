@@ -1,11 +1,12 @@
 import { ToolManager } from './toolManager.js';
 
 export class UIManager {
-    constructor() {
+    constructor(router) {
         this.sidebar = null;
         this.mainContent = null;
         this.menuToggle = null;
         this.toolManager = new ToolManager();
+        this.router = router;
     }
 
     initializeUI() {
@@ -125,30 +126,41 @@ export class UIManager {
     handleNavItemClick(e) {
         e.preventDefault();
         const route = e.currentTarget.getAttribute('data-route');
-        if (route === '/help') {
-            this.showPage('help');
-        } else if (route === '/settings') {
-            this.showPage('settings');
-        } else if (route === '/form-builder') {
-            this.showPage('formBuilder');
-        } else if (route.startsWith('/form-builder/')) {
-            // Handle Form Builder sub-menu items
-            const action = route.split('/').pop();
-            switch (action) {
-                case 'load':
-                    console.log('Load form clicked');
-                    break;
-                case 'save':
-                    console.log('Save form clicked');
-                    break;
-                case 'delete':
-                    console.log('Delete form clicked');
-                    break;
-                default:
-                    console.log(`Unknown action: ${action}`);
-            }
+        if (route) {
+            this.navigateTo(route);
         } else {
-            console.log(`Navigating to: ${route}`);
+            console.log(`No route defined for this button`);
+        }
+    }
+
+    navigateTo(route) {
+        switch (route) {
+            case '/help':
+                this.showPage('help');
+                break;
+            case '/settings':
+                this.showPage('settings');
+                break;
+            case '/form-builder':
+                this.showPage('formBuilder');
+                break;
+            case '/form-builder/load':
+                console.log('Load form clicked');
+                break;
+            case '/form-builder/save':
+                console.log('Save form clicked');
+                break;
+            case '/form-builder/delete':
+                console.log('Delete form clicked');
+                break;
+            default:
+                console.log(`Navigating to: ${route}`);
+                // Here you would typically use your router to navigate
+                if (this.router) {
+                    this.router.navigateTo(route);
+                } else {
+                    console.error('Router not initialized');
+                }
         }
     }
 

@@ -4,8 +4,8 @@ import { ToolManager } from './toolManager.js';
 
 class App {
     constructor() {
-        this.uiManager = new UIManager();
-        this.router = new Router(this.uiManager);
+        this.router = new Router();
+        this.uiManager = new UIManager(this.router);
         this.toolManager = new ToolManager();
         this.initializeApp();
     }
