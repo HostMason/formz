@@ -50,6 +50,11 @@ function initializeEventListeners() {
     });
 
     document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
+    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
+    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
+    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
+    document.getElementById('settingsBtn').addEventListener('click', openSettings);
+    document.getElementById('helpBtn').addEventListener('click', openHelp);
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
@@ -73,6 +78,39 @@ function initializeEventListeners() {
             UIModule.closeModal();
         }
     };
+}
+
+function createNewForm() {
+    // Implement create new form functionality
+    console.log('Create new form');
+    // Clear existing form fields and reset the form builder
+    formFields = [];
+    updateFormFields(formFields);
+    updatePageTitle('New Form');
+}
+
+function loadForm() {
+    // Implement load form functionality
+    console.log('Load form');
+    FormModule.loadForm(updateFormFields);
+}
+
+function saveForm() {
+    // Implement save form functionality
+    console.log('Save form');
+    FormModule.saveForm(formFields);
+}
+
+function openSettings() {
+    // Implement settings functionality
+    console.log('Open settings');
+    // You can create a modal or a new page for settings
+}
+
+function openHelp() {
+    // Implement help functionality
+    console.log('Open help');
+    // You can create a modal or a new page for help documentation
 }
 
 function dragStart(e) {
