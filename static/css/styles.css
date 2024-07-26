@@ -237,9 +237,43 @@ body {
 
     .sidebar {
         width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
     }
 
     .builder-container {
         grid-template-columns: 1fr;
+    }
+
+    .field-types, .form-preview, .field-properties {
+        padding: 10px;
+    }
+
+    .fields-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .action-button {
+        flex: 1 0 calc(50% - 5px);
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-actions {
+        margin-top: 10px;
+    }
+
+    .action-button {
+        flex: 1 0 100%;
     }
 }

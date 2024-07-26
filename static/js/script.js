@@ -202,3 +202,44 @@ function updateFormFields(loadedFields) {
     });
     updateHierarchyView();
 }
+
+function handleAjaxError(error) {
+    console.error('An error occurred:', error);
+    alert('An error occurred. Please try again later.');
+}
+
+// Update the FormModule.saveForm function to include error handling
+FormModule.saveForm = function(formFields) {
+    const formName = prompt("Enter a name for this form:");
+    if (formName) {
+        const formData = {
+            name: formName,
+            fields: formFields.map(field => ({
+                type: field.querySelector('input, textarea, select, button')?.tagName.toLowerCase(),
+                label: field.querySelector('label')?.innerText || '',
+                placeholder: field.querySelector('input, textarea')?.placeholder || '',
+                required: field.querySelector('input, textarea, select')?.required || false,
+                options: field.querySelector('select') ? Array.from(field.querySelector('select').options).map(option => option.text) : []
+            }))
+        };
+
+        fetch('/save_form', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Form saved successfully!');
+            FormModule.updateFormList();
+        })
+        .catch(error => handleAjaxError(error));
+    }
+};
