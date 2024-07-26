@@ -1,0 +1,18 @@
+<div id="scheduleReport-page" class="page">
+    <h1>Schedule Report</h1>
+    <p>Set up automated report generation and delivery.</p>
+    <form id="schedule-report-form">
+        <select id="report-select" name="report-select" required>
+            <option value="">Select a report</option>
+            <!-- Add more options dynamically -->
+        </select>
+        <input type="datetime-local" id="schedule-time" name="schedule-time" required>
+        <select id="recurrence" name="recurrence">
+            <option value="once">Once</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+        <button type="submit">Schedule Report</button>
+    </form>
+</div>
