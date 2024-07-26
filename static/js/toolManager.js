@@ -28,6 +28,10 @@ export class ToolManager {
         return this.tools.has(id);
     }
 
+    isToolRegistered(id) {
+        return this.tools.has(id);
+    }
+
     getTool(id) {
         return this.tools.get(id);
     }
