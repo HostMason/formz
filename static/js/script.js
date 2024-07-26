@@ -45,19 +45,20 @@ function initializeEventListeners() {
         });
     });
 
-    document.querySelectorAll('.nav-section.expandable h2').forEach(header => {
-        header.addEventListener('click', toggleSection);
-    });
-
     // Add event listener for menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     menuToggle.addEventListener('click', toggleSidebar);
 
+    // Add event listeners for nav section buttons
+    document.getElementById('formsBtn').addEventListener('click', () => toggleSection('formsSection'));
+    document.getElementById('settingsBtn').addEventListener('click', () => toggleSection('settingsSection'));
+
+    // Add event listeners for nav items
     document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
-    document.getElementById('settingsBtn').addEventListener('click', openSettings);
+    document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
@@ -115,6 +116,12 @@ function openHelp() {
     // Implement help functionality
     console.log('Open help');
     // You can create a modal or a new page for help documentation
+}
+
+function openPreferences() {
+    // Implement preferences functionality
+    console.log('Open preferences');
+    // You can create a modal or a new page for preferences
 }
 
 function dragStart(e) {
@@ -204,8 +211,8 @@ export function updateFormFields(loadedFields) {
 }
 
 export { formFields, selectedField };
-function toggleSection(event) {
-    const section = event.target.closest('.nav-section');
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
     section.classList.toggle('expanded');
 }
 
