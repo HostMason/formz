@@ -10,32 +10,31 @@
     <title>BlueColar Form Builder</title>
 </head>
 <body>
-    <div class="side-menu">
-        <div class="menu-header">
-            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
-            <div class="company-name">BlueColar</div>
-        </div>
-        <div class="menu-content">
-            <h2>Toolbox</h2>
-            <button class="menu-option" data-target="creator-tools"><i class="fas fa-tools"></i> Builder Tools</button>
-            <div id="creator-tools-submenu" class="submenu">
-                <button class="submenu-option" data-target="fields"><i class="fas fa-list-ul"></i> Form Fields</button>
-                <button class="submenu-option" data-target="form-options"><i class="fas fa-cog"></i> Form Settings</button>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                <h1 class="company-name">BlueColar</h1>
             </div>
-        </div>
-    </div>
-    <div class="container">
-        <h1 class="page-title"><i class="fas fa-hammer"></i> BlueColar Form Builder</h1>
-        <div class="form-actions">
-            <button id="previewFormBtn" class="action-button"><i class="fas fa-eye"></i> Preview</button>
-            <button id="saveFormBtn" class="action-button"><i class="fas fa-save"></i> Save</button>
-            <button id="loadFormBtn" class="action-button"><i class="fas fa-folder-open"></i> Load</button>
-            <button id="deleteFormBtn" class="action-button"><i class="fas fa-trash-alt"></i> Delete</button>
-            <select id="form-list"></select>
-        </div>
-        <div class="main-content">
-            <div class="left-panel">
-                <div id="fields" class="menu-panel">
+            <nav class="sidebar-nav">
+                <h2>Toolbox</h2>
+                <button class="nav-item" data-target="fields"><i class="fas fa-list-ul"></i> Form Fields</button>
+                <button class="nav-item" data-target="form-options"><i class="fas fa-cog"></i> Form Settings</button>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <h1><i class="fas fa-hammer"></i> Form Builder</h1>
+                <div class="form-actions">
+                    <button id="previewFormBtn" class="action-button"><i class="fas fa-eye"></i> Preview</button>
+                    <button id="saveFormBtn" class="action-button"><i class="fas fa-save"></i> Save</button>
+                    <button id="loadFormBtn" class="action-button"><i class="fas fa-folder-open"></i> Load</button>
+                    <button id="deleteFormBtn" class="action-button"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <select id="form-list"></select>
+                </div>
+            </header>
+            <div class="builder-container">
+                <section class="field-types">
                     <h2><i class="fas fa-toolbox"></i> Field Types</h2>
                     <div class="fields-grid">
                         <button class="field-type-button" data-field-type="text-input"><i class="fas fa-font"></i> Text</button>
@@ -47,32 +46,16 @@
                         <button class="field-type-button" data-field-type="checkbox"><i class="fas fa-check-square"></i> Checkbox</button>
                         <button class="field-type-button" data-field-type="select-dropdown"><i class="fas fa-caret-square-down"></i> Select</button>
                     </div>
-                </div>
-                <div id="form-hierarchy" class="menu-panel">
-                    <h2><i class="fas fa-sitemap"></i> Form Hierarchy</h2>
-                    <ul id="hierarchy-list"></ul>
-                </div>
-            </div>
-            <div class="center-panel">
-                <div id="form-preview" class="menu-panel">
+                </section>
+                <section class="form-preview">
                     <h2><i class="fas fa-clipboard-list"></i> Form Preview</h2>
                     <div id="preview-content" class="form-field-container">
-                        <p>Your form preview will appear here</p>
+                        <p class="drag-placeholder">Drag and drop fields here</p>
                     </div>
-                    <div class="form-navigation">
-                        <button id="prevBtn" class="action-button"><i class="fas fa-chevron-left"></i> Previous</button>
-                        <button id="nextBtn" class="action-button">Next <i class="fas fa-chevron-right"></i></button>
-                        <button id="submitBtn" class="action-button" style="display: none;"><i class="fas fa-paper-plane"></i> Submit</button>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="right-panel">
-                <div id="field-properties" class="menu-panel">
+                </section>
+                <section class="field-properties">
                     <h2><i class="fas fa-sliders-h"></i> Field Properties</h2>
-                    <div class="field-properties">
+                    <div class="properties-form">
                         <label for="fieldLabel">Label:</label>
                         <input type="text" id="fieldLabel">
                         <label for="fieldPlaceholder">Placeholder:</label>
@@ -86,9 +69,9 @@
                             <button id="addOptionBtn"><i class="fas fa-plus"></i> Add Option</button>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </main>
     </div>
     <div id="preview-modal" class="modal">
         <div class="modal-content">

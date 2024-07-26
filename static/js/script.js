@@ -13,10 +13,8 @@ let selectedField = null;
 
 function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const fieldType = button.getAttribute('data-field-type');
-            addFieldToPreview(fieldType);
-        });
+        button.addEventListener('dragstart', dragStart);
+        button.addEventListener('dragend', dragEnd);
     });
 
     document.getElementById('previewFormBtn').addEventListener('click', UIModule.previewForm);
@@ -31,29 +29,20 @@ function initializeEventListeners() {
     document.getElementById('fieldOptionsText').addEventListener('input', (e) => updateFieldProperty('options', e.target.value));
     document.getElementById('addOptionBtn').addEventListener('click', addSelectOption);
 
-    document.getElementById('prevBtn').addEventListener('click', () => navigateForm(-1));
-    document.getElementById('nextBtn').addEventListener('click', () => navigateForm(1));
-    document.getElementById('submitBtn').addEventListener('click', submitForm);
+    const formFieldContainer = document.getElementById('preview-content');
+    formFieldContainer.addEventListener('dragover', dragOver);
+    formFieldContainer.addEventListener('dragenter', dragEnter);
+    formFieldContainer.addEventListener('dragleave', dragLeave);
+    formFieldContainer.addEventListener('drop', drop);
 
     // Side menu functionality
     const menuToggle = document.querySelector('.menu-toggle');
-    const sideMenu = document.querySelector('.side-menu');
-    const container = document.querySelector('.container');
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
 
     menuToggle.addEventListener('click', () => {
-        sideMenu.classList.toggle('open');
-        container.style.marginLeft = sideMenu.classList.contains('open') ? '250px' : '60px';
-    });
-
-    document.querySelectorAll('.menu-option, .submenu-option').forEach(option => {
-        option.addEventListener('click', function() {
-            const target = this.getAttribute('data-target');
-            if (target === 'creator-tools') {
-                document.getElementById('creator-tools-submenu').classList.toggle('show');
-            } else {
-                UIModule.showMenuPanel(target);
-            }
-        });
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
     });
 
     // Close modal when clicking on <span> (x)
@@ -66,38 +55,55 @@ function initializeEventListeners() {
             UIModule.closeModal();
         }
     };
-
-    // Initialize drag and drop
-    const previewContent = document.getElementById('preview-content');
-    previewContent.addEventListener('dragover', allowDrop);
-    previewContent.addEventListener('drop', drop);
 }
 
-function addFieldToPreview(fieldType) {
+function dragStart(e) {
+    e.dataTransfer.setData('text/plain', e.target.getAttribute('data-field-type'));
+    e.target.classList.add('dragging');
+}
+
+function dragEnd(e) {
+    e.target.classList.remove('dragging');
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+    e.target.classList.add('drag-over');
+}
+
+function dragLeave(e) {
+    e.target.classList.remove('drag-over');
+}
+
+function drop(e) {
+    e.preventDefault();
+    e.target.classList.remove('drag-over');
+
+    const fieldType = e.dataTransfer.getData('text');
     const fieldElement = FieldModule.createField(fieldType);
     fieldElement.draggable = true;
-    fieldElement.addEventListener('dragstart', drag);
+    fieldElement.addEventListener('dragstart', dragStart);
+    fieldElement.addEventListener('dragend', dragEnd);
     fieldElement.addEventListener('click', () => selectField(fieldElement));
+
+    if (e.target.classList.contains('form-field-container')) {
+        e.target.appendChild(fieldElement);
+    } else if (e.target.closest('.form-field-container')) {
+        e.target.closest('.form-field-container').appendChild(fieldElement);
+    }
+
     formFields.push(fieldElement);
-    updateFormPreview();
     updateHierarchyView();
 }
 
-function updateFormPreview() {
-    const previewContent = document.getElementById('preview-content');
-    previewContent.innerHTML = '';
-    formFields.forEach(field => previewContent.appendChild(field.cloneNode(true)));
-}
-
 function updateHierarchyView() {
-    const hierarchyList = document.getElementById('hierarchy-list');
-    hierarchyList.innerHTML = '';
-    formFields.forEach((field, index) => {
-        const li = document.createElement('li');
-        li.textContent = field.querySelector('label').textContent || `Field ${index + 1}`;
-        li.addEventListener('click', () => selectField(field));
-        hierarchyList.appendChild(li);
-    });
+    const formFieldContainer = document.getElementById('preview-content');
+    formFields = Array.from(formFieldContainer.children);
+    // Update hierarchy view if needed
 }
 
 function selectField(field) {
@@ -125,14 +131,11 @@ function updateFieldProperties(field) {
     } else {
         fieldOptions.style.display = 'none';
     }
-
-    UIModule.showMenuPanel('field-properties');
 }
 
 function updateFieldProperty(property, value) {
     if (selectedField) {
         FieldModule.updateField(selectedField, property, value);
-        updateFormPreview();
         updateHierarchyView();
     }
 }
@@ -150,60 +153,6 @@ function addSelectOption() {
             updateFieldProperties(selectedField);
         }
     }
-}
-
-let draggedElement = null;
-
-function drag(ev) {
-    draggedElement = ev.target;
-    ev.dataTransfer.setData('text/plain', '');
-    setTimeout(() => draggedElement.classList.add('dragging'), 0);
-}
-
-function allowDrop(ev) {
-    ev.preventDefault();
-    const draggingElement = document.querySelector('.dragging');
-    if (draggingElement) {
-        const closestElement = getClosestElement(ev.clientY);
-        if (closestElement) {
-            closestElement.classList.add('drag-over');
-        }
-    }
-}
-
-function getClosestElement(y) {
-    const draggableElements = [...document.querySelectorAll('.form-field:not(.dragging)')];
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    const draggingElement = document.querySelector('.dragging');
-    if (draggingElement) {
-        const closestElement = getClosestElement(ev.clientY);
-        if (closestElement) {
-            closestElement.parentNode.insertBefore(draggingElement, closestElement);
-        } else {
-            ev.target.appendChild(draggingElement);
-        }
-        draggingElement.classList.remove('dragging');
-        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-        updateFormFieldsOrder();
-    }
-}
-
-function updateFormFieldsOrder() {
-    const previewContent = document.getElementById('preview-content');
-    formFields = Array.from(previewContent.children);
-    updateHierarchyView();
 }
 
 // Initialize the application
