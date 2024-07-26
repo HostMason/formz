@@ -126,14 +126,11 @@ export class UIManager {
         if (tool) {
             if (tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
-            }
-            if (typeof tool.action === 'function') {
-                tool.action();
-            }
-            if (toolId === 'toolbox') {
-                const submenu = button.nextElementSibling;
-                if (submenu && submenu.classList.contains('submenu')) {
-                    submenu.classList.add('expanded');
+            } else {
+                if (typeof tool.action === 'function') {
+                    tool.action();
+                } else {
+                    this.showPage(toolId);
                 }
             }
             this.highlightActiveButton(button);
@@ -200,17 +197,14 @@ export class UIManager {
             const html = await response.text();
             this.mainContent.innerHTML = html;
 
+            // Load and execute the corresponding JavaScript file
             const scriptPath = `/static/js/tools/${pageId}.js`;
-            const script = document.createElement('script');
-            script.src = scriptPath;
-            script.type = 'module';
-            document.body.appendChild(script);
+            await this.loadScript(scriptPath);
 
-            script.onload = () => {
-                if (window[pageId] && typeof window[pageId].init === 'function') {
-                    window[pageId].init();
-                }
-            };
+            // Initialize the page if an init function exists
+            if (window[pageId] && typeof window[pageId].init === 'function') {
+                window[pageId].init();
+            }
 
             // Update active state in navigation
             this.updateActiveNavItem(pageId);
@@ -218,6 +212,17 @@ export class UIManager {
             console.error(`Error loading page: ${pageId}`, error);
             this.showErrorPage();
         }
+    }
+
+    loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.type = 'module';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
     }
 
     updateActiveNavItem(pageId) {
