@@ -1,6 +1,7 @@
 export class ToolManager {
     constructor() {
         this.tools = [];
+        this.initializeTools();
     }
 
     initializeTools() {

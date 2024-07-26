@@ -92,4 +92,17 @@ export class UIManager {
         // Here you would typically use your router to navigate
         console.log(`Navigating to: ${route}`);
     }
+
+    addEventListenersToButtons(element) {
+        element.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleNavItemClick(e));
+        });
+    }
+
+    handleNavItemClick(e) {
+        e.preventDefault();
+        const route = e.currentTarget.getAttribute('data-route');
+        // Here you would typically use your router to navigate
+        console.log(`Navigating to: ${route}`);
+    }
 }
