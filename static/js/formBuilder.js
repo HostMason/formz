@@ -2,20 +2,23 @@ export class FormBuilder {
     constructor() {
         this.formFields = null;
         this.fieldTypes = null;
+        this.currentForm = null;
+        this.formList = [];
     }
 
     initialize() {
         this.formFields = document.getElementById('preview-content');
         this.fieldTypes = document.querySelectorAll('.field-type-button');
-        
-        if (this.formFields && this.fieldTypes.length > 0) {
-            this.initializeEventListeners();
-        } else {
-            console.error('Form fields container or field types not found');
-        }
+        this.initializeEventListeners();
+        this.renderFormBuilder();
     }
 
     initializeEventListeners() {
+        document.getElementById('create-form-btn').addEventListener('click', () => this.createNewForm());
+        document.getElementById('save-form-btn').addEventListener('click', () => this.saveForm());
+        document.getElementById('preview-form-btn').addEventListener('click', () => this.previewForm());
+        document.getElementById('form-list').addEventListener('change', (e) => this.loadForm(e.target.value));
+
         this.fieldTypes.forEach(fieldType => {
             fieldType.addEventListener('dragstart', this.dragStart.bind(this));
             fieldType.addEventListener('dragend', this.dragEnd.bind(this));
@@ -25,103 +28,91 @@ export class FormBuilder {
         this.formFields.addEventListener('drop', this.drop.bind(this));
     }
 
-    dragStart(e) {
-        e.dataTransfer.setData('text/plain', e.target.getAttribute('data-field-type'));
-        e.target.style.opacity = '0.5';
+    renderFormBuilder() {
+        const formBuilderHTML = `
+            <div id="form-builder-container">
+                <div id="form-controls">
+                    <button id="create-form-btn">Create New Form</button>
+                    <select id="form-list">
+                        <option value="">Select a form</option>
+                    </select>
+                    <button id="save-form-btn">Save Form</button>
+                    <button id="preview-form-btn">Preview Form</button>
+                </div>
+                <div id="form-editor">
+                    <div id="field-types">
+                        <!-- Add draggable field type buttons here -->
+                    </div>
+                    <div id="preview-content"></div>
+                </div>
+            </div>
+        `;
+        document.getElementById('main-content').innerHTML = formBuilderHTML;
+        this.updateFormList();
     }
 
-    dragEnd(e) {
-        e.target.style.opacity = '1';
-    }
-
-    dragOver(e) {
-        e.preventDefault();
-    }
-
-    drop(e) {
-        e.preventDefault();
-        const fieldType = e.dataTransfer.getData('text');
-        const newField = this.createField(fieldType);
-        e.target.appendChild(newField);
-    }
-
-    createField(type) {
-        const field = document.createElement('div');
-        field.className = 'form-field';
-        field.innerHTML = `<label>${this.capitalizeFirstLetter(type)}:</label>`;
-        
-        const input = this.createInputElement(type);
-        field.appendChild(input);
-        return field;
-    }
-
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    createInputElement(type) {
-        switch(type) {
-            case 'text-input':
-            case 'number-input':
-            case 'email-input':
-                return this.createBasicInput(type.split('-')[0]);
-            case 'textarea':
-                return document.createElement('textarea');
-            case 'checkbox':
-            case 'radio-button':
-                return this.createCheckboxOrRadio(type);
-            case 'select-dropdown':
-                return this.createSelectDropdown();
-            case 'button':
-                return this.createButton();
-            default:
-                console.warn(`Unknown field type: ${type}`);
-                return document.createElement('input');
+    createNewForm() {
+        const formName = prompt('Enter a name for the new form:');
+        if (formName) {
+            this.currentForm = { name: formName, fields: [] };
+            this.formFields.innerHTML = '';
+            this.updateFormList();
         }
     }
 
-    createBasicInput(type) {
-        const input = document.createElement('input');
-        input.type = type;
-        return input;
+    updateFormList() {
+        const formList = document.getElementById('form-list');
+        formList.innerHTML = '<option value="">Select a form</option>';
+        this.formList.forEach(form => {
+            const option = document.createElement('option');
+            option.value = form.name;
+            option.textContent = form.name;
+            formList.appendChild(option);
+        });
     }
 
-    createCheckboxOrRadio(type) {
-        const input = document.createElement('input');
-        input.type = type === 'radio-button' ? 'radio' : 'checkbox';
-        return input;
-    }
-
-    createSelectDropdown() {
-        const select = document.createElement('select');
-        select.innerHTML = '<option>Option 1</option><option>Option 2</option>';
-        return select;
-    }
-
-    createButton() {
-        const button = document.createElement('button');
-        button.textContent = 'Button';
-        return button;
+    loadForm(formName) {
+        this.currentForm = this.formList.find(form => form.name === formName);
+        if (this.currentForm) {
+            this.formFields.innerHTML = '';
+            this.currentForm.fields.forEach(field => {
+                const newField = this.createField(field.type);
+                newField.querySelector('label').textContent = field.label;
+                this.formFields.appendChild(newField);
+            });
+        }
     }
 
     saveForm() {
-        const formData = Array.from(this.formFields.children).map(field => ({
-            type: field.querySelector('input, textarea, select, button').tagName.toLowerCase(),
-            label: field.querySelector('label').textContent
-        }));
-        console.log('Form saved:', formData);
-        // Here you would typically send this data to a server
+        if (this.currentForm) {
+            this.currentForm.fields = Array.from(this.formFields.children).map(field => ({
+                type: field.querySelector('input, textarea, select, button').tagName.toLowerCase(),
+                label: field.querySelector('label').textContent
+            }));
+            const existingFormIndex = this.formList.findIndex(form => form.name === this.currentForm.name);
+            if (existingFormIndex !== -1) {
+                this.formList[existingFormIndex] = this.currentForm;
+            } else {
+                this.formList.push(this.currentForm);
+            }
+            this.updateFormList();
+            console.log('Form saved:', this.currentForm);
+        } else {
+            console.error('No form is currently being edited');
+        }
     }
 
     previewForm() {
-        const previewModal = document.getElementById('preview-modal');
-        const previewForm = document.getElementById('preview-form');
-        previewForm.innerHTML = '';
-
-        this.formFields.childNodes.forEach(field => {
-            previewForm.appendChild(field.cloneNode(true));
-        });
-
-        previewModal.style.display = 'block';
+        if (this.currentForm) {
+            const previewWindow = window.open('', 'Form Preview', 'width=600,height=400');
+            previewWindow.document.body.innerHTML = `
+                <h1>${this.currentForm.name}</h1>
+                <form>${this.formFields.innerHTML}</form>
+            `;
+        } else {
+            console.error('No form to preview');
+        }
     }
+
+    // ... (keep the existing methods for drag and drop, createField, etc.)
 }

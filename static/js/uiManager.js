@@ -31,34 +31,15 @@ export class UIManager {
     }
 
     async initializeTools() {
-        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
-        
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
-        formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
-        formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
-        formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
-        formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
-
         const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
-        dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => this.showPage('importData')));
-        dataAnalyzer.addSubTool(new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => this.showPage('analyzeData')));
-        dataAnalyzer.addSubTool(new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => this.showPage('exportResults')));
-
         const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
-        reportGenerator.addSubTool(new Tool('createReport', 'Create Report', 'fas fa-plus', () => this.showPage('createReport')));
-        reportGenerator.addSubTool(new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => this.showPage('editTemplate')));
-        reportGenerator.addSubTool(new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => this.showPage('scheduleReport')));
 
-        toolbox.addSubTool(formBuilder);
-        toolbox.addSubTool(dataAnalyzer);
-        toolbox.addSubTool(reportGenerator);
-
-        this.toolManager.addTool(toolbox);
+        this.toolManager.addTool(formBuilder);
+        this.toolManager.addTool(dataAnalyzer);
+        this.toolManager.addTool(reportGenerator);
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
-
-        // Only add the toolbox to the manager, not its subtools
-        await this.addAllToolsToManager(toolbox, true);
     }
 
     async addAllToolsToManager(tool, isTopLevel = false) {
@@ -140,19 +121,13 @@ export class UIManager {
         const tool = this.toolManager.getTool(toolId);
         
         if (tool) {
-            if (toolId === 'toolbox') {
-                this.toggleToolbox();
-            } else if (tool.subTools && tool.subTools.length > 0) {
-                this.toggleSubmenu(button);
+            this.collapseAllSubmenus();
+            if (typeof tool.action === 'function') {
+                tool.action();
             } else {
-                this.collapseAllSubmenus();
-                if (typeof tool.action === 'function') {
-                    tool.action();
-                } else {
-                    const pageId = toolId;
-                    this.router.navigateTo(`/${pageId}`);
-                    this.showPage(pageId);
-                }
+                const pageId = toolId;
+                this.router.navigateTo(`/${pageId}`);
+                this.showPage(pageId);
             }
             this.highlightActiveButton(button);
         } else {
