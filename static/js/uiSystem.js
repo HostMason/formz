@@ -53,9 +53,18 @@ export class UISystem {
             navList.appendChild(this.createNavItem(tool));
         });
 
-        // Add event listeners to the newly created buttons
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        // Add event listeners to all buttons, including those in submenus
+        this.addEventListenersToButtons(navList);
+    }
+
+    addEventListenersToButtons(element) {
+        element.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => this.handleNavItemClick(e));
+        });
+
+        // Recursively add event listeners to buttons in submenus
+        element.querySelectorAll('.submenu').forEach(submenu => {
+            this.addEventListenersToButtons(submenu);
         });
     }
 
@@ -81,6 +90,7 @@ export class UISystem {
     }
 
     handleNavItemClick(e) {
+        e.preventDefault();
         const button = e.currentTarget;
         const toolId = button.id.replace('Btn', '');
         const tool = this.toolManager.getTool(toolId);
@@ -97,6 +107,16 @@ export class UISystem {
         } else {
             console.error(`Tool not found: ${toolId}`);
         }
+
+        // Highlight the active button
+        this.highlightActiveButton(button);
+    }
+
+    highlightActiveButton(button) {
+        // Remove 'active' class from all buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        // Add 'active' class to the clicked button
+        button.classList.add('active');
     }
 
     toggleSubmenu(button) {
