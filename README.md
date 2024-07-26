@@ -1,4 +1,26 @@
-# Web Application Setup and Maintenance
+# Hostmason Internal Systems
+
+This project is an internal system for Hostmason customers, providing various tools to manage and customize services.
+
+## Features
+
+- Form Builder
+  - Drag and drop form creation
+  - Custom field types
+  - Form templates
+  - Form preview
+  - Save and load forms
+  - Form settings management
+
+- Data Analyzer
+  - Data import
+  - Various analysis options
+  - Export results
+
+- Report Generator
+  - Create custom reports
+  - Edit report templates
+  - Schedule automated reports
 
 ## Setup Instructions
 
@@ -79,13 +101,16 @@
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
-│   │   ├── script.js
-│   │   ├── formModule.js
-│   │   ├── fieldModule.js
-│   │   └── uiModule.js
+│   │   ├── app.js
+│   │   ├── uiManager.js
+│   │   ├── toolManager.js
+│   │   ├── router.js
+│   │   └── themeManager.js
 │   └── templates/
 │       ├── index.html
-│       └── form_template.html
+│       ├── formBuilder.html
+│       ├── dataAnalyzer.html
+│       └── reportGenerator.html
 ├── setup_webapp.sh
 └── install.sh
 ```
@@ -100,3 +125,11 @@
 - The `install.sh` script is used to install dependencies and can be run separately if needed.
 
 - For any issues or further assistance, please refer to the service logs or contact the support team.
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
