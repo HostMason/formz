@@ -112,6 +112,7 @@ function dragEnd(e) {
 
 function dragOver(e) {
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = 'move';
 }
 
@@ -134,7 +135,24 @@ function drop(e) {
     formFieldContainer.classList.remove('drag-over');
 
     const fieldType = e.dataTransfer.getData('text/plain');
-    addField(null, fieldType);
+    const fieldElement = FieldModule.createField(fieldType);
+    if (fieldElement) {
+        fieldElement.draggable = true;
+        fieldElement.addEventListener('dragstart', dragStart);
+        fieldElement.addEventListener('dragend', dragEnd);
+        fieldElement.addEventListener('click', () => selectField(fieldElement));
+
+        formFieldContainer.appendChild(fieldElement);
+        formFields.push(fieldElement);
+        updateHierarchyView();
+
+        const placeholder = formFieldContainer.querySelector('.drag-placeholder');
+        if (placeholder) {
+            formFieldContainer.removeChild(placeholder);
+        }
+    } else {
+        console.error('Failed to create field element for type:', fieldType);
+    }
 }
 
 function addField(e, fieldType) {
