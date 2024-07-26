@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 import os
 
-app = Flask(__name__, template_folder=os.path.abspath('../static/templates'), static_folder=os.path.abspath('../static'))
+app = Flask(__name__, template_folder='../static/templates', static_folder='../static')
 
 @app.route('/')
 def home():
@@ -13,4 +13,4 @@ def generate_form():
     return render_template('form_template.html', form_data=form_data)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)
