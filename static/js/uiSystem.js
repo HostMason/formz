@@ -11,27 +11,30 @@ export class UISystem {
     }
 
     initializeTools() {
-        const formBuilderTool = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'), [
-            new Tool('loadForm', 'Load Form', 'fas fa-folder-open', () => console.log('Load form clicked')),
-            new Tool('saveForm', 'Save Form', 'fas fa-save', () => this.formBuilder.saveForm()),
-            new Tool('deleteForm', 'Delete Form', 'fas fa-trash-alt', () => console.log('Delete form clicked')),
-            new Tool('customFields', 'Custom Fields', 'fas fa-puzzle-piece', () => this.showPage('customFields')),
-            new Tool('templates', 'Templates', 'fas fa-file-code', () => this.showPage('templates'))
-        ]);
+        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
+        
+        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
+        formBuilder.addSubTool(new Tool('loadForm', 'Load Form', 'fas fa-folder-open', () => console.log('Load form clicked')));
+        formBuilder.addSubTool(new Tool('saveForm', 'Save Form', 'fas fa-save', () => this.formBuilder.saveForm()));
+        formBuilder.addSubTool(new Tool('deleteForm', 'Delete Form', 'fas fa-trash-alt', () => console.log('Delete form clicked')));
+        formBuilder.addSubTool(new Tool('customFields', 'Custom Fields', 'fas fa-puzzle-piece', () => this.showPage('customFields')));
+        formBuilder.addSubTool(new Tool('templates', 'Templates', 'fas fa-file-code', () => this.showPage('templates')));
+        
+        const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
+        dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => console.log('Import data clicked')));
+        dataAnalyzer.addSubTool(new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => console.log('Analyze data clicked')));
+        dataAnalyzer.addSubTool(new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => console.log('Export results clicked')));
+        
+        const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
+        reportGenerator.addSubTool(new Tool('createReport', 'Create Report', 'fas fa-plus', () => console.log('Create report clicked')));
+        reportGenerator.addSubTool(new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => console.log('Edit template clicked')));
+        reportGenerator.addSubTool(new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => console.log('Schedule report clicked')));
 
-        const dataAnalyzerTool = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'), [
-            new Tool('importData', 'Import Data', 'fas fa-file-import', () => console.log('Import data clicked')),
-            new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => console.log('Analyze data clicked')),
-            new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => console.log('Export results clicked'))
-        ]);
+        toolbox.addSubTool(formBuilder);
+        toolbox.addSubTool(dataAnalyzer);
+        toolbox.addSubTool(reportGenerator);
 
-        const reportGeneratorTool = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'), [
-            new Tool('createReport', 'Create Report', 'fas fa-plus', () => console.log('Create report clicked')),
-            new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => console.log('Edit template clicked')),
-            new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => console.log('Schedule report clicked'))
-        ]);
-
-        this.toolManager.addTool(new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox(), [formBuilderTool, dataAnalyzerTool, reportGeneratorTool]));
+        this.toolManager.addTool(toolbox);
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
@@ -46,44 +49,8 @@ export class UISystem {
         const navList = document.querySelector('.nav-list');
         navList.innerHTML = ''; // Clear existing navigation
 
-        this.toolManager.getTools().forEach(tool => {
-            const li = document.createElement('li');
-            li.className = 'nav-item';
-            li.innerHTML = `
-                <button class="nav-btn" id="${tool.id}Btn">
-                    <i class="${tool.icon}"></i> <span>${tool.name}</span>
-                </button>
-            `;
-            if (tool.subTools.length > 0) {
-                const subMenu = document.createElement('ul');
-                subMenu.className = 'submenu';
-                tool.subTools.forEach(subTool => {
-                    const subLi = document.createElement('li');
-                    subLi.className = 'nav-item';
-                    subLi.innerHTML = `
-                        <button class="nav-btn" id="${subTool.id}Btn">
-                            <i class="${subTool.icon}"></i> <span>${subTool.name}</span>
-                        </button>
-                    `;
-                    if (subTool.subTools.length > 0) {
-                        const subSubMenu = document.createElement('ul');
-                        subSubMenu.className = 'submenu';
-                        subTool.subTools.forEach(subSubTool => {
-                            subSubMenu.innerHTML += `
-                                <li class="nav-item">
-                                    <button class="nav-btn" id="${subSubTool.id}Btn">
-                                        <i class="${subSubTool.icon}"></i> <span>${subSubTool.name}</span>
-                                    </button>
-                                </li>
-                            `;
-                        });
-                        subLi.appendChild(subSubMenu);
-                    }
-                    subMenu.appendChild(subLi);
-                });
-                li.appendChild(subMenu);
-            }
-            navList.appendChild(li);
+        this.toolManager.getAllTools().forEach(tool => {
+            navList.appendChild(this.createNavItem(tool));
         });
 
         // Add event listeners to the newly created buttons
@@ -92,10 +59,31 @@ export class UISystem {
         });
     }
 
+    createNavItem(tool) {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        li.innerHTML = `
+            <button class="nav-btn" id="${tool.id}Btn">
+                <i class="${tool.icon}"></i> <span>${tool.name}</span>
+            </button>
+        `;
+        
+        if (tool.subTools.length > 0) {
+            const subMenu = document.createElement('ul');
+            subMenu.className = 'submenu';
+            tool.subTools.forEach(subTool => {
+                subMenu.appendChild(this.createNavItem(subTool));
+            });
+            li.appendChild(subMenu);
+        }
+        
+        return li;
+    }
+
     handleNavItemClick(e) {
         const button = e.currentTarget;
         const toolId = button.id.replace('Btn', '');
-        const tool = this.findTool(toolId);
+        const tool = this.toolManager.getTool(toolId);
         
         if (tool) {
             if (tool.subTools.length > 0) {
@@ -103,17 +91,6 @@ export class UISystem {
             }
             tool.action();
         }
-    }
-
-    findTool(id, tools = this.toolManager.getTools()) {
-        for (const tool of tools) {
-            if (tool.id === id) return tool;
-            if (tool.subTools.length > 0) {
-                const subTool = this.findTool(id, tool.subTools);
-                if (subTool) return subTool;
-            }
-        }
-        return null;
     }
 
     toggleSubmenu(button) {
