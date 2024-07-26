@@ -3,18 +3,16 @@ import { FormBuilder } from '../formBuilder.js';
 const formBuilder = {
     init() {
         this.formBuilder = new FormBuilder();
-        document.addEventListener('DOMContentLoaded', () => {
-            this.formBuilder.initialize();
-            this.attachEventListeners();
-        });
+        this.formBuilder.initialize();
+        this.attachEventListeners();
     },
 
     attachEventListeners() {
-        document.getElementById('previewFormBtn')?.addEventListener('click', () => this.formBuilder.previewForm());
-        document.getElementById('saveFormBtn')?.addEventListener('click', () => this.formBuilder.saveForm());
-        document.getElementById('loadFormBtn')?.addEventListener('click', () => this.formBuilder.loadForm());
-        document.getElementById('deleteFormBtn')?.addEventListener('click', () => this.formBuilder.deleteForm());
+        document.getElementById('preview-form-btn')?.addEventListener('click', () => this.formBuilder.previewForm());
+        document.getElementById('save-form-btn')?.addEventListener('click', () => this.formBuilder.saveForm());
+        document.getElementById('form-list')?.addEventListener('change', (e) => this.formBuilder.loadForm(e.target.value));
+        document.getElementById('create-form-btn')?.addEventListener('click', () => this.formBuilder.createNewForm());
     }
 };
 
-window.formBuilder = formBuilder;
+export default formBuilder;
