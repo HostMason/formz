@@ -36,10 +36,14 @@ export class UISystem {
 
     toggleToolbox() {
         const toolboxBtn = document.getElementById('toolboxBtn');
-        const formsSubsection = document.getElementById('formsSubsection');
+        const formsSubsection = document.querySelector('.submenu');
 
         toolboxBtn.classList.toggle('active');
         formsSubsection.classList.toggle('expanded');
+
+        // Prevent the default action (navigating to the landing page)
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     toggleFormsSubsection(event) {

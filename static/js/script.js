@@ -330,9 +330,6 @@ function updateMenuToggleIcon() {
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
     switch (action) {
-        case 'toolboxBtn':
-            uiSystem.toggleToolbox();
-            break;
         case 'formBuilderBtn':
             showPage('formBuilder');
             break;
@@ -346,7 +343,7 @@ function handleNavItemClick(e) {
             showPage('settings');
             break;
         default:
-            showPage('landing');
+            // Do nothing for other buttons, let UISystem handle them
             break;
     }
 }
