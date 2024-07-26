@@ -38,58 +38,33 @@ export class UIManager {
 
     addToolboxSubTools(toolbox) {
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
-        formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => {
-            this.showPage('createForm');
-            // Additional logic for creating a new form
-        }));
-        formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => {
-            this.showPage('editForm');
-            // Logic for loading existing form for editing
-        }));
-        formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => {
-            this.showPage('viewForms');
-            // Logic for fetching and displaying all forms
-        }));
-        formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => {
-            this.showPage('formTemplates');
-            // Logic for managing form templates
-        }));
-        formBuilder.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => {
-            this.showPage('formSettings');
-            // Logic for managing form settings
-        }));
+        formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
+        formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
+        formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
+        formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
+        formBuilder.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
 
         const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
-        dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => {
-            this.showPage('importData');
-            // Logic for importing data
-        }));
-        dataAnalyzer.addSubTool(new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => {
-            this.showPage('analyzeData');
-            // Logic for analyzing data
-        }));
-        dataAnalyzer.addSubTool(new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => {
-            this.showPage('exportResults');
-            // Logic for exporting analysis results
-        }));
+        dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => this.showPage('importData')));
+        dataAnalyzer.addSubTool(new Tool('analyzeData', 'Analyze Data', 'fas fa-microscope', () => this.showPage('analyzeData')));
+        dataAnalyzer.addSubTool(new Tool('exportResults', 'Export Results', 'fas fa-file-export', () => this.showPage('exportResults')));
 
         const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
-        reportGenerator.addSubTool(new Tool('createReport', 'Create Report', 'fas fa-plus', () => {
-            this.showPage('createReport');
-            // Logic for creating a new report
-        }));
-        reportGenerator.addSubTool(new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => {
-            this.showPage('editTemplate');
-            // Logic for editing report templates
-        }));
-        reportGenerator.addSubTool(new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => {
-            this.showPage('scheduleReport');
-            // Logic for scheduling reports
-        }));
+        reportGenerator.addSubTool(new Tool('createReport', 'Create Report', 'fas fa-plus', () => this.showPage('createReport')));
+        reportGenerator.addSubTool(new Tool('editTemplate', 'Edit Template', 'fas fa-edit', () => this.showPage('editTemplate')));
+        reportGenerator.addSubTool(new Tool('scheduleReport', 'Schedule Report', 'fas fa-calendar-alt', () => this.showPage('scheduleReport')));
 
         toolbox.addSubTool(formBuilder);
         toolbox.addSubTool(dataAnalyzer);
         toolbox.addSubTool(reportGenerator);
+
+        // Add the subtools to the toolManager as well
+        this.toolManager.addTool(formBuilder);
+        this.toolManager.addTool(dataAnalyzer);
+        this.toolManager.addTool(reportGenerator);
+        formBuilder.subTools.forEach(subTool => this.toolManager.addTool(subTool));
+        dataAnalyzer.subTools.forEach(subTool => this.toolManager.addTool(subTool));
+        reportGenerator.subTools.forEach(subTool => this.toolManager.addTool(subTool));
     }
 
     renderBasicStructure() {
@@ -164,7 +139,7 @@ export class UIManager {
         if (tool) {
             if (toolId === 'toolbox') {
                 this.toggleToolbox();
-            } else if (tool.subTools.length > 0) {
+            } else if (tool.subTools && tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
             } else {
                 this.collapseAllSubmenus();
@@ -178,7 +153,26 @@ export class UIManager {
             }
             this.highlightActiveButton(button);
         } else {
-            console.error(`Tool not found: ${toolId}`);
+            // If the tool is not found in the main tools, check subtools
+            const parentToolId = button.closest('.submenu').previousElementSibling.getAttribute('data-tool-id');
+            const parentTool = this.toolManager.getTool(parentToolId);
+            if (parentTool && parentTool.subTools) {
+                const subTool = parentTool.subTools.find(st => st.id === toolId);
+                if (subTool) {
+                    if (typeof subTool.action === 'function') {
+                        subTool.action();
+                    } else {
+                        const pageId = toolId;
+                        this.router.navigateTo(`/${pageId}`);
+                        this.showPage(pageId);
+                    }
+                    this.highlightActiveButton(button);
+                } else {
+                    console.error(`Subtool not found: ${toolId}`);
+                }
+            } else {
+                console.error(`Tool not found: ${toolId}`);
+            }
         }
     }
 
