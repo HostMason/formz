@@ -14,21 +14,27 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <span class="hamburger"></span>
+                </button>
                 <h1 class="company-name">BlueColar</h1>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-section-btn" id="formsBtn"><i class="fas fa-file-alt"></i> Forms</button>
-                <div class="nav-section" id="formsSection">
-                    <button class="nav-item" id="formBuilderBtn" data-target="form-builder"><i class="fas fa-tools"></i> Form Builder</button>
-                    <button class="nav-item" id="createFormBtn"><i class="fas fa-plus"></i> Create New</button>
-                    <button class="nav-item" id="loadFormBtn"><i class="fas fa-folder-open"></i> Load Form</button>
-                    <button class="nav-item" id="saveFormBtn"><i class="fas fa-save"></i> Save Form</button>
+                <div class="nav-section">
+                    <button class="nav-section-btn" id="formsBtn"><i class="fas fa-file-alt"></i> Forms</button>
+                    <div class="nav-section-content" id="formsSection">
+                        <button class="nav-item" id="formBuilderBtn" data-target="form-builder"><i class="fas fa-tools"></i> Form Builder</button>
+                        <button class="nav-item" id="createFormBtn"><i class="fas fa-plus"></i> Create New</button>
+                        <button class="nav-item" id="loadFormBtn"><i class="fas fa-folder-open"></i> Load Form</button>
+                        <button class="nav-item" id="saveFormBtn"><i class="fas fa-save"></i> Save Form</button>
+                    </div>
                 </div>
-                <button class="nav-section-btn" id="settingsBtn"><i class="fas fa-cogs"></i> Settings</button>
-                <div class="nav-section" id="settingsSection">
-                    <button class="nav-item" id="preferencesBtn"><i class="fas fa-sliders-h"></i> Preferences</button>
-                    <button class="nav-item" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
+                <div class="nav-section">
+                    <button class="nav-section-btn" id="settingsBtn"><i class="fas fa-cogs"></i> Settings</button>
+                    <div class="nav-section-content" id="settingsSection">
+                        <button class="nav-item" id="preferencesBtn"><i class="fas fa-sliders-h"></i> Preferences</button>
+                        <button class="nav-item" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
+                    </div>
                 </div>
             </nav>
         </aside>

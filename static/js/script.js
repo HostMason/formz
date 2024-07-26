@@ -237,15 +237,19 @@ function toggleSidebar() {
 function initializeEventListeners() {
     // ... existing code ...
 
-    const menuToggle = document.querySelector('.menu-toggle');
+    const menuToggle = document.getElementById('menuToggle');
     menuToggle.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent event from bubbling up
         toggleSidebar();
     });
 
     // Toggle sections when clicking on section buttons
-    document.getElementById('formsBtn').addEventListener('click', () => toggleSection('formsSection'));
-    document.getElementById('settingsBtn').addEventListener('click', () => toggleSection('settingsSection'));
+    document.querySelectorAll('.nav-section-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const sectionContent = e.currentTarget.nextElementSibling;
+            sectionContent.classList.toggle('expanded');
+        });
+    });
 
     // Add click events for sidebar items
     document.getElementById('formBuilderBtn').addEventListener('click', () => {
@@ -257,6 +261,14 @@ function initializeEventListeners() {
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
     document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar.contains(e.target) && !sidebar.classList.contains('collapsed')) {
+            toggleSidebar();
+        }
+    });
 
     // ... existing code ...
 }

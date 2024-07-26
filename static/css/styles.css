@@ -58,10 +58,15 @@ body {
 .sidebar {
     width: 250px;
     background-color: var(--surface-color);
-    transition: width 0.3s ease;
+    transition: all 0.3s ease;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.collapsed {
+    width: 60px;
 }
 
 .sidebar-header {
@@ -72,14 +77,65 @@ body {
 }
 
 .menu-toggle {
-    font-size: 24px;
+    background: none;
+    border: none;
     cursor: pointer;
-    margin-right: 15px;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+.hamburger {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-color);
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-color);
+    transition: all 0.3s;
+}
+
+.hamburger::before {
+    top: -6px;
+}
+
+.hamburger::after {
+    bottom: -6px;
+}
+
+.sidebar.collapsed .hamburger {
+    background-color: transparent;
+}
+
+.sidebar.collapsed .hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.sidebar.collapsed .hamburger::after {
+    bottom: 0;
+    transform: rotate(-45deg);
 }
 
 .company-name {
     font-size: 20px;
     font-weight: bold;
+    margin-left: 15px;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .company-name {
+    opacity: 0;
 }
 
 .sidebar-nav {
@@ -88,25 +144,28 @@ body {
     overflow-y: auto;
 }
 
+.nav-section {
+    margin-bottom: 20px;
+}
+
 .nav-section-btn {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 15px;
-    margin-bottom: 5px;
-    background-color: var(--primary-color);
+    padding: 12px;
+    background: none;
     border: none;
     color: var(--text-color);
     font-size: 16px;
     font-weight: bold;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     border-radius: 4px;
 }
 
 .nav-section-btn:hover {
-    background-color: var(--hover-color);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-section-btn i {
@@ -115,14 +174,14 @@ body {
     text-align: center;
 }
 
-.nav-section {
+.nav-section-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
 }
 
-.nav-section.expanded {
-    max-height: 500px; /* Adjust this value as needed */
+.nav-section-content.expanded {
+    max-height: 500px;
 }
 
 .nav-item {
@@ -133,21 +192,38 @@ body {
     margin-bottom: 5px;
     background: none;
     border: none;
-    color: var(--text-color);
+    color: var(--text-secondary-color);
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     border-radius: 4px;
 }
 
 .nav-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
 }
 
 .nav-item i {
     margin-right: 10px;
     width: 20px;
     text-align: center;
+}
+
+.sidebar.collapsed .nav-section-btn,
+.sidebar.collapsed .nav-item {
+    padding: 12px 0;
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-section-btn i,
+.sidebar.collapsed .nav-item i {
+    margin-right: 0;
+}
+
+.sidebar.collapsed .nav-section-btn span,
+.sidebar.collapsed .nav-item span {
+    display: none;
 }
 
 .main-content {
