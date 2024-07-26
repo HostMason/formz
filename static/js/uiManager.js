@@ -16,6 +16,7 @@ export class UIManager {
         this.attachEventListeners();
         this.renderNavigation();
         this.showLandingPage(); // Show landing page by default
+        this.updateMenuToggleIcon(); // Set initial icon state
     }
 
     showLandingPage() {
@@ -54,30 +55,48 @@ export class UIManager {
 
     toggleSidebar() {
         this.sidebar.classList.toggle('collapsed');
-        this.mainContent.classList.toggle('expanded');
         this.updateMenuToggleIcon();
     }
 
     updateMenuToggleIcon() {
         const icon = this.menuToggle.querySelector('i');
-        icon.classList.toggle('fa-arrow-right');
-        icon.classList.toggle('fa-arrow-left');
+        icon.classList.toggle('fa-chevron-up');
+        icon.classList.toggle('fa-chevron-down');
     }
 
     renderNavigation() {
         const navList = document.querySelector('.nav-list');
         navList.innerHTML = '';
-        this.toolManager.getAllTools().forEach(tool => {
-            const li = document.createElement('li');
-            li.className = 'nav-item';
-            li.innerHTML = `
-                <button class="nav-btn" data-route="${tool.route}">
-                    <i class="${tool.icon}"></i> <span>${tool.name}</span>
-                </button>
-            `;
+        const tools = this.toolManager.getAllTools();
+        
+        // Render all tools except settings
+        tools.filter(tool => tool.name !== 'Settings').forEach(tool => {
+            const li = this.createNavItem(tool);
             navList.appendChild(li);
         });
-        this.addEventListenersToButtons(navList);
+
+        // Render settings button at the bottom
+        const settingsSection = document.createElement('div');
+        settingsSection.className = 'settings-section';
+        const settingsTool = tools.find(tool => tool.name === 'Settings');
+        if (settingsTool) {
+            const settingsLi = this.createNavItem(settingsTool);
+            settingsSection.appendChild(settingsLi);
+        }
+        this.sidebar.appendChild(settingsSection);
+
+        this.addEventListenersToButtons(this.sidebar);
+    }
+
+    createNavItem(tool) {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        li.innerHTML = `
+            <button class="nav-btn" data-route="${tool.route}">
+                <i class="${tool.icon}"></i> <span>${tool.name}</span>
+            </button>
+        `;
+        return li;
     }
 
     addEventListenersToButtons(element) {

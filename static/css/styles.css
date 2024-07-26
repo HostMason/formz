@@ -69,7 +69,8 @@ body {
 }
 
 .sidebar.collapsed {
-    width: 60px;
+    height: 60px;
+    overflow: hidden;
 }
 
 .main-content {
@@ -78,7 +79,7 @@ body {
 }
 
 .main-content.expanded {
-    margin-left: 60px;
+    margin-left: 250px;
 }
 
 .sidebar-header {
@@ -98,41 +99,20 @@ body {
     position: relative;
 }
 
-.menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
 .menu-toggle i {
     color: var(--text-color);
     font-size: 20px;
     transition: transform 0.3s;
 }
 
-.menu-toggle i {
-    transform: rotate(180deg);
-}
-
 .sidebar.collapsed .menu-toggle i {
-    transform: rotate(0deg);
+    transform: rotate(180deg);
 }
 
 .company-name {
     font-size: 20px;
     font-weight: bold;
     margin-left: 15px;
-    transition: opacity 0.3s;
-}
-
-.sidebar.collapsed .company-name {
-    opacity: 0;
 }
 
 .sidebar-nav {
@@ -141,6 +121,10 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+}
+
+.nav-list {
+    flex-grow: 1;
 }
 
 .settings-section {
