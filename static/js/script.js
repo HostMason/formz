@@ -20,6 +20,15 @@ function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
         button.addEventListener('dragstart', dragStart);
         button.addEventListener('dragend', dragEnd);
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const fieldType = e.target.getAttribute('data-field-type');
+            const fieldElement = FieldModule.createField(fieldType);
+            const formFieldContainer = document.getElementById('preview-content');
+            formFieldContainer.appendChild(fieldElement);
+            formFields.push(fieldElement);
+            updateHierarchyView();
+        });
     });
 
     document.getElementById('previewFormBtn').addEventListener('click', () => UIModule.previewForm(formFields));
@@ -101,7 +110,7 @@ function dragLeave(e) {
 
 function drop(e) {
     e.preventDefault();
-    const formFieldContainer = document.querySelector('.form-field-container');
+    const formFieldContainer = document.getElementById('preview-content');
     formFieldContainer.classList.remove('drag-over');
 
     const fieldType = e.dataTransfer.getData('text');
@@ -114,6 +123,12 @@ function drop(e) {
     formFieldContainer.appendChild(fieldElement);
     formFields.push(fieldElement);
     updateHierarchyView();
+
+    // Remove the placeholder text if it exists
+    const placeholder = formFieldContainer.querySelector('.drag-placeholder');
+    if (placeholder) {
+        formFieldContainer.removeChild(placeholder);
+    }
 }
 
 function updateHierarchyView() {
@@ -127,6 +142,13 @@ function selectField(field) {
     updateFieldProperties(field);
     document.querySelectorAll('.form-field').forEach(f => f.classList.remove('selected'));
     field.classList.add('selected');
+
+    // Show the field properties section
+    document.querySelector('.field-properties').style.display = 'block';
+
+    // Prevent default behavior and stop event propagation
+    event.preventDefault();
+    event.stopPropagation();
 }
 
 function updateFieldProperties(field) {
