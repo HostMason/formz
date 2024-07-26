@@ -220,7 +220,8 @@ export function updateFormFields(loadedFields) {
 export { formFields, selectedField };
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
-    section.classList.toggle('expanded');
+    const content = section.querySelector('.nav-section-content');
+    content.classList.toggle('expanded');
 }
 
 function updatePageTitle(title) {
@@ -246,8 +247,8 @@ function initializeEventListeners() {
     // Toggle sections when clicking on section buttons
     document.querySelectorAll('.nav-section-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const sectionContent = e.currentTarget.nextElementSibling;
-            sectionContent.classList.toggle('expanded');
+            const sectionId = e.currentTarget.id.replace('Btn', 'Section');
+            toggleSection(sectionId);
         });
     });
 
