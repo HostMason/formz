@@ -1,5 +1,5 @@
 .blue-bar {
-    background-color: #4a90e2;
+    background-color: #2c3e50;
     width: 100%;
     padding: 10px 0;
     display: flex;
@@ -11,10 +11,13 @@
     background-color: transparent;
     border: none;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 25px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .tab-button:hover {
@@ -22,21 +25,22 @@
 }
 
 .tab-button.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #3498db;
     font-weight: bold;
 }
 
 #toolbox-content {
-    padding: 20px;
-    background-color: #f5f5f5;
+    padding: 30px;
+    background-color: #ffffff;
     border-radius: 0 0 5px 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
 }
 
 /* Modern and sleek theme */
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #ecf0f1;
     color: #333;
 }
 
@@ -47,24 +51,48 @@ body {
 }
 
 button {
-    background-color: #4a90e2;
+    background-color: #3498db;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-weight: 500;
 }
 
 button:hover {
-    background-color: #3a7bc8;
+    background-color: #2980b9;
 }
 
 input, select, textarea {
-    border: 1px solid #ccc;
+    border: 1px solid #bdc3c7;
     border-radius: 5px;
-    padding: 10px;
+    padding: 12px;
     font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Toolbox specific styles */
+#toolbox-container {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
 /* Add more styles as needed */

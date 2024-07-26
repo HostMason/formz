@@ -13,9 +13,15 @@ const toolbox = {
         const toolboxContent = `
             <div id="toolbox-container">
                 <div id="toolbox-tabs" class="blue-bar">
-                    <button class="tab-button active" data-tool="formBuilder">Form Builder</button>
-                    <button class="tab-button" data-tool="dataAnalyzer">Data Analyzer</button>
-                    <button class="tab-button" data-tool="reportGenerator">Report Generator</button>
+                    <button class="tab-button active" data-tool="formBuilder">
+                        <i class="fas fa-wpforms"></i> Form Builder
+                    </button>
+                    <button class="tab-button" data-tool="dataAnalyzer">
+                        <i class="fas fa-chart-bar"></i> Data Analyzer
+                    </button>
+                    <button class="tab-button" data-tool="reportGenerator">
+                        <i class="fas fa-file-alt"></i> Report Generator
+                    </button>
                 </div>
                 <div id="toolbox-content"></div>
             </div>
@@ -47,10 +53,10 @@ const toolbox = {
                         module = await import('../tools/formBuilder.js');
                         break;
                     case 'dataAnalyzer':
-                        module = await import('../dataAnalyzer.js');
+                        module = await import('../tools/dataAnalyzer.js');
                         break;
                     case 'reportGenerator':
-                        module = await import('../reportGenerator.js');
+                        module = await import('../tools/reportGenerator.js');
                         break;
                     default:
                         throw new Error(`Unknown tool: ${tool}`);
@@ -58,8 +64,6 @@ const toolbox = {
 
                 if (module.default && typeof module.default.init === 'function') {
                     module.default.init();
-                } else if (module[tool.charAt(0).toUpperCase() + tool.slice(1)] && typeof module[tool.charAt(0).toUpperCase() + tool.slice(1)].prototype.initialize === 'function') {
-                    new module[tool.charAt(0).toUpperCase() + tool.slice(1)]().initialize();
                 } else {
                     throw new Error(`Module ${tool} does not have a valid initialization method`);
                 }
