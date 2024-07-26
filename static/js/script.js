@@ -65,6 +65,9 @@ function addFieldToPreview(fieldType) {
 
     fieldElement.draggable = true;
     fieldElement.ondragstart = drag;
+    fieldElement.ondragend = dragEnd;
+    fieldElement.ondragover = allowDrop;
+    fieldElement.ondrop = drop;
     fieldElement.onclick = function() {
         FieldModule.selectField(fieldElement);
     };
@@ -72,22 +75,40 @@ function addFieldToPreview(fieldType) {
     updateFormPreview();
 }
 
+let draggedElement = null;
+let dropTarget = null;
+
 function drag(ev) {
+    draggedElement = ev.target;
     ev.dataTransfer.setData("text", ev.target.id);
+    setTimeout(() => {
+        draggedElement.classList.add('dragging');
+    }, 0);
 }
 
 function allowDrop(ev) {
     ev.preventDefault();
+    if (draggedElement && ev.target.classList.contains('form-field') && ev.target !== draggedElement) {
+        const rect = ev.target.getBoundingClientRect();
+        const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
+
+        if (dropPosition < 0.5) {
+            ev.target.classList.remove('shift-down');
+            ev.target.classList.add('shift-up');
+        } else {
+            ev.target.classList.remove('shift-up');
+            ev.target.classList.add('shift-down');
+        }
+        dropTarget = ev.target;
+    }
 }
 
 function drop(ev) {
     ev.preventDefault();
     const data = ev.dataTransfer.getData("text");
-    const draggedElement = document.getElementById(data);
-    const dropTarget = ev.target.closest('.form-field') || ev.target;
     const dropzone = document.getElementById('preview-content');
 
-    if (dropTarget !== draggedElement && dropzone.contains(dropTarget)) {
+    if (dropTarget && dropTarget !== draggedElement && dropzone.contains(dropTarget)) {
         const rect = dropTarget.getBoundingClientRect();
         const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
 
@@ -99,6 +120,22 @@ function drop(ev) {
 
         updateFormFieldsOrder();
     }
+
+    // Reset styles and classes
+    draggedElement.classList.remove('dragging');
+    document.querySelectorAll('.form-field').forEach(field => {
+        field.classList.remove('shift-up', 'shift-down');
+    });
+
+    draggedElement = null;
+    dropTarget = null;
+}
+
+function dragEnd(ev) {
+    ev.target.classList.remove('dragging');
+    document.querySelectorAll('.form-field').forEach(field => {
+        field.classList.remove('shift-up', 'shift-down');
+    });
 }
 
 function updateFormFieldsOrder() {

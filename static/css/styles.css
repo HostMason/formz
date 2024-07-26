@@ -292,7 +292,7 @@ h1, h2 {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease, margin-top 0.3s ease, margin-bottom 0.3s ease;
     cursor: move;
     animation: fadeIn 0.5s ease-out;
 }
@@ -303,9 +303,20 @@ h1, h2 {
 }
 
 .form-field.dragging {
-    opacity: 0.5;
-    transform: scale(0.95);
-    animation: pulse 1s infinite;
+    opacity: 0.8;
+    transform: scale(1.05);
+    z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.form-field.shift-up {
+    margin-top: -40px;
+    margin-bottom: 60px;
+}
+
+.form-field.shift-down {
+    margin-top: 60px;
+    margin-bottom: -40px;
 }
 
 @keyframes fadeIn {
