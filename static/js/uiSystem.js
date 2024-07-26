@@ -19,7 +19,7 @@ export class UISystem {
             new Tool('templates', 'Templates', 'fas fa-file-code', () => this.showPage('templates'))
         ]);
 
-        this.toolManager.addTool(formBuilderTool);
+        this.toolManager.addTool(new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox(), [formBuilderTool]));
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
@@ -46,13 +46,28 @@ export class UISystem {
                 const subMenu = document.createElement('ul');
                 subMenu.className = 'submenu';
                 tool.subTools.forEach(subTool => {
-                    subMenu.innerHTML += `
-                        <li>
-                            <button class="nav-btn" id="${subTool.id}Btn">
-                                <i class="${subTool.icon}"></i> <span>${subTool.name}</span>
-                            </button>
-                        </li>
+                    const subLi = document.createElement('li');
+                    subLi.className = 'nav-item';
+                    subLi.innerHTML = `
+                        <button class="nav-btn" id="${subTool.id}Btn">
+                            <i class="${subTool.icon}"></i> <span>${subTool.name}</span>
+                        </button>
                     `;
+                    if (subTool.subTools.length > 0) {
+                        const subSubMenu = document.createElement('ul');
+                        subSubMenu.className = 'submenu';
+                        subTool.subTools.forEach(subSubTool => {
+                            subSubMenu.innerHTML += `
+                                <li class="nav-item">
+                                    <button class="nav-btn" id="${subSubTool.id}Btn">
+                                        <i class="${subSubTool.icon}"></i> <span>${subSubTool.name}</span>
+                                    </button>
+                                </li>
+                            `;
+                        });
+                        subLi.appendChild(subSubMenu);
+                    }
+                    subMenu.appendChild(subLi);
                 });
                 li.appendChild(subMenu);
             }
@@ -63,6 +78,39 @@ export class UISystem {
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => this.handleNavItemClick(e));
         });
+    }
+
+    handleNavItemClick(e) {
+        const button = e.currentTarget;
+        const toolId = button.id.replace('Btn', '');
+        const tool = this.findTool(toolId);
+        
+        if (tool) {
+            if (tool.subTools.length > 0) {
+                this.toggleSubmenu(button);
+            } else {
+                tool.action();
+            }
+        }
+    }
+
+    findTool(id, tools = this.toolManager.getTools()) {
+        for (const tool of tools) {
+            if (tool.id === id) return tool;
+            if (tool.subTools.length > 0) {
+                const subTool = this.findTool(id, tool.subTools);
+                if (subTool) return subTool;
+            }
+        }
+        return null;
+    }
+
+    toggleSubmenu(button) {
+        const submenu = button.nextElementSibling;
+        if (submenu && submenu.classList.contains('submenu')) {
+            submenu.classList.toggle('expanded');
+            button.classList.toggle('active');
+        }
     }
 
     toggleSidebar() {
@@ -83,20 +131,14 @@ export class UISystem {
         }
     }
 
-    toggleFormsSubsection(event) {
-        event.stopPropagation();
-        const formsBtn = document.getElementById('formsBtn');
-        const formsSubmenu = formsBtn.nextElementSibling;
-        formsSubmenu.classList.toggle('expanded');
-        formsBtn.classList.toggle('active');
-    }
-
     toggleToolbox() {
         const toolboxBtn = document.getElementById('toolboxBtn');
-        const formsSubsection = document.querySelector('.submenu');
-    
-        toolboxBtn.classList.toggle('active');
-        formsSubsection.classList.toggle('expanded');
+        const toolboxSubmenu = toolboxBtn.nextElementSibling;
+        
+        if (toolboxSubmenu) {
+            toolboxSubmenu.classList.toggle('expanded');
+            toolboxBtn.classList.toggle('active');
+        }
     }
 
     showPage(pageId) {
