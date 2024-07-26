@@ -48,7 +48,10 @@ export class UISystem {
 
     toggleFormsSubsection(event) {
         event.stopPropagation();
-        this.toggleToolbox();
+        const formsBtn = document.getElementById('formsBtn');
+        const formsSubmenu = formsBtn.nextElementSibling;
+        formsSubmenu.classList.toggle('expanded');
+        formsBtn.classList.toggle('active');
     }
 
     handleNavItemClick(e) {
@@ -62,6 +65,8 @@ export class UISystem {
             case 'loadFormBtn':
             case 'saveFormBtn':
             case 'deleteFormBtn':
+                this.showPage(action.replace('Btn', ''));
+                break;
             case 'customFieldsBtn':
             case 'templatesBtn':
             case 'settingsBtn':
