@@ -310,12 +310,11 @@ window.onload = function() {
 function toggleMenu() {
     const sideMenu = document.querySelector('.side-menu');
     const container = document.querySelector('.container');
-    if (sideMenu.style.width === '250px') {
-        sideMenu.style.width = '50px';
-        container.style.marginLeft = '50px';
-    } else {
-        sideMenu.style.width = '250px';
+    sideMenu.classList.toggle('open');
+    if (sideMenu.classList.contains('open')) {
         container.style.marginLeft = '250px';
+    } else {
+        container.style.marginLeft = '50px';
     }
 }
 
