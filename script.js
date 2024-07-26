@@ -24,29 +24,45 @@ function drop(event) {
             fieldElement.innerText = 'Click Me';
             break;
         case 'radio-button':
-            fieldElement = document.createElement('input');
-            fieldElement.type = 'radio';
-            const radioLabel = document.createElement('label');
-            radioLabel.innerText = 'Radio Option';
+            fieldElement = document.createElement('div');
+            const radioInput = document.createElement('input');
+            radioInput.type = 'radio';
+            radioInput.name = 'radioGroup';
+            const radioLabel = document.createElement('input');
+            radioLabel.type = 'text';
+            radioLabel.placeholder = 'Radio Option Label';
+            fieldElement.appendChild(radioInput);
             fieldElement.appendChild(radioLabel);
             break;
         case 'checkbox':
-            fieldElement = document.createElement('input');
-            fieldElement.type = 'checkbox';
-            const checkboxLabel = document.createElement('label');
-            checkboxLabel.innerText = 'Checkbox Option';
+            fieldElement = document.createElement('div');
+            const checkboxInput = document.createElement('input');
+            checkboxInput.type = 'checkbox';
+            const checkboxLabel = document.createElement('input');
+            checkboxLabel.type = 'text';
+            checkboxLabel.placeholder = 'Checkbox Option Label';
+            fieldElement.appendChild(checkboxInput);
             fieldElement.appendChild(checkboxLabel);
             break;
         case 'select-dropdown':
             fieldElement = document.createElement('select');
-            const option1 = document.createElement('option');
-            option1.value = 'option1';
-            option1.text = 'Option 1';
-            const option2 = document.createElement('option');
-            option2.value = 'option2';
-            option2.text = 'Option 2';
-            fieldElement.appendChild(option1);
-            fieldElement.appendChild(option2);
+            const optionInput = document.createElement('input');
+            optionInput.type = 'text';
+            optionInput.placeholder = 'Add Option';
+            const addButton = document.createElement('button');
+            addButton.innerText = 'Add Option';
+            addButton.onclick = function() {
+                const optionValue = optionInput.value;
+                if (optionValue) {
+                    const option = document.createElement('option');
+                    option.value = optionValue;
+                    option.text = optionValue;
+                    fieldElement.appendChild(option);
+                    optionInput.value = '';
+                }
+            };
+            fieldElement.appendChild(optionInput);
+            fieldElement.appendChild(addButton);
             break;
     }
 
@@ -73,14 +89,28 @@ function selectField(field) {
         `;
     } else if (field.tagName === 'SELECT') {
         fieldDetails.innerHTML = `
-            <label>Select Options:</label> <input type="text" value="${field.options[0].text}" onchange="updateFieldValue(this.value, false, true)">
+            <label>Select Options:</label> <input type="text" placeholder="Add Option" onchange="updateSelectOptions(this.value)">
+        `;
+    } else if (field.firstChild && field.firstChild.type === 'radio') {
+        fieldDetails.innerHTML = `
+            <label>Radio Option Label:</label> <input type="text" value="${field.firstChild.nextSibling.placeholder}" onchange="updateFieldLabel(this.value, true)">
+        `;
+    } else if (field.firstChild && field.firstChild.type === 'checkbox') {
+        fieldDetails.innerHTML = `
+            <label>Checkbox Option Label:</label> <input type="text" value="${field.firstChild.nextSibling.placeholder}" onchange="updateFieldLabel(this.value, false, true)">
         `;
     }
 }
 
-function updateFieldLabel(value) {
+function updateFieldLabel(value, isRadio = false, isCheckbox = false) {
     if (selectedField) {
-        selectedField.setAttribute('placeholder', value);
+        if (isRadio) {
+            selectedField.firstChild.nextSibling.placeholder = value;
+        } else if (isCheckbox) {
+            selectedField.firstChild.nextSibling.placeholder = value;
+        } else {
+            selectedField.setAttribute('placeholder', value);
+        }
     }
 }
 
@@ -90,14 +120,21 @@ function updateFieldPlaceholder(value) {
     }
 }
 
-function updateFieldValue(value, isButton = false, isSelect = false) {
+function updateFieldValue(value, isButton = false) {
     if (selectedField) {
         if (isButton) {
             selectedField.innerText = value;
-        } else if (isSelect) {
-            selectedField.options[0].text = value;
         } else {
             selectedField.value = value;
         }
+    }
+}
+
+function updateSelectOptions(value) {
+    if (selectedField && value) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.text = value;
+        selectedField.appendChild(option);
     }
 }
