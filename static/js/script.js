@@ -2,28 +2,18 @@ import { moduleManager } from './moduleManager.js';
 import * as FormModule from './formModule.js';
 import * as FieldModule from './fieldModule.js';
 import * as UIModule from './uiModule.js';
-import { pages, showPage } from './pageSystem.js';
+import { UISystem } from './uiSystem.js';
 
 let formFields = [];
 let selectedField = null;
+let uiSystem;
 
 document.addEventListener('DOMContentLoaded', () => {
+    uiSystem = new UISystem();
     initializeEventListeners();
     FormModule.loadSavedForms();
-    showLandingPage();
+    uiSystem.showPage('landing');
 });
-
-function showLandingPage() {
-    document.title = "Welcome - BlueColar Form Builder";
-    document.getElementById('landing-page').style.display = 'block';
-    document.getElementById('form-builder').style.display = 'none';
-}
-
-function showFormBuilder() {
-    document.title = "Form Builder - BlueColar";
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('form-builder').style.display = 'block';
-}
 
 function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
@@ -35,34 +25,6 @@ function initializeEventListeners() {
 
     document.getElementById('previewFormBtn').addEventListener('click', () => UIModule.previewForm(formFields));
     document.getElementById('submitPreviewFormBtn').addEventListener('click', UIModule.submitPreviewForm);
-
-    const menuToggle = document.querySelector('.menu-toggle');
-    menuToggle.addEventListener('click', toggleSidebar);
-
-    document.getElementById('toolboxBtn').addEventListener('click', toggleToolbox);
-    document.getElementById('formsBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleFormsSubsection(e);
-    });
-
-    // Add event listeners for sidebar buttons
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', handleNavItemClick);
-    });
-
-    // Initialize sidebar state
-    const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
-    if (localStorage.getItem('sidebarCollapsed') === 'true') {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('expanded');
-    }
-
-    // Initialize landing page view
-    showPage('landing');
-
-    // Update menu toggle icon initially
-    updateMenuToggleIcon();
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
