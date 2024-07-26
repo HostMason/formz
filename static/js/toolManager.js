@@ -3,7 +3,7 @@ export class ToolManager {
         this.tools = new Map();
     }
 
-    addTool(tool) {
+    registerTool(tool) {
         this.tools.set(tool.id, tool);
     }
 
@@ -13,14 +13,5 @@ export class ToolManager {
 
     getAllTools() {
         return Array.from(this.tools.values());
-    }
-}
-
-export class Tool {
-    constructor(id, name, icon, action) {
-        this.id = id;
-        this.name = name;
-        this.icon = icon;
-        this.action = action;
     }
 }

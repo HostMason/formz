@@ -1,20 +1,20 @@
+import { Tool } from './baseTool.js';
 import { FormBuilder } from '../formBuilder.js';
 
-class FormBuilderTool {
+class FormBuilderTool extends Tool {
     constructor() {
+        super('formBuilder', 'Form Builder', 'fas fa-wpforms');
         this.formBuilder = new FormBuilder();
     }
 
     init() {
-        console.log('Form Builder initialized');
+        super.init();
         this.formBuilder.initialize();
-        this.renderFormBuilder();
-        this.attachEventListeners();
     }
 
-    renderFormBuilder() {
-        const formBuilderHTML = `
-            <h2>Form Builder</h2>
+    render() {
+        return `
+            <h2>${this.name}</h2>
             <div id="form-builder-container">
                 <div id="form-controls">
                     <button id="create-form-btn">Create New Form</button>
@@ -36,7 +36,6 @@ class FormBuilderTool {
                 </div>
             </div>
         `;
-        document.getElementById('toolbox-content').innerHTML = formBuilderHTML;
     }
 
     attachEventListeners() {

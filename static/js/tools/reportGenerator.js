@@ -1,17 +1,20 @@
+import { Tool } from './baseTool.js';
 import { ReportGenerator } from '../reportGenerator.js';
 
-const reportGenerator = {
-    init() {
-        console.log('Report Generator initialized');
+class ReportGeneratorTool extends Tool {
+    constructor() {
+        super('reportGenerator', 'Report Generator', 'fas fa-file-alt');
         this.reportGenerator = new ReportGenerator();
-        this.reportGenerator.initialize();
-        this.renderReportGenerator();
-        this.attachEventListeners();
-    },
+    }
 
-    renderReportGenerator() {
-        const reportGeneratorHTML = `
-            <h2>Report Generator</h2>
+    init() {
+        super.init();
+        this.reportGenerator.initialize();
+    }
+
+    render() {
+        return `
+            <h2>${this.name}</h2>
             <div id="report-generator-container">
                 <div id="report-controls">
                     <button id="create-report-btn">Create New Report</button>
@@ -26,8 +29,7 @@ const reportGenerator = {
                 </div>
             </div>
         `;
-        document.getElementById('toolbox-content').innerHTML = reportGeneratorHTML;
-    },
+    }
 
     attachEventListeners() {
         document.getElementById('create-report-btn')?.addEventListener('click', () => this.reportGenerator.createNewReport());
@@ -35,6 +37,6 @@ const reportGenerator = {
         document.getElementById('schedule-report-btn')?.addEventListener('click', () => this.reportGenerator.scheduleReport());
         document.getElementById('report-list')?.addEventListener('change', (e) => this.reportGenerator.loadReport(e.target.value));
     }
-};
+}
 
-export default reportGenerator;
+export default new ReportGeneratorTool();
