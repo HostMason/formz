@@ -38,46 +38,67 @@ function selectField(field) {
     const fieldDetails = document.getElementById('field-details');
     fieldDetails.innerHTML = '';
 
-    if (field.querySelector('input')) {
-        const input = field.querySelector('input');
-        fieldDetails.innerHTML = `
-            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
-            <label>Placeholder:</label> <input type="text" value="${input.placeholder}" onchange="updateFieldPlaceholder(this.value)">
-            <label>Required:</label> <input type="checkbox" ${input.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
-        `;
-    } else if (field.querySelector('textarea')) {
-        const textarea = field.querySelector('textarea');
-        fieldDetails.innerHTML = `
-            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
-            <label>Placeholder:</label> <input type="text" value="${textarea.placeholder}" onchange="updateFieldPlaceholder(this.value)">
-            <label>Required:</label> <input type="checkbox" ${textarea.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
-        `;
+    const createFieldDetail = (labelText, inputType, value, onchangeFunc) => {
+        const label = document.createElement('label');
+        label.textContent = labelText;
+        const input = document.createElement('input');
+        input.type = inputType;
+        input.value = value;
+        input.onchange = (e) => onchangeFunc(e.target.value);
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        return wrapper;
+    };
+
+    if (field.querySelector('input, textarea, select')) {
+        const element = field.querySelector('input, textarea, select');
+        fieldDetails.appendChild(createFieldDetail('Label:', 'text', field.querySelector('label')?.innerText || '', updateFieldLabel));
+        fieldDetails.appendChild(createFieldDetail('Placeholder:', 'text', element.placeholder || '', updateFieldPlaceholder));
+        
+        const requiredWrapper = document.createElement('div');
+        const requiredLabel = document.createElement('label');
+        requiredLabel.textContent = 'Required:';
+        const requiredCheckbox = document.createElement('input');
+        requiredCheckbox.type = 'checkbox';
+        requiredCheckbox.checked = element.required;
+        requiredCheckbox.onchange = (e) => updateFieldRequired(e.target.checked);
+        requiredWrapper.appendChild(requiredLabel);
+        requiredWrapper.appendChild(requiredCheckbox);
+        fieldDetails.appendChild(requiredWrapper);
+
+        if (element.tagName === 'SELECT') {
+            const optionsLabel = document.createElement('label');
+            optionsLabel.textContent = 'Options:';
+            const optionsTextarea = document.createElement('textarea');
+            optionsTextarea.value = Array.from(element.options).map(option => option.text).join('\n');
+            optionsTextarea.onchange = (e) => updateSelectOptions(e.target.value);
+            fieldDetails.appendChild(optionsLabel);
+            fieldDetails.appendChild(optionsTextarea);
+
+            const addOptionWrapper = document.createElement('div');
+            addOptionWrapper.appendChild(createFieldDetail('Add Option:', 'text', '', () => {}));
+            const addButton = document.createElement('button');
+            addButton.textContent = 'Add Option';
+            addButton.onclick = addSelectOption;
+            addOptionWrapper.appendChild(addButton);
+            fieldDetails.appendChild(addOptionWrapper);
+        }
     } else if (field.tagName === 'BUTTON') {
-        fieldDetails.innerHTML = `
-            <label>Button Text:</label> <input type="text" value="${field.innerText}" onchange="updateFieldValue(this.value, true)">
-        `;
-    } else if (field.querySelector('select')) {
-        const select = field.querySelector('select');
-        fieldDetails.innerHTML = `
-            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
-            <label>Options:</label> <textarea onchange="updateSelectOptions(this.value)">${Array.from(select.options).map(option => option.text).join('\n')}</textarea>
-            <label>Required:</label> <input type="checkbox" ${select.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
-            <label>Add Option:</label> <input type="text" id="newOption" placeholder="New option">
-            <button onclick="addSelectOption()">Add Option</button>
-        `;
+        fieldDetails.appendChild(createFieldDetail('Button Text:', 'text', field.innerText, (value) => updateFieldValue(value, true)));
     }
 
     // Add style modification section
-    fieldDetails.innerHTML += `
-        <h3>Style Modifications</h3>
-        <label>Font Size:</label> <input type="number" value="${getComputedStyle(field).fontSize.replace('px', '')}" onchange="updateFieldStyle('fontSize', this.value + 'px')">
-        <label>Font Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).color)}" onchange="updateFieldStyle('color', this.value)">
-        <label>Background Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).backgroundColor)}" onchange="updateFieldStyle('backgroundColor', this.value)">
-        <label>Border Color:</label> <input type="color" value="${rgbToHex(getComputedStyle(field).borderColor)}" onchange="updateFieldStyle('borderColor', this.value)">
-        <label>Border Width:</label> <input type="number" value="${getComputedStyle(field).borderWidth.replace('px', '')}" onchange="updateFieldStyle('borderWidth', this.value + 'px')">
-        <label>Border Radius:</label> <input type="number" value="${getComputedStyle(field).borderRadius.replace('px', '')}" onchange="updateFieldStyle('borderRadius', this.value + 'px')">
-        <label>Padding:</label> <input type="number" value="${getComputedStyle(field).padding.replace('px', '')}" onchange="updateFieldStyle('padding', this.value + 'px')">
-    `;
+    const styleSection = document.createElement('div');
+    styleSection.innerHTML = '<h3>Style Modifications</h3>';
+    styleSection.appendChild(createFieldDetail('Font Size:', 'number', getComputedStyle(field).fontSize.replace('px', ''), (value) => updateFieldStyle('fontSize', value + 'px')));
+    styleSection.appendChild(createFieldDetail('Font Color:', 'color', rgbToHex(getComputedStyle(field).color), (value) => updateFieldStyle('color', value)));
+    styleSection.appendChild(createFieldDetail('Background Color:', 'color', rgbToHex(getComputedStyle(field).backgroundColor), (value) => updateFieldStyle('backgroundColor', value)));
+    styleSection.appendChild(createFieldDetail('Border Color:', 'color', rgbToHex(getComputedStyle(field).borderColor), (value) => updateFieldStyle('borderColor', value)));
+    styleSection.appendChild(createFieldDetail('Border Width:', 'number', getComputedStyle(field).borderWidth.replace('px', ''), (value) => updateFieldStyle('borderWidth', value + 'px')));
+    styleSection.appendChild(createFieldDetail('Border Radius:', 'number', getComputedStyle(field).borderRadius.replace('px', ''), (value) => updateFieldStyle('borderRadius', value + 'px')));
+    styleSection.appendChild(createFieldDetail('Padding:', 'number', getComputedStyle(field).padding.replace('px', ''), (value) => updateFieldStyle('padding', value + 'px')));
+    fieldDetails.appendChild(styleSection);
 }
 
 function updateFieldStyle(property, value) {

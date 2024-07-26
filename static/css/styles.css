@@ -176,18 +176,26 @@ button:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.field-view input, .field-view textarea {
+.field-view input, .field-view textarea, .field-view select {
     width: 100%;
     margin-bottom: 15px;
     padding: 12px;
     border: 1px solid #ced4da;
     border-radius: 8px;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
 }
 
-.field-view input:focus, .field-view textarea:focus {
+.field-view input:focus, .field-view textarea:focus, .field-view select:focus {
     border-color: #3498db;
     outline: none;
+}
+
+.field-view label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
 .form-field {
