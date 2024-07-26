@@ -2,22 +2,14 @@ import { moduleManager } from './moduleManager.js';
 import * as FormModule from './formModule.js';
 import * as FieldModule from './fieldModule.js';
 import * as UIModule from './uiModule.js';
-import * as SidebarModule from './sidebarModule.js';
-
-// Register modules
-moduleManager.registerModule('form', FormModule);
-moduleManager.registerModule('field', FieldModule);
-moduleManager.registerModule('ui', UIModule);
-moduleManager.registerModule('sidebar', SidebarModule);
 
 let formFields = [];
 let selectedField = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializeModules();
     initializeEventListeners();
     FormModule.loadSavedForms();
-    showLandingPage(); // Show Landing Page by default
+    showLandingPage();
 });
 
 function showLandingPage() {
@@ -32,31 +24,16 @@ function showFormBuilder() {
     document.getElementById('form-builder').style.display = 'block';
 }
 
-function initializeModules() {
-    moduleManager.initializeAllModules();
-    SidebarModule.initializeSidebarButtons();
-}
-
 function initializeEventListeners() {
     document.querySelectorAll('.field-type-button').forEach(button => {
         button.addEventListener('dragstart', dragStart);
         button.addEventListener('dragend', dragEnd);
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const fieldType = e.target.getAttribute('data-field-type');
-            const fieldElement = FieldModule.createField(fieldType);
-            const formFieldContainer = document.getElementById('preview-content');
-            formFieldContainer.appendChild(fieldElement);
-            formFields.push(fieldElement);
-            updateHierarchyView();
-        });
+        button.addEventListener('click', addField);
     });
 
-    // Add event listener for menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     menuToggle.addEventListener('click', toggleSidebar);
 
-    // Add event listeners for nav section buttons
     document.querySelectorAll('.nav-section-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const sectionId = e.currentTarget.id.replace('Btn', 'Section');
@@ -64,7 +41,6 @@ function initializeEventListeners() {
         });
     });
 
-    // Add event listeners for nav items
     document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
@@ -86,10 +62,8 @@ function initializeEventListeners() {
     formFieldContainer.addEventListener('dragleave', dragLeave);
     formFieldContainer.addEventListener('drop', drop);
 
-    // Close modal when clicking on <span> (x)
     document.querySelector('.close').onclick = UIModule.closeModal;
 
-    // Close modal when clicking outside of it
     window.onclick = function(event) {
         const modal = document.getElementById('preview-modal');
         if (event.target == modal) {
@@ -99,54 +73,33 @@ function initializeEventListeners() {
 }
 
 function createNewForm() {
-    // Implement create new form functionality
-    console.log('Create new form');
-    // Clear existing form fields and reset the form builder
     formFields = [];
     updateFormFields(formFields);
     updatePageTitle('New Form');
 }
 
 function loadForm() {
-    // Implement load form functionality
-    console.log('Load form');
     FormModule.loadForm(updateFormFields);
 }
 
 function saveForm() {
-    // Implement save form functionality
-    console.log('Save form');
     FormModule.saveForm(formFields);
 }
 
-function openSettings() {
-    // Implement settings functionality
-    console.log('Open settings');
-    // You can create a modal or a new page for settings
-}
-
-function openHelp() {
-    // Implement help functionality
-    console.log('Open help');
-    // You can create a modal or a new page for help documentation
-}
-
-function openPreferences() {
-    // Implement preferences functionality
-    console.log('Open preferences');
-    // You can create a modal or a new page for preferences
-}
-
 function openCustomFields() {
-    // Implement custom fields functionality
     console.log('Open custom fields');
-    // You can create a modal or a new page for custom fields
 }
 
 function openTemplates() {
-    // Implement templates functionality
     console.log('Open templates');
-    // You can create a modal or a new page for templates
+}
+
+function openPreferences() {
+    console.log('Open preferences');
+}
+
+function openHelp() {
+    console.log('Open help');
 }
 
 function dragStart(e) {
@@ -181,17 +134,25 @@ function drop(e) {
     formFieldContainer.classList.remove('drag-over');
 
     const fieldType = e.dataTransfer.getData('text');
+    addField(null, fieldType);
+}
+
+function addField(e, fieldType) {
+    if (e) {
+        e.preventDefault();
+        fieldType = e.target.getAttribute('data-field-type');
+    }
     const fieldElement = FieldModule.createField(fieldType);
     fieldElement.draggable = true;
     fieldElement.addEventListener('dragstart', dragStart);
     fieldElement.addEventListener('dragend', dragEnd);
     fieldElement.addEventListener('click', () => selectField(fieldElement));
 
+    const formFieldContainer = document.getElementById('preview-content');
     formFieldContainer.appendChild(fieldElement);
     formFields.push(fieldElement);
     updateHierarchyView();
 
-    // Remove the placeholder text if it exists
     const placeholder = formFieldContainer.querySelector('.drag-placeholder');
     if (placeholder) {
         formFieldContainer.removeChild(placeholder);
@@ -201,7 +162,6 @@ function drop(e) {
 function updateHierarchyView() {
     const formFieldContainer = document.getElementById('preview-content');
     formFields = Array.from(formFieldContainer.children);
-    // Update hierarchy view if needed
 }
 
 function selectField(field) {
@@ -209,13 +169,7 @@ function selectField(field) {
     FieldModule.updateFieldProperties(field);
     document.querySelectorAll('.form-field').forEach(f => f.classList.remove('selected'));
     field.classList.add('selected');
-
-    // Show the field properties section
     document.querySelector('.field-properties').style.display = 'block';
-
-    // Prevent default behavior and stop event propagation
-    event.preventDefault();
-    event.stopPropagation();
 }
 
 function updateFieldProperty(property, value) {
@@ -225,7 +179,7 @@ function updateFieldProperty(property, value) {
     }
 }
 
-export function updateFormFields(loadedFields) {
+function updateFormFields(loadedFields) {
     formFields = loadedFields;
     const formFieldContainer = document.getElementById('preview-content');
     formFieldContainer.innerHTML = '';
@@ -235,7 +189,6 @@ export function updateFormFields(loadedFields) {
     updateHierarchyView();
 }
 
-export { formFields, selectedField };
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
     const content = section.querySelector('.nav-section-content');
@@ -243,7 +196,7 @@ function toggleSection(sectionId) {
 }
 
 function updatePageTitle(title) {
-    document.title = `${title} - HostMason`;
+    document.title = `${title} - BlueColar Form Builder`;
 }
 
 function toggleSidebar() {
@@ -253,41 +206,4 @@ function toggleSidebar() {
     mainContent.classList.toggle('expanded');
 }
 
-function initializeEventListeners() {
-    const menuToggle = document.getElementById('menuToggle');
-    menuToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleSidebar();
-    });
-
-    document.querySelectorAll('.nav-section-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const sectionId = e.currentTarget.id.replace('Btn', 'Section');
-            toggleSection(sectionId);
-        });
-    });
-
-    document.getElementById('formBuilderBtn').addEventListener('click', () => {
-        showFormBuilder();
-        updatePageTitle('Form Builder');
-    });
-    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
-    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
-    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
-    document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
-    document.getElementById('helpBtn').addEventListener('click', openHelp);
-
-    document.addEventListener('click', (e) => {
-        const sidebar = document.querySelector('.sidebar');
-        if (!sidebar.contains(e.target) && !sidebar.classList.contains('collapsed')) {
-            toggleSidebar();
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    initializeEventListeners();
-    initializeModules();
-    FormModule.loadSavedForms();
-    showLandingPage();
-});
+export { formFields, selectedField, updateFormFields };
