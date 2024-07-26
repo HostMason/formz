@@ -52,6 +52,14 @@ function initializeEventListeners() {
     // Initialize form builder view
     showFormBuilder();
 
+    // Add event listeners for sidebar buttons
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', handleNavItemClick);
+    });
+
+    // Update menu toggle icon initially
+    updateMenuToggleIcon();
+
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
     document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
@@ -248,8 +256,34 @@ function toggleToolbox() {
 
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
-    if (action === 'formsBtn') {
-        showFormBuilder();
+    switch (action) {
+        case 'formsBtn':
+            showFormBuilder();
+            break;
+        case 'createFormBtn':
+            createNewForm();
+            break;
+        case 'loadFormBtn':
+            loadForm();
+            break;
+        case 'saveFormBtn':
+            saveForm();
+            break;
+        case 'deleteFormBtn':
+            deleteForm();
+            break;
+        case 'customFieldsBtn':
+            openCustomFields();
+            break;
+        case 'templatesBtn':
+            openTemplates();
+            break;
+        case 'preferencesBtn':
+            openPreferences();
+            break;
+        case 'helpBtn':
+            openHelp();
+            break;
     }
     // Close the sidebar after clicking a nav item on mobile
     if (window.innerWidth <= 768) {
@@ -271,13 +305,18 @@ function toggleSidebar() {
     localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
 
     // Update menu toggle icon
+    updateMenuToggleIcon();
+}
+
+function updateMenuToggleIcon() {
+    const sidebar = document.querySelector('.sidebar');
     const menuToggle = document.querySelector('.menu-toggle i');
     if (sidebar.classList.contains('collapsed')) {
-        menuToggle.classList.remove('fa-arrow-right');
-        menuToggle.classList.add('fa-arrow-left');
-    } else {
         menuToggle.classList.remove('fa-arrow-left');
         menuToggle.classList.add('fa-arrow-right');
+    } else {
+        menuToggle.classList.remove('fa-arrow-right');
+        menuToggle.classList.add('fa-arrow-left');
     }
 }
 
