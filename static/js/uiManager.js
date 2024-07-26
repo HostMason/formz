@@ -186,13 +186,7 @@ export class UIManager {
     }
 
     showLandingPage() {
-        import('./components/LandingPage.js').then(module => {
-            const landingPage = new module.default();
-            this.mainContent.innerHTML = landingPage.render();
-            if (landingPage.afterRender) {
-                landingPage.afterRender();
-            }
-        });
+        this.showPage('formBuilder');
     }
 
     showPage(pageId) {
