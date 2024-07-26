@@ -239,11 +239,25 @@ export class UIManager {
     }
 
     async fetchPageContent(pageId) {
-        const response = await fetch(`/static/templates/${pageId}.html`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        try {
+            const response = await fetch(`/static/templates/${pageId}.html`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.text();
+        } catch (error) {
+            console.warn(`Failed to fetch template for ${pageId}:`, error);
+            return this.getDefaultPageContent(pageId);
         }
-        return await response.text();
+    }
+
+    getDefaultPageContent(pageId) {
+        return `
+            <div id="${pageId}-container">
+                <h1>${this.capitalizeFirstLetter(pageId)}</h1>
+                <p>Welcome to the ${pageId} page. This is a default content.</p>
+            </div>
+        `;
     }
 
     async loadAndInitializePageScript(pageId) {
