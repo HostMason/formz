@@ -39,6 +39,7 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', toggleSidebar);
 
     document.getElementById('toolboxBtn').addEventListener('click', toggleToolbox);
+    document.getElementById('formsBtn').addEventListener('click', toggleFormsSubsection);
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
@@ -273,6 +274,13 @@ function toggleToolbox() {
     toolboxSection.classList.toggle('expanded');
     const toolboxBtn = document.getElementById('toolboxBtn');
     toolboxBtn.classList.toggle('active');
+}
+
+function toggleFormsSubsection() {
+    const formsSubsection = document.getElementById('formsSubsection');
+    formsSubsection.classList.toggle('expanded');
+    const formsBtn = document.getElementById('formsBtn');
+    formsBtn.classList.toggle('active');
 }
 
 function handleNavItemClick(e) {
