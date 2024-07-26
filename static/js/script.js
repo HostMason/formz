@@ -105,8 +105,28 @@ function handleNavItemClick(e) {
         case 'formBuilderBtn':
             showPage('formBuilder');
             break;
+        case 'loadFormBtn':
+            // Implement load form functionality
+            console.log('Load form clicked');
+            break;
+        case 'saveFormBtn':
+            saveForm();
+            break;
+        case 'deleteFormBtn':
+            // Implement delete form functionality
+            console.log('Delete form clicked');
+            break;
+        case 'customFieldsBtn':
+            showPage('customFields');
+            break;
+        case 'templatesBtn':
+            showPage('templates');
+            break;
         case 'helpBtn':
             showPage('help');
+            break;
+        case 'settingsBtn':
+            showPage('settings');
             break;
         default:
             showPage('landing');
@@ -116,5 +136,10 @@ function handleNavItemClick(e) {
 
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
-    document.getElementById(`${pageId}-page`).style.display = 'block';
+    const pageToShow = document.getElementById(`${pageId}-page`);
+    if (pageToShow) {
+        pageToShow.style.display = 'block';
+    } else {
+        console.error(`Page with id "${pageId}-page" not found`);
+    }
 }
