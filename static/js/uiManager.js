@@ -38,7 +38,6 @@ export class UIManager {
         formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
         formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
         formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
-        formBuilder.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
 
         const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
         dataAnalyzer.addSubTool(new Tool('importData', 'Import Data', 'fas fa-file-import', () => this.showPage('importData')));
@@ -229,10 +228,33 @@ export class UIManager {
             this.mainContent.innerHTML = html;
             await this.loadAndInitializePageScript(pageId);
             this.updateActiveNavItem(pageId);
+            this.updatePageTitle(pageId);
         } catch (error) {
             console.error(`Error loading page: ${pageId}`, error);
             this.showErrorPage(pageId);
         }
+    }
+
+    updatePageTitle(pageId) {
+        const pageTitles = {
+            'landing': 'Welcome',
+            'formBuilder': 'Form Builder',
+            'createForm': 'Create Form',
+            'editForm': 'Edit Form',
+            'viewForms': 'View Forms',
+            'formTemplates': 'Form Templates',
+            'dataAnalyzer': 'Data Analyzer',
+            'importData': 'Import Data',
+            'analyzeData': 'Analyze Data',
+            'exportResults': 'Export Results',
+            'reportGenerator': 'Report Generator',
+            'createReport': 'Create Report',
+            'editTemplate': 'Edit Template',
+            'scheduleReport': 'Schedule Report',
+            'help': 'Help',
+            'settings': 'Settings'
+        };
+        document.title = `${pageTitles[pageId] || 'Page Not Found'} - HostMason`;
     }
 
     async fetchPageContent(pageId) {

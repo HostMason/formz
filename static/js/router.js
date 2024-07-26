@@ -10,9 +10,20 @@ export class Router {
     async initializeRoutes() {
         this.addRoute('/', 'landing');
         this.addRoute('/form-builder', 'formBuilder');
+        this.addRoute('/create-form', 'createForm');
+        this.addRoute('/edit-form', 'editForm');
+        this.addRoute('/view-forms', 'viewForms');
+        this.addRoute('/form-templates', 'formTemplates');
+        this.addRoute('/data-analyzer', 'dataAnalyzer');
+        this.addRoute('/import-data', 'importData');
+        this.addRoute('/analyze-data', 'analyzeData');
+        this.addRoute('/export-results', 'exportResults');
+        this.addRoute('/report-generator', 'reportGenerator');
+        this.addRoute('/create-report', 'createReport');
+        this.addRoute('/edit-template', 'editTemplate');
+        this.addRoute('/schedule-report', 'scheduleReport');
         this.addRoute('/help', 'help');
         this.addRoute('/settings', 'settings');
-        // Add more routes as needed
     }
 
     navigateTo(path) {
