@@ -15,6 +15,7 @@ export class UIManager {
         this.renderNavigation();
         this.updateUIForAuthState();
         this.router.setPageRenderer(this.renderPage.bind(this));
+        this.updateUIForAuthState();
     }
 
     cacheElements() {
