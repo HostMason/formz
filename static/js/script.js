@@ -330,6 +330,9 @@ function updateMenuToggleIcon() {
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
     switch (action) {
+        case 'toolboxBtn':
+            uiSystem.toggleToolbox();
+            break;
         case 'formBuilderBtn':
             showPage('formBuilder');
             break;

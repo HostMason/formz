@@ -35,29 +35,16 @@ export class UISystem {
     }
 
     toggleToolbox() {
-        const toolboxSection = document.getElementById('toolboxSection');
         const toolboxBtn = document.getElementById('toolboxBtn');
         const formsSubsection = document.getElementById('formsSubsection');
 
-        toolboxSection.classList.toggle('expanded');
         toolboxBtn.classList.toggle('active');
-
-        formsSubsection.classList.remove('expanded');
-        document.getElementById('formsBtn').classList.remove('active');
+        formsSubsection.classList.toggle('expanded');
     }
 
     toggleFormsSubsection(event) {
         event.stopPropagation();
-        const toolboxSection = document.getElementById('toolboxSection');
-        const toolboxBtn = document.getElementById('toolboxBtn');
-        const formsSubsection = document.getElementById('formsSubsection');
-        const formsBtn = document.getElementById('formsBtn');
-
-        toolboxSection.classList.add('expanded');
-        toolboxBtn.classList.add('active');
-
-        formsSubsection.classList.toggle('expanded');
-        formsBtn.classList.toggle('active');
+        this.toggleToolbox();
     }
 
     handleNavItemClick(e) {
