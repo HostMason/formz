@@ -29,6 +29,14 @@ export class UIManager {
     initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
+        this.addToolboxSubTools(toolbox);
+
+        this.toolManager.addTool(toolbox);
+        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
+        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
+    }
+
+    addToolboxSubTools(toolbox) {
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
         formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
         formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
@@ -49,10 +57,6 @@ export class UIManager {
         toolbox.addSubTool(formBuilder);
         toolbox.addSubTool(dataAnalyzer);
         toolbox.addSubTool(reportGenerator);
-
-        this.toolManager.addTool(toolbox);
-        this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
-        this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
 
     renderBasicStructure() {
@@ -125,15 +129,19 @@ export class UIManager {
         const tool = this.toolManager.getTool(toolId);
         
         if (tool) {
-            if (tool.subTools.length > 0) {
+            if (toolId === 'toolbox') {
+                this.toggleToolbox();
+            } else if (tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
-            }
-            if (typeof tool.action === 'function') {
-                tool.action();
             } else {
-                const pageId = toolId;
-                this.router.navigateTo(`/${pageId}`);
-                this.showPage(pageId);
+                this.collapseAllSubmenus();
+                if (typeof tool.action === 'function') {
+                    tool.action();
+                } else {
+                    const pageId = toolId;
+                    this.router.navigateTo(`/${pageId}`);
+                    this.showPage(pageId);
+                }
             }
             this.highlightActiveButton(button);
         } else {
@@ -183,9 +191,23 @@ export class UIManager {
         const toolboxSubmenu = toolboxBtn.nextElementSibling;
         
         if (toolboxSubmenu) {
-            toolboxSubmenu.classList.toggle('expanded');
-            toolboxBtn.classList.toggle('active');
+            if (toolboxSubmenu.classList.contains('expanded')) {
+                this.collapseAllSubmenus();
+            } else {
+                this.collapseAllSubmenus();
+                toolboxSubmenu.classList.add('expanded');
+                toolboxBtn.classList.add('active');
+            }
         }
+    }
+
+    collapseAllSubmenus() {
+        document.querySelectorAll('.submenu').forEach(submenu => {
+            submenu.classList.remove('expanded');
+        });
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
     }
 
     showLandingPage() {
