@@ -31,13 +31,16 @@ export class UIManager {
     }
 
     async initializeTools() {
+        const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
         const dataAnalyzer = new Tool('dataAnalyzer', 'Data Analyzer', 'fas fa-chart-bar', () => this.showPage('dataAnalyzer'));
         const reportGenerator = new Tool('reportGenerator', 'Report Generator', 'fas fa-file-alt', () => this.showPage('reportGenerator'));
 
-        this.toolManager.addTool(formBuilder);
-        this.toolManager.addTool(dataAnalyzer);
-        this.toolManager.addTool(reportGenerator);
+        toolbox.addSubTool(formBuilder);
+        toolbox.addSubTool(dataAnalyzer);
+        toolbox.addSubTool(reportGenerator);
+
+        this.toolManager.addTool(toolbox);
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
