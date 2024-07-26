@@ -1,32 +1,32 @@
-import { UISystem } from './uiSystem.js';
-import { FormBuilder } from './formBuilder.js';
+// Rename this file to app.js
+import { Router } from './router.js';
+import { UIManager } from './uiManager.js';
+import { ToolManager } from './toolManager.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const formBuilder = new FormBuilder();
-    const uiSystem = new UISystem();
-    uiSystem.formBuilder = formBuilder;
+class App {
+    constructor() {
+        this.router = new Router();
+        this.uiManager = new UIManager();
+        this.toolManager = new ToolManager();
+        this.initializeApp();
+    }
 
-    // Close button for preview modal
-    const closeButton = document.querySelector('#preview-modal .close');
-    if (closeButton) {
-        closeButton.addEventListener('click', () => {
-            document.getElementById('preview-modal').style.display = 'none';
+    initializeApp() {
+        this.router.initializeRoutes();
+        this.uiManager.initializeUI();
+        this.toolManager.initializeTools();
+        this.attachEventListeners();
+    }
+
+    attachEventListeners() {
+        document.addEventListener('DOMContentLoaded', () => {
+            this.router.navigateTo(window.location.pathname);
         });
-    } else {
-        console.error('Close button not found');
+
+        window.addEventListener('popstate', (event) => {
+            this.router.navigateTo(event.state.route);
+        });
     }
+}
 
-    // Initialize the navigation
-    uiSystem.renderNavigation();
-
-    // Show the landing page by default
-    uiSystem.showPage('landing');
-
-    // Initialize menu toggle button
-    const menuToggle = document.getElementById('menuToggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => uiSystem.toggleSidebar());
-    } else {
-        console.error('Menu toggle button not found');
-    }
-});
+const app = new App();
