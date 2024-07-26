@@ -312,6 +312,7 @@ function handleNavItemClick(e) {
             break;
         case 'formBuilderBtn':
             showFormBuilder();
+            document.getElementById('form-builder').style.display = 'block';
             break;
         case 'loadFormBtn':
             loadForm();
