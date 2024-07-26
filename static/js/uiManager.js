@@ -222,31 +222,33 @@ export class UIManager {
 
     async showPage(pageId) {
         try {
-            const response = await fetch(`/static/templates/${pageId}.html`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const html = await response.text();
+            const html = await this.fetchPageContent(pageId);
             this.mainContent.innerHTML = html;
-
-            // Load and execute the corresponding JavaScript file
-            const scriptPath = `/static/js/tools/${pageId}.js`;
-            try {
-                await this.loadScript(scriptPath);
-                // Initialize the page if an init function exists
-                if (window[pageId] && typeof window[pageId].init === 'function') {
-                    window[pageId].init();
-                }
-            } catch (scriptError) {
-                console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
-                // Continue without the script if it fails to load
-            }
-
-            // Update active state in navigation
+            await this.loadAndInitializePageScript(pageId);
             this.updateActiveNavItem(pageId);
         } catch (error) {
             console.error(`Error loading page: ${pageId}`, error);
             this.showErrorPage(pageId);
+        }
+    }
+
+    async fetchPageContent(pageId) {
+        const response = await fetch(`/static/templates/${pageId}.html`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.text();
+    }
+
+    async loadAndInitializePageScript(pageId) {
+        const scriptPath = `/static/js/tools/${pageId}.js`;
+        try {
+            await this.loadScript(scriptPath);
+            if (window[pageId] && typeof window[pageId].init === 'function') {
+                await window[pageId].init();
+            }
+        } catch (scriptError) {
+            console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
         }
     }
 
@@ -269,16 +271,8 @@ export class UIManager {
     }
 
     updateActiveNavItem(pageId) {
-        const navItems = document.querySelectorAll('.nav-btn');
-        navItems.forEach(item => {
-            item.classList.remove('active');
-            if (item.id === `${pageId}Btn`) {
-                item.classList.add('active');
-            }
+        document.querySelectorAll('.nav-btn').forEach(item => {
+            item.classList.toggle('active', item.id === `${pageId}Btn`);
         });
-    }
-
-    showErrorPage() {
-        this.mainContent.innerHTML = '<h1>Error 404: Page Not Found</h1>';
     }
 }
