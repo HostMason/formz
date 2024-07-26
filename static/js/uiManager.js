@@ -57,11 +57,14 @@ export class UIManager {
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
 
-        await this.addAllToolsToManager(toolbox);
+        // Only add the toolbox to the manager, not its subtools
+        await this.addAllToolsToManager(toolbox, true);
     }
 
-    async addAllToolsToManager(tool) {
-        this.toolManager.addTool(tool);
+    async addAllToolsToManager(tool, isTopLevel = false) {
+        if (isTopLevel) {
+            this.toolManager.addTool(tool);
+        }
         for (const subTool of tool.subTools) {
             await this.addAllToolsToManager(subTool);
         }
