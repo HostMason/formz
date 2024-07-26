@@ -24,6 +24,10 @@ export class ToolManager {
         this.tools.set(tool.id, tool);
     }
 
+    isToolRegistered(id) {
+        return this.tools.has(id);
+    }
+
 
     isToolRegistered(id) {
         return this.tools.has(id);
