@@ -37,6 +37,18 @@ function createSelectField() {
     return fieldElement;
 }
 
+function createGroupField() {
+    const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field group-field';
+    const label = document.createElement('label');
+    label.innerText = 'Group:';
+    const groupContainer = document.createElement('div');
+    groupContainer.className = 'group-container';
+    fieldElement.appendChild(label);
+    fieldElement.appendChild(groupContainer);
+    return fieldElement;
+}
+
 function selectField(field) {
     selectedField = field;
     const fieldView = document.getElementById('field-view');

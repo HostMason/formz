@@ -9,6 +9,30 @@ moduleManager.registerModule('field', FieldModule);
 moduleManager.registerModule('ui', UIModule);
 
 let formFields = [];
+let formHierarchy = [];
+
+function updateHierarchyView() {
+    const hierarchyList = document.getElementById('hierarchy-list');
+    hierarchyList.innerHTML = '';
+    
+    function createHierarchyItem(field, parent) {
+        const li = document.createElement('li');
+        li.textContent = field.querySelector('label').textContent;
+        li.onclick = () => selectField(field);
+        
+        if (field.classList.contains('group-field')) {
+            const ul = document.createElement('ul');
+            field.querySelectorAll('.form-field').forEach(childField => {
+                createHierarchyItem(childField, ul);
+            });
+            li.appendChild(ul);
+        }
+        
+        parent.appendChild(li);
+    }
+    
+    formFields.forEach(field => createHierarchyItem(field, hierarchyList));
+}
 
 function updateFormPreview() {
     const previewContent = document.getElementById('preview-content');
@@ -61,6 +85,9 @@ function addFieldToPreview(fieldType) {
         case 'select-dropdown':
             fieldElement = FieldModule.createSelectField();
             break;
+        case 'group':
+            fieldElement = FieldModule.createGroupField();
+            break;
     }
 
     fieldElement.draggable = true;
@@ -69,10 +96,53 @@ function addFieldToPreview(fieldType) {
     fieldElement.ondragover = allowDrop;
     fieldElement.ondrop = drop;
     fieldElement.onclick = function() {
-        FieldModule.selectField(fieldElement);
+        selectField(fieldElement);
     };
     formFields.push(fieldElement);
     updateFormPreview();
+    updateHierarchyView();
+}
+
+function selectField(field) {
+    FieldModule.selectField(field);
+    updateFieldSettings(field);
+}
+
+function updateFieldSettings(field) {
+    const settingsContent = document.getElementById('field-settings-content');
+    settingsContent.innerHTML = '';
+
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.value = field.querySelector('label').textContent;
+    labelInput.onchange = (e) => {
+        field.querySelector('label').textContent = e.target.value;
+        updateHierarchyView();
+    };
+    settingsContent.appendChild(labelInput);
+
+    if (field.classList.contains('group-field')) {
+        const resizeHandle = document.createElement('div');
+        resizeHandle.className = 'resize-handle';
+        resizeHandle.innerHTML = '<i class="fas fa-arrows-alt-v"></i>';
+        resizeHandle.onmousedown = (e) => {
+            const startY = e.clientY;
+            const startHeight = parseInt(field.style.height);
+            const onMouseMove = (moveEvent) => {
+                const newHeight = startHeight + moveEvent.clientY - startY;
+                field.style.height = newHeight + 'px';
+            };
+            const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+        field.appendChild(resizeHandle);
+    }
+
+    updateHierarchyView();
 }
 
 let draggedElement = null;
