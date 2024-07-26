@@ -129,9 +129,39 @@ export class UIManager {
             this.showPage('help');
         } else if (route === '/settings') {
             this.showPage('settings');
+        } else if (route === '/form-builder') {
+            this.showPage('formBuilder');
+        } else if (route.startsWith('/form-builder/')) {
+            // Handle Form Builder sub-menu items
+            const action = route.split('/').pop();
+            switch (action) {
+                case 'load':
+                    console.log('Load form clicked');
+                    break;
+                case 'save':
+                    console.log('Save form clicked');
+                    break;
+                case 'delete':
+                    console.log('Delete form clicked');
+                    break;
+                default:
+                    console.log(`Unknown action: ${action}`);
+            }
         } else {
-            // Here you would typically use your router to navigate
             console.log(`Navigating to: ${route}`);
+        }
+    }
+
+    showPage(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+        
+        // Show the selected page
+        const page = document.getElementById(`${pageId}-page`);
+        if (page) {
+            page.style.display = 'block';
+        } else {
+            console.error(`Page not found: ${pageId}`);
         }
     }
 
