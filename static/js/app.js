@@ -4,15 +4,15 @@ import { ToolManager } from './toolManager.js';
 
 class App {
     constructor() {
-        this.router = new Router();
         this.uiManager = new UIManager();
+        this.router = new Router(this.uiManager);
         this.toolManager = new ToolManager();
         this.initializeApp();
     }
 
     initializeApp() {
-        this.router.initializeRoutes();
         this.uiManager.initializeUI();
+        this.router.initializeRoutes();
         this.toolManager.initializeTools();
         this.attachEventListeners();
     }
@@ -28,4 +28,6 @@ class App {
     }
 }
 
-const app = new App();
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new App();
+});

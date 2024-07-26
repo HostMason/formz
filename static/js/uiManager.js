@@ -15,6 +15,17 @@ export class UIManager {
         this.menuToggle = document.querySelector('.menu-toggle');
         this.attachEventListeners();
         this.renderNavigation();
+        this.showLandingPage(); // Show landing page by default
+    }
+
+    showLandingPage() {
+        import('./components/LandingPage.js').then(module => {
+            const landingPage = new module.default();
+            this.mainContent.innerHTML = landingPage.render();
+            if (landingPage.afterRender) {
+                landingPage.afterRender();
+            }
+        });
     }
 
     renderBasicStructure() {

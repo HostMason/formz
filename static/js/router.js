@@ -1,6 +1,7 @@
 export class Router {
-    constructor() {
+    constructor(uiManager) {
         this.routes = {};
+        this.uiManager = uiManager;
     }
 
     addRoute(path, component) {
@@ -29,7 +30,7 @@ export class Router {
         import(`./components/${componentName}.js`)
             .then(module => {
                 const component = new module.default();
-                document.getElementById('app').innerHTML = component.render();
+                this.uiManager.mainContent.innerHTML = component.render();
                 if (component.afterRender) {
                     component.afterRender();
                 }
