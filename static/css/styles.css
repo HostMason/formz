@@ -109,13 +109,12 @@ h1, h2 {
 
 .flex-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 30px;
 }
 
 .drop-area {
-    flex: 1;
-    min-width: 300px;
+    width: 100%;
     border: 2px dashed #6c757d;
     padding: 30px;
     text-align: center;
@@ -128,15 +127,6 @@ h1, h2 {
 .drop-area:hover {
     border-color: #3498db;
     background-color: #f8f9fa;
-}
-
-.field-view {
-    flex: 1;
-    min-width: 300px;
-    padding: 25px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .draggable {
