@@ -15,7 +15,7 @@ create_service() {
     echo "Creating systemd service..."
     SERVICE_FILE="/etc/systemd/system/webapp.service"
     echo "[Unit]
-Description=Flask Web Application
+Description=HostMason Internal Tools Web Application
 
 [Service]
 User=$USER
@@ -32,7 +32,7 @@ WantedBy=multi-user.target" | sudo tee $SERVICE_FILE
 # Function to configure firewall
 configure_firewall() {
     echo "Configuring firewall..."
-    sudo ufw allow 5000
+    sudo ufw allow $1
     echo "Firewall configured to allow traffic on port $1."
 }
 
@@ -52,14 +52,25 @@ reload_service() {
     echo "Web application service reloaded."
 }
 
+# Function to set up the project structure
+setup_project_structure() {
+    echo "Setting up project structure..."
+    mkdir -p static/js/tools
+    mkdir -p static/templates
+    mkdir -p app
+    touch app/__init__.py
+    echo "Project structure set up successfully."
+}
+
 # Main script execution
 if [ "$1" == "reload" ]; then
     reload_service
     exit 0
 fi
 
-echo "Welcome to the Web Application Setup Script!"
+echo "Welcome to the HostMason Internal Tools Setup Script!"
 install_packages
+setup_project_structure
 
 read -p "Please enter the port number for the web application (default is 5000): " PORT
 PORT=${PORT:-5000}
@@ -68,5 +79,5 @@ create_service
 configure_firewall $PORT
 start_service
 
-echo "Setup complete! You can access the web application at http://localhost:$PORT"
+echo "Setup complete! You can access the HostMason Internal Tools at http://localhost:$PORT"
 echo "To reload the service after code updates, run: ./setup_webapp.sh reload"
