@@ -112,6 +112,9 @@ function drop(ev) {
         const rect = dropTarget.getBoundingClientRect();
         const dropPosition = (ev.clientY - rect.top) / (rect.bottom - rect.top);
 
+        // Remove the dragged element from its original position
+        draggedElement.parentNode.removeChild(draggedElement);
+
         if (dropPosition < 0.5) {
             dropzone.insertBefore(draggedElement, dropTarget);
         } else {
@@ -129,6 +132,11 @@ function drop(ev) {
 
     draggedElement = null;
     dropTarget = null;
+}
+
+function updateFormFieldsOrder() {
+    const previewContent = document.getElementById('preview-content');
+    formFields = Array.from(previewContent.children);
 }
 
 function dragEnd(ev) {
