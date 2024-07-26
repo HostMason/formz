@@ -18,6 +18,7 @@ export class UISystem {
     initializeEventListeners() {
         this.menuToggle.addEventListener('click', () => this.toggleSidebar());
         document.getElementById('hostMasonLogo').addEventListener('click', () => this.showPage('landing'));
+        this.addEventListenersToButtons(this.sidebar);
     }
 
     renderNavigation() {
@@ -25,7 +26,9 @@ export class UISystem {
         navList.innerHTML = ''; // Clear existing navigation
 
         this.toolManager.getAllTools().forEach(tool => {
-            navList.appendChild(this.createNavItem(tool));
+            if (!this.toolManager.isToolRegistered(tool.id)) {
+                navList.appendChild(this.createNavItem(tool));
+            }
         });
 
         // Add event listeners to all buttons, including those in submenus
@@ -148,5 +151,6 @@ export class UISystem {
         } else {
             console.error(`Page with id "${pageId}-page" not found`);
         }
+        this.highlightActiveButton(document.querySelector(`#${pageId}Btn`));
     }
 }
