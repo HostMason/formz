@@ -143,19 +143,23 @@ function addField(e, fieldType) {
         fieldType = e.currentTarget.getAttribute('data-field-type');
     }
     const fieldElement = FieldModule.createField(fieldType);
-    fieldElement.draggable = true;
-    fieldElement.addEventListener('dragstart', dragStart);
-    fieldElement.addEventListener('dragend', dragEnd);
-    fieldElement.addEventListener('click', () => selectField(fieldElement));
+    if (fieldElement) {
+        fieldElement.draggable = true;
+        fieldElement.addEventListener('dragstart', dragStart);
+        fieldElement.addEventListener('dragend', dragEnd);
+        fieldElement.addEventListener('click', () => selectField(fieldElement));
 
-    const formFieldContainer = document.getElementById('preview-content');
-    formFieldContainer.appendChild(fieldElement);
-    formFields.push(fieldElement);
-    updateHierarchyView();
+        const formFieldContainer = document.getElementById('preview-content');
+        formFieldContainer.appendChild(fieldElement);
+        formFields.push(fieldElement);
+        updateHierarchyView();
 
-    const placeholder = formFieldContainer.querySelector('.drag-placeholder');
-    if (placeholder) {
-        formFieldContainer.removeChild(placeholder);
+        const placeholder = formFieldContainer.querySelector('.drag-placeholder');
+        if (placeholder) {
+            formFieldContainer.removeChild(placeholder);
+        }
+    } else {
+        console.error('Failed to create field element for type:', fieldType);
     }
 }
 

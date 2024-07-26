@@ -180,3 +180,47 @@ export {
     updateSelectOptions, 
     addSelectOption 
 };
+function createField(fieldType) {
+    switch (fieldType) {
+        case 'text-input':
+            return createInputField('text', 'Enter text');
+        case 'number-input':
+            return createInputField('number', 'Enter number');
+        case 'email-input':
+            return createInputField('email', 'Enter email');
+        case 'textarea':
+            return createTextareaField();
+        case 'button':
+            return createButtonField();
+        case 'radio-button':
+            return createOptionField('radio');
+        case 'checkbox':
+            return createOptionField('checkbox');
+        case 'select-dropdown':
+            return createSelectField();
+        default:
+            console.error('Unknown field type:', fieldType);
+            return null;
+    }
+}
+
+function createTextareaField() {
+    const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field';
+    const label = document.createElement('label');
+    label.innerText = 'Textarea:';
+    const textarea = document.createElement('textarea');
+    textarea.placeholder = 'Enter text';
+    fieldElement.appendChild(label);
+    fieldElement.appendChild(textarea);
+    return fieldElement;
+}
+
+function createButtonField() {
+    const fieldElement = document.createElement('div');
+    fieldElement.className = 'form-field';
+    const button = document.createElement('button');
+    button.innerText = 'Button';
+    fieldElement.appendChild(button);
+    return fieldElement;
+}
