@@ -128,10 +128,21 @@ function handleNavItemClick(e) {
         case 'settingsBtn':
             showPage('settings');
             break;
+        case 'toolboxBtn':
+            toggleToolbox();
+            break;
         default:
             showPage('landing');
             break;
     }
+}
+
+function toggleToolbox() {
+    const toolboxBtn = document.getElementById('toolboxBtn');
+    const formsSubsection = document.querySelector('.submenu');
+
+    toolboxBtn.classList.toggle('active');
+    formsSubsection.classList.toggle('expanded');
 }
 
 function showPage(pageId) {

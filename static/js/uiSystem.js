@@ -34,30 +34,12 @@ export class UISystem {
         }
     }
 
-    toggleToolbox() {
-        const toolboxBtn = document.getElementById('toolboxBtn');
-        const formsSubsection = document.querySelector('.submenu');
-
-        toolboxBtn.classList.toggle('active');
-        formsSubsection.classList.toggle('expanded');
-
-        // Prevent the default action (navigating to the landing page)
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
     toggleFormsSubsection(event) {
         event.stopPropagation();
         const formsBtn = document.getElementById('formsBtn');
         const formsSubmenu = formsBtn.nextElementSibling;
         formsSubmenu.classList.toggle('expanded');
         formsBtn.classList.toggle('active');
-    }
-
-    handleNavItemClick(e) {
-        // This method is now handled in script.js
-        // We'll keep this as a placeholder in case we need to add UI-specific logic later
-        console.log('Nav item clicked:', e.currentTarget.id);
     }
 
     showPage(pageId) {
