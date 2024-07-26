@@ -2,19 +2,15 @@ function allowDrop(event) {
     event.preventDefault();
 }
 
+function drag(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
 function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData("text");
-    const inputElement = document.getElementById(data);
-    event.target.appendChild(inputElement);
-}
-
-function nextStep(step) {
-    const steps = document.querySelectorAll('.step');
-    steps.forEach(s => s.style.display = 'none');
-    document.getElementById(`step-${step}`).style.display = 'block';
-}
-
-function submitForm() {
-    alert("Form submitted!");
+    const fieldElement = document.getElementById(data).cloneNode(true);
+    fieldElement.removeAttribute("draggable");
+    fieldElement.setAttribute("contenteditable", "true");
+    event.target.appendChild(fieldElement);
 }

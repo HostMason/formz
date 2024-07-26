@@ -9,21 +9,17 @@
 <body>
     <div class="container">
         <h1>Quote Form Creator</h1>
-        <div id="form-steps">
-            <div class="step" id="step-1">
-                <h2>Step 1: Add Inputs</h2>
-                <div id="input-area" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <p>Drag and drop inputs here</p>
-                </div>
-                <button onclick="nextStep(2)">Next</button>
+        <div class="flex-container">
+            <div class="menu">
+                <h2>Fields</h2>
+                <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
+                <div id="button" class="draggable" draggable="true" ondragstart="drag(event)">Button</div>
+                <div id="radio-button" class="draggable" draggable="true" ondragstart="drag(event)">Radio Button</div>
+                <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
             </div>
-            <div class="step" id="step-2" style="display:none;">
-                <h2>Step 2: Add Equations</h2>
-                <div id="equation-area" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <p>Drag and drop equations here</p>
-                </div>
-                <button onclick="nextStep(1)">Back</button>
-                <button onclick="submitForm()">Submit</button>
+            <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h2>Form View</h2>
+                <p>Drag and drop fields here</p>
             </div>
         </div>
     </div>
