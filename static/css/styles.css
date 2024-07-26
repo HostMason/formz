@@ -216,11 +216,72 @@ button:hover {
     border: 1px solid #ced4da;
     border-radius: 8px;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
 }
 
 .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
     border-color: #3498db;
     outline: none;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        margin-left: 60px;
+        padding: 15px;
+    }
+
+    .flex-container {
+        flex-direction: column;
+    }
+
+    .drop-area, .field-view {
+        min-width: 100%;
+    }
+
+    .side-menu.open {
+        width: 200px;
+    }
+
+    .side-menu.open ~ .container {
+        margin-left: 200px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .side-menu {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .side-menu.open {
+        width: 100%;
+    }
+
+    .side-menu.open ~ .container {
+        margin-left: 0;
+    }
+
+    .menu-content {
+        display: none;
+    }
+
+    .side-menu.open .menu-content {
+        display: block;
+    }
+
+    .menu-header {
+        justify-content: space-between;
+    }
+
+    .company-name {
+        opacity: 1;
+    }
 }
 
 .modal {
