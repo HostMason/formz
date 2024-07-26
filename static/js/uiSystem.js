@@ -13,6 +13,7 @@ export class UISystem {
         document.querySelectorAll('.nav-item, .nav-subitem').forEach(item => {
             item.addEventListener('click', (e) => this.handleNavItemClick(e));
         });
+        document.getElementById('hostMasonLogo').addEventListener('click', () => this.showPage('landing'));
     }
 
     toggleSidebar() {

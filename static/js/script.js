@@ -280,6 +280,9 @@ function initializeEventListeners() {
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', handleNavItemClick);
     });
+
+    // Add event listener for HostMason logo
+    document.getElementById('hostMasonLogo').addEventListener('click', () => showPage('landing'));
 }
 
 function updatePageTitle(title) {
@@ -287,9 +290,16 @@ function updatePageTitle(title) {
 }
 
 function hideAllPages() {
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('form-builder').style.display = 'none';
-    document.getElementById('helpPage').style.display = 'none';
+    document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+}
+
+function showPage(pageId) {
+    hideAllPages();
+    const page = document.getElementById(`${pageId}-page`);
+    if (page) {
+        page.style.display = 'block';
+        updatePageTitle(pageId.charAt(0).toUpperCase() + pageId.slice(1));
+    }
 }
 
 function toggleSidebar() {
@@ -314,6 +324,27 @@ function updateMenuToggleIcon() {
     } else {
         menuToggle.classList.remove('fa-arrow-right');
         menuToggle.classList.add('fa-arrow-left');
+    }
+}
+
+function handleNavItemClick(e) {
+    const action = e.currentTarget.id;
+    switch (action) {
+        case 'formBuilderBtn':
+            showPage('formBuilder');
+            break;
+        case 'loadFormBtn':
+            showPage('loadForm');
+            break;
+        case 'helpBtn':
+            showPage('help');
+            break;
+        case 'settingsBtn':
+            showPage('settings');
+            break;
+        default:
+            showPage('landing');
+            break;
     }
 }
 

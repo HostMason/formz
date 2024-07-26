@@ -144,7 +144,8 @@ body {
 }
 
 .settings-section {
-    margin-top: auto;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .nav-list {
@@ -219,6 +220,14 @@ body {
 
 .sidebar.collapsed .nav-btn span {
     display: none;
+}
+
+.sidebar.collapsed .settings-section {
+    border-top: none;
+}
+
+.company-name {
+    cursor: pointer;
 }
 
 .main-content {
