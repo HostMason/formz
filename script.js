@@ -1,4 +1,5 @@
 let selectedField = null;
+let formFields = [];
 
 function allowDrop(event) {
     event.preventDefault();
@@ -15,8 +16,16 @@ function drop(event) {
 
     switch (data) {
         case 'text-input':
-            fieldElement = document.createElement('input');
-            fieldElement.type = 'text';
+            fieldElement = createInputField('text', 'Enter text');
+            break;
+        case 'number-input':
+            fieldElement = createInputField('number', 'Enter number');
+            break;
+        case 'email-input':
+            fieldElement = createInputField('email', 'Enter email');
+            break;
+        case 'textarea':
+            fieldElement = document.createElement('textarea');
             fieldElement.placeholder = 'Enter text';
             break;
         case 'button':
@@ -24,53 +33,71 @@ function drop(event) {
             fieldElement.innerText = 'Click Me';
             break;
         case 'radio-button':
-            fieldElement = document.createElement('div');
-            const radioInput = document.createElement('input');
-            radioInput.type = 'radio';
-            radioInput.name = 'radioGroup';
-            const radioLabel = document.createElement('input');
-            radioLabel.type = 'text';
-            radioLabel.placeholder = 'Radio Option Label';
-            fieldElement.appendChild(radioInput);
-            fieldElement.appendChild(radioLabel);
+            fieldElement = createOptionField('radio');
             break;
         case 'checkbox':
-            fieldElement = document.createElement('div');
-            const checkboxInput = document.createElement('input');
-            checkboxInput.type = 'checkbox';
-            const checkboxLabel = document.createElement('input');
-            checkboxLabel.type = 'text';
-            checkboxLabel.placeholder = 'Checkbox Option Label';
-            fieldElement.appendChild(checkboxInput);
-            fieldElement.appendChild(checkboxLabel);
+            fieldElement = createOptionField('checkbox');
             break;
         case 'select-dropdown':
-            fieldElement = document.createElement('select');
-            const optionInput = document.createElement('input');
-            optionInput.type = 'text';
-            optionInput.placeholder = 'Add Option';
-            const addButton = document.createElement('button');
-            addButton.innerText = 'Add Option';
-            addButton.onclick = function() {
-                const optionValue = optionInput.value;
-                if (optionValue) {
-                    const option = document.createElement('option');
-                    option.value = optionValue;
-                    option.text = optionValue;
-                    fieldElement.appendChild(option);
-                    optionInput.value = '';
-                }
-            };
-            fieldElement.appendChild(optionInput);
-            fieldElement.appendChild(addButton);
+            fieldElement = createSelectField();
             break;
     }
 
-    fieldElement.setAttribute("contenteditable", "true");
+    fieldElement.className = 'form-field';
     fieldElement.onclick = function() {
         selectField(fieldElement);
     };
     event.target.appendChild(fieldElement);
+    formFields.push(fieldElement);
+}
+
+function createInputField(type, placeholder) {
+    const fieldElement = document.createElement('div');
+    const label = document.createElement('label');
+    label.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Input:`;
+    const input = document.createElement('input');
+    input.type = type;
+    input.placeholder = placeholder;
+    fieldElement.appendChild(label);
+    fieldElement.appendChild(input);
+    return fieldElement;
+}
+
+function createOptionField(type) {
+    const fieldElement = document.createElement('div');
+    const input = document.createElement('input');
+    input.type = type;
+    input.name = `${type}Group`;
+    const label = document.createElement('input');
+    label.type = 'text';
+    label.placeholder = `${type.charAt(0).toUpperCase() + type.slice(1)} Option Label`;
+    fieldElement.appendChild(input);
+    fieldElement.appendChild(label);
+    return fieldElement;
+}
+
+function createSelectField() {
+    const fieldElement = document.createElement('div');
+    const select = document.createElement('select');
+    const optionInput = document.createElement('input');
+    optionInput.type = 'text';
+    optionInput.placeholder = 'Add Option';
+    const addButton = document.createElement('button');
+    addButton.innerText = 'Add Option';
+    addButton.onclick = function() {
+        const optionValue = optionInput.value;
+        if (optionValue) {
+            const option = document.createElement('option');
+            option.value = optionValue;
+            option.text = optionValue;
+            select.appendChild(option);
+            optionInput.value = '';
+        }
+    };
+    fieldElement.appendChild(select);
+    fieldElement.appendChild(optionInput);
+    fieldElement.appendChild(addButton);
+    return fieldElement;
 }
 
 function selectField(field) {
@@ -78,45 +105,59 @@ function selectField(field) {
     const fieldDetails = document.getElementById('field-details');
     fieldDetails.innerHTML = '';
 
-    if (field.tagName === 'INPUT' && field.type === 'text') {
+    if (field.querySelector('input')) {
+        const input = field.querySelector('input');
         fieldDetails.innerHTML = `
-            <label>Label:</label> <input type="text" value="Text Input" onchange="updateFieldLabel(this.value)">
-            <label>Placeholder:</label> <input type="text" value="${field.placeholder}" onchange="updateFieldPlaceholder(this.value)">
+            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
+            <label>Placeholder:</label> <input type="text" value="${input.placeholder}" onchange="updateFieldPlaceholder(this.value)">
+            <label>Required:</label> <input type="checkbox" ${input.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
+        `;
+    } else if (field.querySelector('textarea')) {
+        const textarea = field.querySelector('textarea');
+        fieldDetails.innerHTML = `
+            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
+            <label>Placeholder:</label> <input type="text" value="${textarea.placeholder}" onchange="updateFieldPlaceholder(this.value)">
+            <label>Required:</label> <input type="checkbox" ${textarea.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
         `;
     } else if (field.tagName === 'BUTTON') {
         fieldDetails.innerHTML = `
             <label>Button Text:</label> <input type="text" value="${field.innerText}" onchange="updateFieldValue(this.value, true)">
         `;
-    } else if (field.tagName === 'SELECT') {
+    } else if (field.querySelector('select')) {
         fieldDetails.innerHTML = `
-            <label>Select Options:</label> <input type="text" placeholder="Add Option" onchange="updateSelectOptions(this.value)">
-        `;
-    } else if (field.firstChild && field.firstChild.type === 'radio') {
-        fieldDetails.innerHTML = `
-            <label>Radio Option Label:</label> <input type="text" value="${field.firstChild.nextSibling.placeholder}" onchange="updateFieldLabel(this.value, true)">
-        `;
-    } else if (field.firstChild && field.firstChild.type === 'checkbox') {
-        fieldDetails.innerHTML = `
-            <label>Checkbox Option Label:</label> <input type="text" value="${field.firstChild.nextSibling.placeholder}" onchange="updateFieldLabel(this.value, false, true)">
+            <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
+            <label>Options:</label> <textarea onchange="updateSelectOptions(this.value)">${Array.from(field.querySelector('select').options).map(option => option.text).join('\n')}</textarea>
+            <label>Required:</label> <input type="checkbox" ${field.querySelector('select').required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
         `;
     }
 }
 
-function updateFieldLabel(value, isRadio = false, isCheckbox = false) {
+function updateFieldLabel(value) {
     if (selectedField) {
-        if (isRadio) {
-            selectedField.firstChild.nextSibling.placeholder = value;
-        } else if (isCheckbox) {
-            selectedField.firstChild.nextSibling.placeholder = value;
-        } else {
-            selectedField.setAttribute('placeholder', value);
+        let label = selectedField.querySelector('label');
+        if (!label) {
+            label = document.createElement('label');
+            selectedField.insertBefore(label, selectedField.firstChild);
         }
+        label.innerText = value;
     }
 }
 
 function updateFieldPlaceholder(value) {
     if (selectedField) {
-        selectedField.placeholder = value;
+        const input = selectedField.querySelector('input') || selectedField.querySelector('textarea');
+        if (input) {
+            input.placeholder = value;
+        }
+    }
+}
+
+function updateFieldRequired(value) {
+    if (selectedField) {
+        const input = selectedField.querySelector('input') || selectedField.querySelector('textarea') || selectedField.querySelector('select');
+        if (input) {
+            input.required = value;
+        }
     }
 }
 
@@ -131,10 +172,72 @@ function updateFieldValue(value, isButton = false) {
 }
 
 function updateSelectOptions(value) {
-    if (selectedField && value) {
-        const option = document.createElement('option');
-        option.value = value;
-        option.text = value;
-        selectedField.appendChild(option);
+    if (selectedField) {
+        const select = selectedField.querySelector('select');
+        if (select) {
+            select.innerHTML = '';
+            value.split('\n').forEach(optionText => {
+                if (optionText.trim()) {
+                    const option = document.createElement('option');
+                    option.text = optionText.trim();
+                    option.value = optionText.trim();
+                    select.appendChild(option);
+                }
+            });
+        }
+    }
+}
+
+function previewForm() {
+    const modal = document.getElementById('preview-modal');
+    const previewForm = document.getElementById('preview-form');
+    previewForm.innerHTML = '';
+    
+    formFields.forEach(field => {
+        const clonedField = field.cloneNode(true);
+        clonedField.onclick = null;
+        previewForm.appendChild(clonedField);
+    });
+
+    modal.style.display = 'block';
+}
+
+function submitPreviewForm() {
+    const formData = new FormData(document.getElementById('preview-form'));
+    console.log('Form submitted:', Object.fromEntries(formData));
+    alert('Form submitted! Check console for details.');
+}
+
+function saveForm() {
+    const formHTML = document.getElementById('form-view').innerHTML;
+    localStorage.setItem('savedForm', formHTML);
+    alert('Form saved successfully!');
+}
+
+// Close modal when clicking on <span> (x)
+document.querySelector('.close').onclick = function() {
+    document.getElementById('preview-modal').style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('preview-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Load saved form on page load
+window.onload = function() {
+    const savedForm = localStorage.getItem('savedForm');
+    if (savedForm) {
+        document.getElementById('form-view').innerHTML = savedForm;
+        // Re-attach event listeners to loaded fields
+        document.querySelectorAll('#form-view .form-field').forEach(field => {
+            field.onclick = function() {
+                selectField(field);
+            };
+            formFields.push(field);
+        });
     }
 }

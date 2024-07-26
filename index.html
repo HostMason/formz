@@ -13,6 +13,9 @@
             <div class="menu">
                 <h2>Fields</h2>
                 <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
+                <div id="number-input" class="draggable" draggable="true" ondragstart="drag(event)">Number Input</div>
+                <div id="email-input" class="draggable" draggable="true" ondragstart="drag(event)">Email Input</div>
+                <div id="textarea" class="draggable" draggable="true" ondragstart="drag(event)">Textarea</div>
                 <div id="button" class="draggable" draggable="true" ondragstart="drag(event)">Button</div>
                 <div id="radio-button" class="draggable" draggable="true" ondragstart="drag(event)">Radio Button</div>
                 <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
@@ -28,6 +31,18 @@
                     <p>Select a field to edit its details.</p>
                 </div>
             </div>
+        </div>
+        <div class="form-actions">
+            <button onclick="previewForm()">Preview Form</button>
+            <button onclick="saveForm()">Save Form</button>
+        </div>
+    </div>
+    <div id="preview-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Form Preview</h2>
+            <div id="preview-form"></div>
+            <button onclick="submitPreviewForm()">Submit</button>
         </div>
     </div>
     <script src="script.js"></script>
