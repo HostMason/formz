@@ -2,12 +2,10 @@ import { ThemeManager } from './themeManager.js';
 
 export class UIManager {
     constructor(router, toolManager) {
-        this.sidebar = null;
-        this.mainContent = null;
-        this.menuToggle = null;
-        this.toolManager = toolManager;
         this.router = router;
+        this.toolManager = toolManager;
         this.themeManager = new ThemeManager();
+        this.elements = {};
     }
 
     async initializeUI() {
@@ -15,20 +13,23 @@ export class UIManager {
         this.cacheElements();
         this.attachEventListeners();
         this.renderNavigation();
-        this.router.handleNavigation((pageId) => this.showPage(pageId));
+        this.router.handleNavigation(this.showPage.bind(this));
         await this.showPage('landing');
         this.updateMenuToggleIcon();
     }
 
     cacheElements() {
-        this.sidebar = document.querySelector('.sidebar');
-        this.mainContent = document.querySelector('.main-content');
-        this.menuToggle = document.querySelector('.menu-toggle');
+        this.elements = {
+            sidebar: document.querySelector('.sidebar'),
+            mainContent: document.querySelector('.main-content'),
+            menuToggle: document.querySelector('.menu-toggle'),
+            navList: document.querySelector('.nav-list'),
+            authButtons: document.querySelector('.auth-buttons')
+        };
     }
 
     renderBasicStructure() {
-        const appContainer = document.getElementById('app');
-        appContainer.innerHTML = `
+        document.getElementById('app').innerHTML = `
             <div class="app-container">
                 <header class="app-header">
                     <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
@@ -69,22 +70,19 @@ export class UIManager {
     }
 
     attachEventListeners() {
-        this.menuToggle.addEventListener('click', () => this.toggleSidebar());
+        this.elements.menuToggle.addEventListener('click', this.toggleSidebar.bind(this));
         document.getElementById('hostMasonLogo').addEventListener('click', () => this.router.navigateTo('/'));
         document.getElementById('loginBtn').addEventListener('click', () => this.router.navigateTo('/login'));
         document.getElementById('registerBtn').addEventListener('click', () => this.router.navigateTo('/register'));
     }
 
     renderNavigation() {
-        const navList = document.querySelector('.nav-list');
-        navList.innerHTML = '';
-
+        this.elements.navList.innerHTML = '';
         if (window.app.authManager.isAuthenticated()) {
             this.toolManager.getAllTools().forEach(tool => {
-                navList.appendChild(this.createNavItem(tool));
+                this.elements.navList.appendChild(this.createNavItem(tool));
             });
         }
-
         this.addEventListenersToButtons();
     }
 
@@ -101,20 +99,17 @@ export class UIManager {
 
     addEventListenersToButtons() {
         document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleNavItemClick(e));
+            btn.addEventListener('click', this.handleNavItemClick.bind(this));
         });
     }
 
     handleNavItemClick(e) {
-        e.preventDefault();
-        const button = e.currentTarget;
-        const toolId = button.getAttribute('data-tool-id');
+        const toolId = e.currentTarget.getAttribute('data-tool-id');
         const tool = this.toolManager.getTool(toolId);
-        
         if (tool) {
             this.router.navigateTo(`/${toolId}`);
             this.showPage(toolId);
-            this.highlightActiveButton(button);
+            this.highlightActiveButton(e.currentTarget);
         } else {
             console.error(`Tool not found: ${toolId}`);
         }
@@ -126,25 +121,20 @@ export class UIManager {
     }
 
     toggleSidebar() {
-        this.sidebar.classList.toggle('collapsed');
+        this.elements.sidebar.classList.toggle('collapsed');
         this.updateMenuToggleIcon();
     }
 
     updateMenuToggleIcon() {
-        const icon = this.menuToggle.querySelector('i');
-        if (this.sidebar.classList.contains('collapsed')) {
-            icon.classList.remove('fa-arrow-left');
-            icon.classList.add('fa-arrow-right');
-        } else {
-            icon.classList.remove('fa-arrow-right');
-            icon.classList.add('fa-arrow-left');
-        }
+        const icon = this.elements.menuToggle.querySelector('i');
+        icon.classList.toggle('fa-arrow-right', this.elements.sidebar.classList.contains('collapsed'));
+        icon.classList.toggle('fa-arrow-left', !this.elements.sidebar.classList.contains('collapsed'));
     }
 
     async showPage(pageId) {
         try {
             const html = await this.fetchPageContent(pageId);
-            this.mainContent.innerHTML = html;
+            this.elements.mainContent.innerHTML = html;
             await this.loadAndInitializePageScript(pageId);
             this.updateActiveNavItem(pageId);
             this.updatePageTitle(pageId);
@@ -173,9 +163,7 @@ export class UIManager {
     async fetchPageContent(pageId) {
         try {
             const response = await fetch(`/static/templates/${pageId}.html`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return await response.text();
         } catch (error) {
             console.warn(`Failed to fetch template for ${pageId}:`, error);
@@ -187,30 +175,20 @@ export class UIManager {
         return `
             <div id="${pageId}-container">
                 <h1>${this.capitalizeFirstLetter(pageId)}</h1>
-                <p>Welcome to the ${pageId} page. This is a default content.</p>
+                <p>Welcome to the ${pageId} page. This is default content.</p>
             </div>
         `;
     }
 
     async loadAndInitializePageScript(pageId) {
-        const scriptPath = `/static/js/pages/${pageId}.js`;
         try {
-            const module = await import(scriptPath);
+            const module = await import(`/static/js/pages/${pageId}.js`);
             if (module.default && typeof module.default.init === 'function') {
                 await module.default.init();
             }
-        } catch (scriptError) {
-            console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
-            this.renderBasicPageContent(pageId);
+        } catch (error) {
+            console.warn(`Failed to load or execute script for ${pageId}:`, error);
         }
-    }
-
-    renderBasicPageContent(pageId) {
-        const pageContent = `
-            <h1>${this.capitalizeFirstLetter(pageId)}</h1>
-            <p>Welcome to the ${pageId} page. This is a placeholder content.</p>
-        `;
-        this.mainContent.innerHTML = pageContent;
     }
 
     capitalizeFirstLetter(string) {
@@ -218,7 +196,7 @@ export class UIManager {
     }
 
     showErrorPage(pageId) {
-        this.mainContent.innerHTML = `
+        this.elements.mainContent.innerHTML = `
             <h1>Error 404: Page Not Found</h1>
             <p>The requested page "${pageId}" could not be found.</p>
         `;
@@ -231,24 +209,20 @@ export class UIManager {
     }
 
     updateUIForAuthState() {
-        const authButtons = document.querySelector('.auth-buttons');
-        const sidebar = document.querySelector('.sidebar');
-        
         if (window.app.authManager.isAuthenticated()) {
-            authButtons.innerHTML = `
+            this.elements.authButtons.innerHTML = `
                 <span>Welcome, ${window.app.authManager.user.name}</span>
                 <button id="logoutBtn">Logout</button>
             `;
-            sidebar.style.display = 'block';
+            this.elements.sidebar.style.display = 'block';
             this.renderNavigation();
         } else {
-            authButtons.innerHTML = `
+            this.elements.authButtons.innerHTML = `
                 <button id="loginBtn">Login</button>
                 <button id="registerBtn">Register</button>
             `;
-            sidebar.style.display = 'none';
+            this.elements.sidebar.style.display = 'none';
         }
-        
         this.attachEventListeners();
     }
 }

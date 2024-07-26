@@ -16,22 +16,23 @@ class App {
     }
 
     async init() {
-        await this.authManager.init();
-        await this.router.initializeRoutes();
-        await this.toolManager.initializeTools();
-        await this.uiManager.initializeUI();
-        this.attachEventListeners();
-        this.handleInitialRoute();
+        try {
+            await this.authManager.init();
+            await this.router.initializeRoutes();
+            await this.toolManager.initializeTools();
+            await this.uiManager.initializeUI();
+            this.attachEventListeners();
+            this.handleInitialRoute();
+        } catch (error) {
+            console.error('Error initializing app:', error);
+            // Handle initialization error (e.g., show error message to user)
+        }
     }
 
     attachEventListeners() {
         window.addEventListener('popstate', this.handleRouteChange.bind(this));
-        document.getElementById('toggleTheme')?.addEventListener('click', () => {
-            this.themeManager.toggleTheme();
-        });
-        document.getElementById('logoutBtn')?.addEventListener('click', () => {
-            this.authManager.logout();
-        });
+        document.getElementById('toggleTheme')?.addEventListener('click', () => this.themeManager.toggleTheme());
+        document.getElementById('logoutBtn')?.addEventListener('click', () => this.authManager.logout());
     }
 
     handleInitialRoute() {
