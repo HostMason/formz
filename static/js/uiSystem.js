@@ -19,7 +19,6 @@ export class UISystem {
         this.menuToggle.addEventListener('click', () => this.toggleSidebar());
         document.getElementById('hostMasonLogo').addEventListener('click', () => this.showPage('landing'));
         this.addEventListenersToButtons(this.sidebar);
-        this.addEventListenersToButtons(this.sidebar);
     }
 
     renderNavigation() {

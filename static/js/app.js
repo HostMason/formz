@@ -22,7 +22,7 @@ class App {
             if (!this.toolManager.isToolRegistered('formBuilder')) {
                 await this.toolManager.initializeTools();
             }
-            this.uiManager.initializeUI(this.router, this.toolManager, this.themeManager, this.authManager);
+            await this.uiManager.initializeUI(this.router, this.toolManager, this.themeManager, this.authManager);
             this.attachEventListeners();
             this.handleInitialRoute();
         } catch (error) {

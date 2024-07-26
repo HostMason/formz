@@ -36,7 +36,7 @@ export class Router {
         }
 
         history.pushState({ path }, null, path);
-        return route.pageId;
+        this.renderPage(route.pageId);
     }
 
     handleNavigation(callback) {
