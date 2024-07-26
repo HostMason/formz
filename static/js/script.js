@@ -213,53 +213,24 @@ function updateFormFields(loadedFields) {
     updateHierarchyView();
 }
 
-function toggleSection(e) {
-    const sectionId = e.currentTarget.id.replace('Btn', 'Section');
-    const section = document.getElementById(sectionId);
-    document.querySelectorAll('.nav-section-content').forEach(content => {
-        if (content.id !== sectionId) {
-            content.classList.remove('expanded');
-        }
-    });
-    section.classList.toggle('expanded');
-}
-
-function toggleToolbox() {
-    const toolboxSection = document.getElementById('toolboxSection');
-    const toolboxBtn = document.getElementById('toolboxBtn');
-    const formsSubsection = document.getElementById('formsSubsection');
-
-    toolboxSection.classList.toggle('expanded');
-    toolboxBtn.classList.toggle('active');
-
-    // Always collapse the forms subsection when toggling the toolbox
-    formsSubsection.classList.remove('expanded');
-    document.getElementById('formsBtn').classList.remove('active');
-}
-
-function toggleFormsSubsection(event) {
-    event.stopPropagation();
-    const toolboxSection = document.getElementById('toolboxSection');
-    const toolboxBtn = document.getElementById('toolboxBtn');
-    const formsSubsection = document.getElementById('formsSubsection');
-    const formsBtn = document.getElementById('formsBtn');
-
-    // Always expand the toolbox section when toggling forms subsection
-    toolboxSection.classList.add('expanded');
-    toolboxBtn.classList.add('active');
-
-    // Toggle the forms subsection
-    formsSubsection.classList.toggle('expanded');
-    formsBtn.classList.toggle('active');
+function toggleSubmenu(e) {
+    const submenu = e.currentTarget.nextElementSibling;
+    if (submenu && submenu.classList.contains('submenu')) {
+        submenu.classList.toggle('expanded');
+        e.currentTarget.classList.toggle('active');
+    }
 }
 
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
 
+    // If the clicked item has a submenu, toggle it
+    if (e.currentTarget.nextElementSibling && e.currentTarget.nextElementSibling.classList.contains('submenu')) {
+        toggleSubmenu(e);
+        return;
+    }
+
     switch (action) {
-        case 'formsBtn':
-            toggleFormsSubsection(e);
-            return; // Don't proceed further for formsBtn
         case 'formBuilderBtn':
             showPage('formBuilder');
             break;
@@ -293,26 +264,22 @@ function handleNavItemClick(e) {
     }
 
     // Highlight the active menu item
-    document.querySelectorAll('.nav-item, .nav-subitem').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(item => item.classList.remove('active'));
     e.currentTarget.classList.add('active');
-
-    // Expand the toolbox and forms subsection when a forms submenu item is clicked
-    if (['formBuilderBtn', 'loadFormBtn', 'saveFormBtn', 'deleteFormBtn'].includes(action)) {
-        const toolboxSection = document.getElementById('toolboxSection');
-        const toolboxBtn = document.getElementById('toolboxBtn');
-        const formsSubsection = document.getElementById('formsSubsection');
-        const formsBtn = document.getElementById('formsBtn');
-
-        toolboxSection.classList.add('expanded');
-        toolboxBtn.classList.add('active');
-        formsSubsection.classList.add('expanded');
-        formsBtn.classList.add('active');
-    }
 
     // Close the sidebar on mobile after a menu item is clicked
     if (window.innerWidth <= 768) {
         toggleSidebar();
     }
+}
+
+function initializeEventListeners() {
+    // ... (keep existing code)
+
+    // Add event listeners for nav buttons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', handleNavItemClick);
+    });
 }
 
 function updatePageTitle(title) {

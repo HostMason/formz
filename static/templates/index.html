@@ -20,27 +20,31 @@
                 <h1 class="company-name">HostMason</h1>
             </div>
             <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <button class="nav-section-btn" id="toolboxBtn"><i class="fas fa-toolbox"></i> Toolbox</button>
-                    <div class="nav-section-content" id="toolboxSection">
-                        <button class="nav-item" id="formsBtn"><i class="fas fa-file-alt"></i> Forms</button>
-                        <div class="nav-subsection" id="formsSubsection">
-                            <button class="nav-subitem" id="formBuilderBtn"><i class="fas fa-plus"></i> Form Builder</button>
-                            <button class="nav-subitem" id="loadFormBtn"><i class="fas fa-folder-open"></i> Load Form</button>
-                            <button class="nav-subitem" id="saveFormBtn"><i class="fas fa-save"></i> Save Form</button>
-                            <button class="nav-subitem" id="deleteFormBtn"><i class="fas fa-trash-alt"></i> Delete Form</button>
-                        </div>
-                        <button class="nav-item" id="customFieldsBtn"><i class="fas fa-puzzle-piece"></i> Custom Fields</button>
-                        <button class="nav-item" id="templatesBtn"><i class="fas fa-file-code"></i> Templates</button>
-                    </div>
-                </div>
-                <div class="nav-section">
-                    <button class="nav-section-btn" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
-                </div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <button class="nav-btn" id="toolboxBtn"><i class="fas fa-toolbox"></i> Toolbox</button>
+                        <ul class="submenu">
+                            <li class="nav-item">
+                                <button class="nav-btn" id="formsBtn"><i class="fas fa-file-alt"></i> Forms</button>
+                                <ul class="submenu">
+                                    <li><button class="nav-btn" id="formBuilderBtn"><i class="fas fa-plus"></i> Form Builder</button></li>
+                                    <li><button class="nav-btn" id="loadFormBtn"><i class="fas fa-folder-open"></i> Load Form</button></li>
+                                    <li><button class="nav-btn" id="saveFormBtn"><i class="fas fa-save"></i> Save Form</button></li>
+                                    <li><button class="nav-btn" id="deleteFormBtn"><i class="fas fa-trash-alt"></i> Delete Form</button></li>
+                                </ul>
+                            </li>
+                            <li><button class="nav-btn" id="customFieldsBtn"><i class="fas fa-puzzle-piece"></i> Custom Fields</button></li>
+                            <li><button class="nav-btn" id="templatesBtn"><i class="fas fa-file-code"></i> Templates</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
+                    </li>
+                </ul>
             </nav>
-            <div class="settings-section">
-                <button class="nav-item" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
-            </div>
         </aside>
         <main class="main-content">
             <div id="landing-page" class="page">
