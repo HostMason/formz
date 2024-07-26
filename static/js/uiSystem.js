@@ -25,7 +25,9 @@ export class UISystem {
         navList.innerHTML = ''; // Clear existing navigation
 
         this.toolManager.getAllTools().forEach(tool => {
-            navList.appendChild(this.createNavItem(tool));
+            if (!this.toolManager.isToolRegistered(tool.id)) {
+                navList.appendChild(this.createNavItem(tool));
+            }
         });
 
         // Add event listeners to all buttons, including those in submenus

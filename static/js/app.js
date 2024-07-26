@@ -19,7 +19,9 @@ class App {
         try {
             await this.authManager.init();
             await this.router.initializeRoutes();
-            await this.toolManager.initializeTools();
+            if (!this.toolManager.isToolRegistered('formBuilder')) {
+                await this.toolManager.initializeTools();
+            }
             this.uiManager.initializeUI(this.router, this.toolManager, this.themeManager, this.authManager);
             this.attachEventListeners();
             this.handleInitialRoute();
