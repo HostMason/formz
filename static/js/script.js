@@ -58,12 +58,36 @@ function addFieldToPreview(fieldType) {
             break;
     }
 
+    fieldElement.draggable = true;
+    fieldElement.ondragstart = drag;
     fieldElement.onclick = function() {
         FieldModule.selectField(fieldElement);
     };
     formFields.push(fieldElement);
     updateFormPreview();
 }
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var draggedElement = document.getElementById(data);
+    var dropzone = ev.target.closest('#preview-content');
+    if (dropzone) {
+        dropzone.appendChild(draggedElement);
+    }
+}
+
+// Add event listeners for drag and drop
+document.getElementById('preview-content').ondrop = drop;
+document.getElementById('preview-content').ondragover = allowDrop;
 
 // Load saved forms on page load
 window.onload = function() {
