@@ -43,6 +43,7 @@ function initializeEventListeners() {
         e.stopPropagation();
         toggleFormsSubsection(e);
     });
+    document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
     document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
@@ -307,6 +308,9 @@ function handleNavItemClick(e) {
     switch (action) {
         case 'formsBtn':
             toggleFormsSubsection(e);
+            showFormBuilder();
+            break;
+        case 'formBuilderBtn':
             showFormBuilder();
             break;
         case 'loadFormBtn':
