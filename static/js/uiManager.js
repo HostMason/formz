@@ -51,9 +51,6 @@ export class UIManager {
         toolbox.addSubTool(reportGenerator);
 
         this.toolManager.addTool(toolbox);
-        this.toolManager.addTool(formBuilder);
-        this.toolManager.addTool(dataAnalyzer);
-        this.toolManager.addTool(reportGenerator);
         this.toolManager.addTool(new Tool('help', 'Help', 'fas fa-question-circle', () => this.showPage('help')));
         this.toolManager.addTool(new Tool('settings', 'Settings', 'fas fa-cog', () => this.showPage('settings')));
     }
