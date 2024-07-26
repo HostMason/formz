@@ -133,7 +133,10 @@ function openPreferences() {
 }
 
 function openHelp() {
-    console.log('Open help');
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('form-builder').style.display = 'none';
+    document.getElementById('helpPage').style.display = 'block';
+    updatePageTitle('Help');
 }
 
 function openCustomFields() {
@@ -314,6 +317,21 @@ function handleNavItemClick(e) {
             openHelp();
             break;
     }
+    hideAllPages();
+    switch (action) {
+        case 'formsBtn':
+        case 'createFormBtn':
+        case 'loadFormBtn':
+        case 'saveFormBtn':
+        case 'deleteFormBtn':
+            document.getElementById('form-builder').style.display = 'block';
+            break;
+        case 'helpBtn':
+            document.getElementById('helpPage').style.display = 'block';
+            break;
+        default:
+            document.getElementById('landing-page').style.display = 'block';
+    }
     // Close the toolbox after clicking a nav item
     const toolboxSection = document.getElementById('toolboxSection');
     toolboxSection.classList.remove('expanded');
@@ -323,6 +341,12 @@ function handleNavItemClick(e) {
 
 function updatePageTitle(title) {
     document.title = `${title} - BlueColar Form Builder`;
+}
+
+function hideAllPages() {
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('form-builder').style.display = 'none';
+    document.getElementById('helpPage').style.display = 'none';
 }
 
 function toggleSidebar() {
