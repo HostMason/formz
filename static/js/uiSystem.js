@@ -89,7 +89,13 @@ export class UISystem {
             if (tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
             }
-            tool.action();
+            if (typeof tool.action === 'function') {
+                tool.action();
+            } else {
+                console.error(`No action defined for tool: ${tool.name}`);
+            }
+        } else {
+            console.error(`Tool not found: ${toolId}`);
         }
     }
 

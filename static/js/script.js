@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Close button not found');
     }
 
-    // Ensure all nav buttons are clickable
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => uiSystem.handleNavItemClick(e));
-    });
+    // Initialize the navigation
+    uiSystem.renderNavigation();
+
+    // Show the landing page by default
+    uiSystem.showPage('landing');
 });
