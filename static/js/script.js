@@ -49,6 +49,10 @@ function initializeEventListeners() {
         header.addEventListener('click', toggleSection);
     });
 
+    // Add event listener for menu toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    menuToggle.addEventListener('click', toggleSidebar);
+
     document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
@@ -207,4 +211,11 @@ function toggleSection(event) {
 
 function updatePageTitle(title) {
     document.title = `${title} - BlueColar`;
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+    sidebar.classList.toggle('collapsed');
+    mainContent.classList.toggle('expanded');
 }
