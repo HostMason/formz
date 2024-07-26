@@ -79,24 +79,7 @@ function createOptionField(type) {
 function createSelectField() {
     const fieldElement = document.createElement('div');
     const select = document.createElement('select');
-    const optionInput = document.createElement('input');
-    optionInput.type = 'text';
-    optionInput.placeholder = 'Add Option';
-    const addButton = document.createElement('button');
-    addButton.innerText = 'Add Option';
-    addButton.onclick = function() {
-        const optionValue = optionInput.value;
-        if (optionValue) {
-            const option = document.createElement('option');
-            option.value = optionValue;
-            option.text = optionValue;
-            select.appendChild(option);
-            optionInput.value = '';
-        }
-    };
     fieldElement.appendChild(select);
-    fieldElement.appendChild(optionInput);
-    fieldElement.appendChild(addButton);
     return fieldElement;
 }
 
@@ -124,11 +107,32 @@ function selectField(field) {
             <label>Button Text:</label> <input type="text" value="${field.innerText}" onchange="updateFieldValue(this.value, true)">
         `;
     } else if (field.querySelector('select')) {
+        const select = field.querySelector('select');
         fieldDetails.innerHTML = `
             <label>Label:</label> <input type="text" value="${field.querySelector('label')?.innerText || ''}" onchange="updateFieldLabel(this.value)">
-            <label>Options:</label> <textarea onchange="updateSelectOptions(this.value)">${Array.from(field.querySelector('select').options).map(option => option.text).join('\n')}</textarea>
-            <label>Required:</label> <input type="checkbox" ${field.querySelector('select').required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
+            <label>Options:</label> <textarea onchange="updateSelectOptions(this.value)">${Array.from(select.options).map(option => option.text).join('\n')}</textarea>
+            <label>Required:</label> <input type="checkbox" ${select.required ? 'checked' : ''} onchange="updateFieldRequired(this.checked)">
+            <label>Add Option:</label> <input type="text" id="newOption" placeholder="New option">
+            <button onclick="addSelectOption()">Add Option</button>
         `;
+    }
+}
+
+function addSelectOption() {
+    if (selectedField) {
+        const select = selectedField.querySelector('select');
+        const newOptionInput = document.getElementById('newOption');
+        const newOptionValue = newOptionInput.value.trim();
+        if (newOptionValue) {
+            const option = document.createElement('option');
+            option.value = newOptionValue;
+            option.text = newOptionValue;
+            select.appendChild(option);
+            newOptionInput.value = '';
+            // Update the options textarea
+            const optionsTextarea = document.querySelector('textarea');
+            optionsTextarea.value = Array.from(select.options).map(option => option.text).join('\n');
+        }
     }
 }
 
