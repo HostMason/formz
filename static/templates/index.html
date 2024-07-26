@@ -24,18 +24,18 @@
     </div>
     <div class="container">
         <h1 class="page-title">Quote Form Creator</h1>
+        <div class="form-actions">
+            <button onclick="previewForm()" class="action-button">Preview</button>
+            <button onclick="saveForm()" class="action-button">Save</button>
+            <button onclick="loadForm()" class="action-button">Load</button>
+            <button onclick="deleteForm()" class="action-button">Delete</button>
+            <select id="form-list"></select>
+        </div>
         <div class="flex-container">
             <div class="left-panel">
                 <div id="fields" class="menu-panel">
                     <div class="fields-header">
                         <h2>Fields</h2>
-                        <div class="form-actions">
-                            <button onclick="previewForm()" class="action-button">Preview</button>
-                            <button onclick="saveForm()" class="action-button">Save</button>
-                            <button onclick="loadForm()" class="action-button">Load</button>
-                            <button onclick="deleteForm()" class="action-button">Delete</button>
-                            <select id="form-list"></select>
-                        </div>
                     </div>
                     <div class="fields-grid">
                         <button onclick="addFieldToPreview('text-input')">Text Input</button>
