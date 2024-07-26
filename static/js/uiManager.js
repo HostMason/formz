@@ -26,10 +26,12 @@ export class UIManager {
     initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
-        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
-        formBuilder.addSubTool(new Tool('loadForm', 'Load Form', 'fas fa-folder-open', () => console.log('Load form clicked')));
-        formBuilder.addSubTool(new Tool('saveForm', 'Save Form', 'fas fa-save', () => this.formBuilder.saveForm()));
-        formBuilder.addSubTool(new Tool('deleteForm', 'Delete Form', 'fas fa-trash-alt', () => console.log('Delete form clicked')));
+        const forms = new Tool('forms', 'Forms', 'fas fa-file-alt', () => this.showPage('forms'));
+        forms.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
+        forms.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
+        forms.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
+        forms.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
+        forms.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
 
         toolbox.addSubTool(formBuilder);
 
