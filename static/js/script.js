@@ -332,9 +332,16 @@ function handleNavItemClick(e) {
     switch (action) {
         case 'formBuilderBtn':
             showPage('formBuilder');
+            initializeFormBuilder();
             break;
         case 'loadFormBtn':
             showPage('loadForm');
+            break;
+        case 'customFieldsBtn':
+            showPage('customFields');
+            break;
+        case 'templatesBtn':
+            showPage('templates');
             break;
         case 'helpBtn':
             showPage('help');
@@ -346,6 +353,15 @@ function handleNavItemClick(e) {
             // Do nothing for other buttons, let UISystem handle them
             break;
     }
+}
+
+function initializeFormBuilder() {
+    // Initialize the drag and drop form builder
+    const formFieldContainer = document.getElementById('preview-content');
+    formFieldContainer.innerHTML = '<p class="drag-placeholder">Drag and drop fields here</p>';
+    formFields = [];
+    selectedField = null;
+    updateHierarchyView();
 }
 
 export { formFields, selectedField, updateFormFields };
