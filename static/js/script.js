@@ -39,7 +39,14 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', toggleSidebar);
 
     document.getElementById('toolboxBtn').addEventListener('click', toggleToolbox);
-    document.getElementById('formsBtn').addEventListener('click', showFormBuilder);
+    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
+    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
+    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
+    document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
+    document.getElementById('customFieldsBtn').addEventListener('click', openCustomFields);
+    document.getElementById('templatesBtn').addEventListener('click', openTemplates);
+    document.getElementById('helpBtn').addEventListener('click', openHelp);
+    document.getElementById('settingsBtn').addEventListener('click', openSettings);
 
     // Initialize sidebar state
     const sidebar = document.querySelector('.sidebar');
@@ -126,6 +133,18 @@ function openPreferences() {
 
 function openHelp() {
     console.log('Open help');
+}
+
+function openCustomFields() {
+    console.log('Open custom fields');
+}
+
+function openTemplates() {
+    console.log('Open templates');
+}
+
+function openSettings() {
+    console.log('Open settings');
 }
 
 function dragStart(e) {
