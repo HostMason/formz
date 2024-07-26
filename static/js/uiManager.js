@@ -127,14 +127,13 @@ export class UIManager {
         if (tool) {
             if (tool.subTools.length > 0) {
                 this.toggleSubmenu(button);
+            }
+            if (typeof tool.action === 'function') {
+                tool.action();
             } else {
-                if (typeof tool.action === 'function') {
-                    tool.action();
-                } else {
-                    const pageId = toolId;
-                    this.router.navigateTo(`/${pageId}`);
-                    this.showPage(pageId);
-                }
+                const pageId = toolId;
+                this.router.navigateTo(`/${pageId}`);
+                this.showPage(pageId);
             }
             this.highlightActiveButton(button);
         } else {
@@ -146,6 +145,8 @@ export class UIManager {
         const submenu = button.nextElementSibling;
         if (submenu && submenu.classList.contains('submenu')) {
             submenu.classList.toggle('expanded');
+            // Prevent the click event from bubbling up to parent elements
+            event.stopPropagation();
         }
     }
 
