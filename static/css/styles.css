@@ -171,32 +171,42 @@ h1, h2 {
     background-color: #f8f9fa;
 }
 
-.button-group {
+.fields-header {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-button {
-    padding: 12px 20px;
-    background-color: #2ecc71;
+.form-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-button {
+    padding: 8px 15px;
+    background-color: #3498db;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    flex: 1;
-    min-width: 120px;
+    font-size: 14px;
 }
 
-button:hover {
-    background-color: #27ae60;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.action-button:hover {
+    background-color: #2980b9;
+}
+
+#form-list {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
 .field-properties {
