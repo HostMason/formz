@@ -105,44 +105,37 @@ function addFieldToPreview(fieldType) {
 
 function selectField(field) {
     FieldModule.selectField(field);
-    updateFieldSettings(field);
+    updateFieldProperties(field);
 }
 
-function updateFieldSettings(field) {
-    const settingsContent = document.getElementById('field-settings-content');
-    settingsContent.innerHTML = '';
+function updateFieldProperties(field) {
+    const fieldLabel = document.getElementById('fieldLabel');
+    const fieldPlaceholder = document.getElementById('fieldPlaceholder');
+    const fieldRequired = document.getElementById('fieldRequired');
+    const fieldOptions = document.getElementById('fieldOptions');
 
-    const labelInput = document.createElement('input');
-    labelInput.type = 'text';
-    labelInput.value = field.querySelector('label').textContent;
-    labelInput.onchange = (e) => {
-        field.querySelector('label').textContent = e.target.value;
-        updateHierarchyView();
-    };
-    settingsContent.appendChild(labelInput);
+    fieldLabel.value = field.querySelector('label').textContent;
+    const input = field.querySelector('input, textarea, select');
+    fieldPlaceholder.value = input ? input.placeholder : '';
+    fieldRequired.checked = input ? input.required : false;
 
-    if (field.classList.contains('group-field')) {
-        const resizeHandle = document.createElement('div');
-        resizeHandle.className = 'resize-handle';
-        resizeHandle.innerHTML = '<i class="fas fa-arrows-alt-v"></i>';
-        resizeHandle.onmousedown = (e) => {
-            const startY = e.clientY;
-            const startHeight = parseInt(field.style.height);
-            const onMouseMove = (moveEvent) => {
-                const newHeight = startHeight + moveEvent.clientY - startY;
-                field.style.height = newHeight + 'px';
-            };
-            const onMouseUp = () => {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        };
-        field.appendChild(resizeHandle);
+    if (input && input.tagName === 'SELECT') {
+        fieldOptions.style.display = 'block';
+        const options = Array.from(input.options).map(option => option.text).join('\n');
+        document.getElementById('fieldOptionsText').value = options;
+    } else {
+        fieldOptions.style.display = 'none';
     }
 
-    updateHierarchyView();
+    // Show the field properties panel
+    showPanel('field-properties');
+}
+
+function showPanel(panelId) {
+    document.querySelectorAll('.menu-panel').forEach(panel => {
+        panel.style.display = 'none';
+    });
+    document.getElementById(panelId).style.display = 'block';
 }
 
 let draggedElement = null;
