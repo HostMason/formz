@@ -277,8 +277,16 @@ function toggleToolbox() {
 
 function toggleFormsSubsection(event) {
     event.stopPropagation();
+    const toolboxSection = document.getElementById('toolboxSection');
+    const toolboxBtn = document.getElementById('toolboxBtn');
     const formsSubsection = document.getElementById('formsSubsection');
     const formsBtn = document.getElementById('formsBtn');
+
+    // Always expand the toolbox section when toggling forms subsection
+    toolboxSection.classList.add('expanded');
+    toolboxBtn.classList.add('active');
+
+    // Toggle the forms subsection
     formsSubsection.classList.toggle('expanded');
     formsBtn.classList.toggle('active');
 }
@@ -289,7 +297,7 @@ function handleNavItemClick(e) {
     switch (action) {
         case 'formsBtn':
             toggleFormsSubsection(e);
-            break;
+            return; // Don't proceed further for formsBtn
         case 'formBuilderBtn':
             showPage('formBuilder');
             break;
@@ -337,6 +345,11 @@ function handleNavItemClick(e) {
         toolboxBtn.classList.add('active');
         formsSubsection.classList.add('expanded');
         formsBtn.classList.add('active');
+    }
+
+    // Close the sidebar on mobile after a menu item is clicked
+    if (window.innerWidth <= 768) {
+        toggleSidebar();
     }
 }
 
