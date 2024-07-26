@@ -3,53 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" type="module" defer></script>
-    <title>Quote Form Creator</title>
+    <title>BlueColar Form Builder</title>
 </head>
 <body>
     <div class="side-menu open">
         <div class="menu-header">
-            <div class="menu-toggle">☰</div>
-            <div class="company-name">HostMason</div>
+            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+            <div class="company-name">BlueColar</div>
         </div>
         <div class="menu-content">
-            <h2>Menu</h2>
-            <button class="menu-option" data-target="creator-tools">Creator Tools</button>
+            <h2>Toolbox</h2>
+            <button class="menu-option" data-target="creator-tools"><i class="fas fa-tools"></i> Builder Tools</button>
             <div id="creator-tools-submenu" class="submenu">
-                <button class="submenu-option" data-target="fields">Fields</button>
-                <button class="submenu-option" data-target="form-options">Form Options</button>
+                <button class="submenu-option" data-target="fields"><i class="fas fa-list-ul"></i> Form Fields</button>
+                <button class="submenu-option" data-target="form-options"><i class="fas fa-cog"></i> Form Settings</button>
             </div>
         </div>
     </div>
     <div class="container">
-        <h1 class="page-title">Quote Form Creator</h1>
+        <h1 class="page-title"><i class="fas fa-hammer"></i> BlueColar Form Builder</h1>
         <div class="form-actions">
-            <button onclick="previewForm()" class="action-button">Preview</button>
-            <button onclick="saveForm()" class="action-button">Save</button>
-            <button onclick="loadForm()" class="action-button">Load</button>
-            <button onclick="deleteForm()" class="action-button">Delete</button>
+            <button onclick="previewForm()" class="action-button"><i class="fas fa-eye"></i> Preview</button>
+            <button onclick="saveForm()" class="action-button"><i class="fas fa-save"></i> Save</button>
+            <button onclick="loadForm()" class="action-button"><i class="fas fa-folder-open"></i> Load</button>
+            <button onclick="deleteForm()" class="action-button"><i class="fas fa-trash-alt"></i> Delete</button>
             <select id="form-list"></select>
         </div>
         <div class="flex-container">
             <div class="left-panel">
                 <div id="fields" class="menu-panel">
                     <div class="fields-header">
-                        <h2>Fields</h2>
+                        <h2><i class="fas fa-toolbox"></i> Field Types</h2>
                     </div>
                     <div class="fields-grid">
-                        <button onclick="addFieldToPreview('text-input')">Text Input</button>
-                        <button onclick="addFieldToPreview('number-input')">Number Input</button>
-                        <button onclick="addFieldToPreview('email-input')">Email Input</button>
-                        <button onclick="addFieldToPreview('textarea')">Textarea</button>
-                        <button onclick="addFieldToPreview('button')">Button</button>
-                        <button onclick="addFieldToPreview('radio-button')">Radio Button</button>
-                        <button onclick="addFieldToPreview('checkbox')">Checkbox</button>
-                        <button onclick="addFieldToPreview('select-dropdown')">Select Dropdown</button>
+                        <button onclick="addFieldToPreview('text-input')"><i class="fas fa-font"></i> Text Input</button>
+                        <button onclick="addFieldToPreview('number-input')"><i class="fas fa-hashtag"></i> Number Input</button>
+                        <button onclick="addFieldToPreview('email-input')"><i class="fas fa-envelope"></i> Email Input</button>
+                        <button onclick="addFieldToPreview('textarea')"><i class="fas fa-align-left"></i> Textarea</button>
+                        <button onclick="addFieldToPreview('button')"><i class="fas fa-square"></i> Button</button>
+                        <button onclick="addFieldToPreview('radio-button')"><i class="fas fa-dot-circle"></i> Radio Button</button>
+                        <button onclick="addFieldToPreview('checkbox')"><i class="fas fa-check-square"></i> Checkbox</button>
+                        <button onclick="addFieldToPreview('select-dropdown')"><i class="fas fa-caret-square-down"></i> Select Dropdown</button>
                     </div>
                 </div>
                 <div id="field-view" class="menu-panel">
-                    <h2>Field Properties</h2>
+                    <h2><i class="fas fa-sliders-h"></i> Field Properties</h2>
                     <div class="field-properties">
                         <label for="fieldLabel">Label:</label>
                         <input type="text" id="fieldLabel" onchange="updateFieldLabel(this.value)">
@@ -61,14 +63,14 @@
                             <label for="fieldOptions">Options:</label>
                             <textarea id="fieldOptionsText" onchange="updateSelectOptions(this.value)"></textarea>
                             <input type="text" id="newOption" placeholder="New option">
-                            <button onclick="addSelectOption()">Add Option</button>
+                            <button onclick="addSelectOption()"><i class="fas fa-plus"></i> Add Option</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="right-panel">
                 <div id="form-preview" class="preview-area">
-                    <h2>Form Preview</h2>
+                    <h2><i class="fas fa-clipboard-list"></i> Form Preview</h2>
                     <div id="preview-content">
                         <p>Your form preview will appear here</p>
                     </div>
@@ -79,9 +81,9 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Form Preview</h2>
+            <h2><i class="fas fa-eye"></i> Form Preview</h2>
             <div id="preview-form"></div>
-            <button onclick="submitPreviewForm()">Submit</button>
+            <button onclick="submitPreviewForm()"><i class="fas fa-paper-plane"></i> Submit</button>
         </div>
     </div>
 </body>
