@@ -327,7 +327,6 @@ function handleNavItemClick(e) {
             openHelp();
             break;
         default:
-            showFormBuilder();
             break;
     }
     hideAllPages();
@@ -335,7 +334,7 @@ function handleNavItemClick(e) {
         document.getElementById('form-builder').style.display = 'block';
         document.querySelector('.main-content').innerHTML = document.getElementById('helpPage').innerHTML;
     } else {
-        document.getElementById('form-builder').style.display = 'block';
+        showFormBuilder();
     }
     // Close the toolbox after clicking a nav item, except for 'formsBtn'
     if (action !== 'formsBtn') {
