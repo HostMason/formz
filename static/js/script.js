@@ -32,6 +32,9 @@ function initializeEventListeners() {
         button.addEventListener('click', addField);
     });
 
+    document.getElementById('previewFormBtn').addEventListener('click', previewForm);
+    document.getElementById('submitPreviewFormBtn').addEventListener('click', UIModule.submitPreviewForm);
+
     const menuToggle = document.querySelector('.menu-toggle');
     menuToggle.addEventListener('click', toggleSidebar);
 

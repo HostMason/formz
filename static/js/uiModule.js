@@ -9,11 +9,7 @@ let currentPage = 0;
 const fieldsPerPage = 5;
 
 function previewForm() {
-    currentPage = 0;
-    updateFormView();
-    document.getElementById('form-preview').style.display = 'block';
-    document.getElementById('fields').style.display = 'none';
-    document.getElementById('field-view').style.display = 'none';
+    UIModule.previewForm(formFields);
 }
 
 function updateFormView() {
@@ -70,6 +66,31 @@ function submitForm() {
     });
     console.log('Form submitted:', Object.fromEntries(formData));
     alert('Form submitted! Check console for details.');
+}
+
+function previewForm(formFields) {
+    const modal = document.getElementById('preview-modal');
+    const previewForm = document.getElementById('preview-form');
+    previewForm.innerHTML = '';
+
+    formFields.forEach(field => {
+        const clonedField = field.cloneNode(true);
+        clonedField.classList.remove('selected');
+        previewForm.appendChild(clonedField);
+    });
+
+    modal.style.display = 'block';
+}
+
+function submitPreviewForm() {
+    const formData = new FormData(document.getElementById('preview-form'));
+    console.log('Form submitted:', Object.fromEntries(formData));
+    alert('Form submitted! Check console for details.');
+    closeModal();
+}
+
+function closeModal() {
+    document.getElementById('preview-modal').style.display = 'none';
 }
 
 export { showMenuPanel, previewForm, submitPreviewForm, closeModal };
