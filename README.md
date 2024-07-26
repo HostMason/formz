@@ -1,26 +1,21 @@
-# Hostmason Internal Systems
+# HostMason Internal Tools
 
-This project is an internal system for Hostmason customers, providing various tools to manage and customize services.
+This project is an internal system for HostMason customers, providing various tools to manage and customize services.
 
 ## Features
 
-- Form Builder
-  - Drag and drop form creation
-  - Custom field types
-  - Form templates
-  - Form preview
-  - Save and load forms
-  - Form settings management
+### Form Builder
+- Drag and drop form creation
+- Custom field types (text, number, email, textarea, checkbox, radio button, dropdown)
+- Form preview functionality
+- Save and load forms
+- Delete existing forms
+- Form settings management
 
-- Data Analyzer
-  - Data import
-  - Various analysis options
-  - Export results
-
-- Report Generator
-  - Create custom reports
-  - Edit report templates
-  - Schedule automated reports
+### UI Improvements
+- Responsive sidebar navigation
+- Dark/Light theme toggle
+- Improved layout and styling
 
 ## Setup Instructions
 
@@ -45,6 +40,15 @@ This project is an internal system for Hostmason customers, providing various to
 3. **Access the Web Application**
     Open your web browser and navigate to `http://localhost:5000` (or the port you specified during setup).
 
+## Usage Instructions
+
+1. **Navigation**: Use the sidebar to navigate between different tools and pages.
+2. **Form Builder**: 
+   - Drag field types from the left panel to the form preview area.
+   - Click on a field in the preview to edit its properties in the right panel.
+   - Use the top buttons to preview, save, load, or delete forms.
+3. **Theme**: Toggle between light and dark themes using the theme toggle button.
+
 ## Maintenance Instructions
 
 ### Reloading the Service After Code Updates
@@ -55,16 +59,9 @@ This project is an internal system for Hostmason customers, providing various to
     ```
 
 2. **Run the Reload Command**
-    The reload command will restart the web application service to apply the latest changes.
     ```bash
     ./setup_webapp.sh reload
     ```
-
-### Managing Forms
-
-- **Save Form**: Use the "Save Form" button to save the current form.
-- **Load Form**: Use the "Load Form" button to load a saved form from the dropdown list.
-- **Delete Form**: Use the "Delete Form" button to delete a selected form from the dropdown list.
 
 ### Debugging
 
@@ -76,18 +73,6 @@ This project is an internal system for Hostmason customers, providing various to
 - **View Service Logs**
     ```bash
     sudo journalctl -u webapp
-    ```
-
-### Firewall Configuration
-
-- **Allow a Specific Port**
-    ```bash
-    sudo ufw allow <port_number>
-    ```
-
-- **Check UFW Status**
-    ```bash
-    sudo ufw status
     ```
 
 ## Directory Structure
@@ -105,26 +90,16 @@ This project is an internal system for Hostmason customers, providing various to
 │   │   ├── uiManager.js
 │   │   ├── toolManager.js
 │   │   ├── router.js
-│   │   └── themeManager.js
+│   │   ├── themeManager.js
+│   │   └── formBuilder.js
 │   └── templates/
 │       ├── index.html
+│       ├── landing.html
 │       ├── formBuilder.html
-│       ├── dataAnalyzer.html
-│       └── reportGenerator.html
+│       └── help.html
 ├── setup_webapp.sh
-└── install.sh
+└── README.md
 ```
-
-## Additional Notes
-
-- Ensure that the `setup_webapp.sh` script has execute permissions. If not, you can set it using:
-    ```bash
-    chmod +x setup_webapp.sh
-    ```
-
-- The `install.sh` script is used to install dependencies and can be run separately if needed.
-
-- For any issues or further assistance, please refer to the service logs or contact the support team.
 
 ## Contributing
 
@@ -133,3 +108,7 @@ Please read CONTRIBUTING.md for details on our code of conduct, and the process 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+## Support
+
+For any issues or further assistance, please contact the support team at support@hostmason.com.
