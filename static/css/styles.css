@@ -120,6 +120,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin-bottom: 25px;
+    width: 100%;
 }
 
 h1, h2 {
@@ -130,12 +131,13 @@ h1, h2 {
 
 .main-content {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     justify-content: space-between;
 }
 
 .left-panel, .center-panel, .right-panel {
-    flex: 1;
+    flex: 1 1 300px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -149,7 +151,7 @@ h1, h2 {
 }
 
 .center-panel {
-    flex: 2;
+    flex: 2 1 400px;
 }
 
 .fields-grid {
