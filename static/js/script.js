@@ -323,14 +323,21 @@ function handleNavItemClick(e) {
     }
 
     // Highlight the active menu item
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.nav-item, .nav-subitem').forEach(item => item.classList.remove('active'));
     e.currentTarget.classList.add('active');
 
-    // Always expand the toolbox when a menu item is clicked
-    const toolboxSection = document.getElementById('toolboxSection');
-    const toolboxBtn = document.getElementById('toolboxBtn');
-    toolboxSection.classList.add('expanded');
-    toolboxBtn.classList.add('active');
+    // Expand the toolbox and forms subsection when a forms submenu item is clicked
+    if (['formBuilderBtn', 'loadFormBtn', 'saveFormBtn', 'deleteFormBtn'].includes(action)) {
+        const toolboxSection = document.getElementById('toolboxSection');
+        const toolboxBtn = document.getElementById('toolboxBtn');
+        const formsSubsection = document.getElementById('formsSubsection');
+        const formsBtn = document.getElementById('formsBtn');
+
+        toolboxSection.classList.add('expanded');
+        toolboxBtn.classList.add('active');
+        formsSubsection.classList.add('expanded');
+        formsBtn.classList.add('active');
+    }
 }
 
 function updatePageTitle(title) {

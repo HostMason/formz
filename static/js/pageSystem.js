@@ -1,7 +1,7 @@
 const pages = {
     landing: document.getElementById('landing-page'),
     formBuilder: document.getElementById('form-builder'),
-    help: document.getElementById('helpPage'),
+    help: document.getElementById('help-page'),
     customFields: createPage('custom-fields', 'Custom Fields'),
     templates: createPage('templates', 'Templates'),
     settings: createPage('settings', 'Settings')

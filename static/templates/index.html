@@ -37,18 +37,31 @@
                 <div class="nav-section">
                     <button class="nav-section-btn" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
                 </div>
-                <div id="helpPage" style="display: none;">
-                    <h2>How to Use the Form Builder</h2>
-                    <ol>
-                        <li>Click on "Create Form" to start a new form.</li>
-                        <li>Drag and drop fields from the Toolbox to your form.</li>
-                        <li>Click on a field to edit its properties.</li>
-                        <li>Use the "Preview" button to see how your form looks.</li>
-                        <li>Save your form using the "Save Form" button.</li>
-                        <li>Load or delete existing forms using the respective buttons.</li>
-                    </ol>
-                    <p>For more detailed instructions, please refer to our <a href="#" id="userManualLink">user manual</a>.</p>
-                </div>
+            </nav>
+            <div class="settings-section">
+                <button class="nav-item" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div id="landing-page">
+                <h1>Welcome to HostMason Internal Tools</h1>
+                <p>This is the internal system for HostMason customers. Here you can access various tools to manage and customize your services.</p>
+                <h2>Available Tools:</h2>
+                <ul>
+                    <li>Form Builder
+                        <ul>
+                            <li>Create, manage, and customize your forms with ease</li>
+                            <li>Drag and drop form elements</li>
+                            <li>Customize field properties</li>
+                            <li>Preview and test your forms</li>
+                            <li>Save and load forms</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>This system will host all of the tools we create for HostMason customers. More tools will be added in the future.</p>
+                <p>Get started by selecting a tool from the sidebar menu.</p>
+            </div>
+            <div id="form-builder" style="display: none;">
             </nav>
             <div class="settings-section">
                 <button class="nav-item" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
@@ -124,6 +137,26 @@
                 </section>
             </div>
         </main>
+    </div>
+    <div id="help-page" style="display: none;">
+        <h1>Help - BlueColar Form Builder</h1>
+        <h2>How to Use the Form Builder</h2>
+        <ol>
+            <li>Click on the "Forms" button in the sidebar, then select "Form Builder" to start creating a new form.</li>
+            <li>Use the field types in the left panel to add fields to your form. You can either click on a field type or drag and drop it into the form preview area.</li>
+            <li>Click on a field in the form preview to edit its properties in the right panel.</li>
+            <li>Use the "Preview" button to see how your form will look to users.</li>
+            <li>Click "Save Form" to save your form. You'll be prompted to enter a name for the form.</li>
+            <li>To load a previously saved form, click on "Load Form" and select the form from the dropdown list.</li>
+            <li>To delete a form, select it from the dropdown list and click "Delete Form".</li>
+        </ol>
+        <h2>Additional Features</h2>
+        <ul>
+            <li><strong>Custom Fields:</strong> Create and use custom field types for your forms.</li>
+            <li><strong>Templates:</strong> Save and load form templates for quick form creation.</li>
+            <li><strong>Settings:</strong> Customize the form builder and manage your account settings.</li>
+        </ul>
+        <p>For more detailed instructions, please refer to our <a href="#" id="userManualLink">user manual</a>.</p>
     </div>
     <div id="preview-modal" class="modal">
         <div class="modal-content">
