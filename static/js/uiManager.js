@@ -60,8 +60,13 @@ export class UIManager {
 
     updateMenuToggleIcon() {
         const icon = this.menuToggle.querySelector('i');
-        icon.classList.toggle('fa-chevron-up');
-        icon.classList.toggle('fa-chevron-down');
+        if (this.sidebar.classList.contains('collapsed')) {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
     }
 
     renderNavigation() {
@@ -96,6 +101,18 @@ export class UIManager {
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
             </button>
         `;
+        
+        if (tool.name === 'Form Builder') {
+            const subMenu = document.createElement('ul');
+            subMenu.className = 'submenu';
+            subMenu.innerHTML = `
+                <li><button class="nav-btn" data-route="/form-builder/load">Load Form</button></li>
+                <li><button class="nav-btn" data-route="/form-builder/save">Save Form</button></li>
+                <li><button class="nav-btn" data-route="/form-builder/delete">Delete Form</button></li>
+            `;
+            li.appendChild(subMenu);
+        }
+        
         return li;
     }
 
@@ -108,8 +125,14 @@ export class UIManager {
     handleNavItemClick(e) {
         e.preventDefault();
         const route = e.currentTarget.getAttribute('data-route');
-        // Here you would typically use your router to navigate
-        console.log(`Navigating to: ${route}`);
+        if (route === '/help') {
+            this.showPage('help');
+        } else if (route === '/settings') {
+            this.showPage('settings');
+        } else {
+            // Here you would typically use your router to navigate
+            console.log(`Navigating to: ${route}`);
+        }
     }
 
     addEventListenersToButtons(element) {

@@ -130,6 +130,7 @@ body {
 .settings-section {
     padding: 20px;
     border-top: 1px solid var(--border-color);
+    list-style-type: none;
 }
 
 .nav-list {
