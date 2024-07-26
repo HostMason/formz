@@ -353,6 +353,15 @@ function handleNavItemClick(e) {
             showPage('landing');
             break;
     }
+
+    // Highlight the active menu item
+    document.querySelectorAll('.nav-btn').forEach(item => item.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+
+    // Close the sidebar on mobile after a menu item is clicked
+    if (window.innerWidth <= 768) {
+        toggleSidebar();
+    }
 }
 
 function initializeFormBuilder() {

@@ -65,8 +65,6 @@ export class UISystem {
             case 'loadFormBtn':
             case 'saveFormBtn':
             case 'deleteFormBtn':
-                this.showPage(action.replace('Btn', ''));
-                break;
             case 'customFieldsBtn':
             case 'templatesBtn':
             case 'settingsBtn':
@@ -87,10 +85,10 @@ export class UISystem {
             const formsSubsection = document.getElementById('formsSubsection');
             const formsBtn = document.getElementById('formsBtn');
 
-            toolboxSection.classList.add('expanded');
-            toolboxBtn.classList.add('active');
-            formsSubsection.classList.add('expanded');
-            formsBtn.classList.add('active');
+            if (toolboxSection) toolboxSection.classList.add('expanded');
+            if (toolboxBtn) toolboxBtn.classList.add('active');
+            if (formsSubsection) formsSubsection.classList.add('expanded');
+            if (formsBtn) formsBtn.classList.add('active');
         }
 
         if (window.innerWidth <= 768) {
