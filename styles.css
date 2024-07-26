@@ -1,6 +1,6 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e9ecef;
     margin: 0;
     padding: 20px;
 }
@@ -9,47 +9,71 @@ body {
     max-width: 1200px;
     margin: auto;
     background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
-    color: #333;
+    color: #343a40;
 }
 
 .flex-container {
     display: flex;
+    gap: 20px;
 }
 
 .menu {
     width: 30%;
-    padding: 10px;
-    border-right: 2px solid #ccc;
+    padding: 15px;
+    border-right: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    border-radius: 5px;
 }
 
 .drop-area {
     width: 40%;
-    border: 2px dashed #ccc;
+    border: 2px dashed #6c757d;
     padding: 20px;
     margin-left: 10px;
     text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 5px;
 }
 
 .field-view {
     width: 30%;
-    padding: 10px;
+    padding: 15px;
     margin-left: 10px;
-    border-left: 2px solid #ccc;
+    border-left: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    border-radius: 5px;
 }
 
 .draggable {
-    padding: 10px;
-    margin: 5px;
-    background-color: #e7e7e7;
+    padding: 12px;
+    margin: 5px 0;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .draggable:hover {
-    background-color: #d4d4d4;
+    background-color: #0056b3;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
 }
