@@ -114,6 +114,12 @@ export class UIManager {
             if (typeof tool.action === 'function') {
                 tool.action();
             }
+            if (toolId === 'toolbox') {
+                const submenu = button.nextElementSibling;
+                if (submenu && submenu.classList.contains('submenu')) {
+                    submenu.classList.add('expanded');
+                }
+            }
             this.highlightActiveButton(button);
         } else {
             console.error(`Tool not found: ${toolId}`);
