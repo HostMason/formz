@@ -246,13 +246,27 @@ export class UIManager {
     async loadAndInitializePageScript(pageId) {
         const scriptPath = `/static/js/tools/${pageId}.js`;
         try {
-            await this.loadScript(scriptPath);
-            if (window[pageId] && typeof window[pageId].init === 'function') {
-                await window[pageId].init();
+            const module = await import(scriptPath);
+            if (module.default && typeof module.default.init === 'function') {
+                await module.default.init();
             }
         } catch (scriptError) {
             console.warn(`Failed to load or execute script for ${pageId}:`, scriptError);
+            // If the script doesn't exist, we'll just render the basic page content
+            this.renderBasicPageContent(pageId);
         }
+    }
+
+    renderBasicPageContent(pageId) {
+        const pageContent = `
+            <h1>${this.capitalizeFirstLetter(pageId)}</h1>
+            <p>Welcome to the ${pageId} page. This is a placeholder content.</p>
+        `;
+        this.mainContent.innerHTML = pageContent;
+    }
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     showErrorPage(pageId) {
