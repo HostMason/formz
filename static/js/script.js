@@ -1,156 +1,60 @@
+import { UISystem } from './uiSystem.js';
+import { FormBuilder } from './formBuilder.js';
+
 document.addEventListener('DOMContentLoaded', () => {
-    initializeFormBuilder();
-    initializeEventListeners();
+    const uiSystem = new UISystem();
+    const formBuilder = new FormBuilder();
+
+    initializeEventListeners(uiSystem, formBuilder);
 });
 
-function initializeFormBuilder() {
-    const formFields = document.getElementById('form-fields');
-    const fieldTypes = document.querySelectorAll('.field-type');
-
-    fieldTypes.forEach(fieldType => {
-        fieldType.addEventListener('dragstart', dragStart);
-        fieldType.addEventListener('dragend', dragEnd);
-    });
-
-    formFields.addEventListener('dragover', dragOver);
-    formFields.addEventListener('drop', drop);
-}
-
-function initializeEventListeners() {
-    document.getElementById('save-form').addEventListener('click', saveForm);
-    document.getElementById('preview-form').addEventListener('click', previewForm);
+function initializeEventListeners(uiSystem, formBuilder) {
+    document.getElementById('saveFormBtn').addEventListener('click', () => formBuilder.saveForm());
+    document.getElementById('previewFormBtn').addEventListener('click', () => formBuilder.previewForm());
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', handleNavItemClick);
+        btn.addEventListener('click', (e) => handleNavItemClick(e, uiSystem, formBuilder));
+    });
+
+    // Close button for preview modal
+    document.querySelector('#preview-modal .close').addEventListener('click', () => {
+        document.getElementById('preview-modal').style.display = 'none';
     });
 }
 
-function dragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.getAttribute('data-type'));
-    e.target.style.opacity = '0.5';
-}
-
-function dragEnd(e) {
-    e.target.style.opacity = '1';
-}
-
-function dragOver(e) {
-    e.preventDefault();
-}
-
-function drop(e) {
-    e.preventDefault();
-    const fieldType = e.dataTransfer.getData('text');
-    const newField = createField(fieldType);
-    e.target.appendChild(newField);
-}
-
-function createField(type) {
-    const field = document.createElement('div');
-    field.className = 'form-field';
-    field.innerHTML = `<label>${type.charAt(0).toUpperCase() + type.slice(1)}:</label>`;
-    
-    let input;
-    switch(type) {
-        case 'text':
-        case 'number':
-        case 'email':
-            input = document.createElement('input');
-            input.type = type;
-            break;
-        case 'textarea':
-            input = document.createElement('textarea');
-            break;
-        case 'checkbox':
-        case 'radio':
-            input = document.createElement('input');
-            input.type = type;
-            break;
-        case 'select':
-            input = document.createElement('select');
-            input.innerHTML = '<option>Option 1</option><option>Option 2</option>';
-            break;
-    }
-    
-    field.appendChild(input);
-    return field;
-}
-
-function saveForm() {
-    const formFields = document.getElementById('form-fields');
-    const formData = Array.from(formFields.children).map(field => {
-        return {
-            type: field.querySelector('input, textarea, select').tagName.toLowerCase(),
-            label: field.querySelector('label').textContent
-        };
-    });
-    console.log('Form saved:', formData);
-    // Here you would typically send this data to a server
-}
-
-function previewForm() {
-    const formFields = document.getElementById('form-fields');
-    const previewWindow = window.open('', 'Form Preview', 'width=600,height=400');
-    previewWindow.document.write('<h1>Form Preview</h1>');
-    previewWindow.document.write('<form>');
-    formFields.childNodes.forEach(field => {
-        previewWindow.document.write(field.outerHTML);
-    });
-    previewWindow.document.write('<input type="submit" value="Submit">');
-    previewWindow.document.write('</form>');
-}
-
-function handleNavItemClick(e) {
+function handleNavItemClick(e, uiSystem, formBuilder) {
     const action = e.currentTarget.id;
     switch (action) {
         case 'formBuilderBtn':
-            showPage('formBuilder');
+            uiSystem.showPage('formBuilder');
             break;
         case 'loadFormBtn':
             // Implement load form functionality
             console.log('Load form clicked');
             break;
         case 'saveFormBtn':
-            saveForm();
+            formBuilder.saveForm();
             break;
         case 'deleteFormBtn':
             // Implement delete form functionality
             console.log('Delete form clicked');
             break;
         case 'customFieldsBtn':
-            showPage('customFields');
+            uiSystem.showPage('customFields');
             break;
         case 'templatesBtn':
-            showPage('templates');
+            uiSystem.showPage('templates');
             break;
         case 'helpBtn':
-            showPage('help');
+            uiSystem.showPage('help');
             break;
         case 'settingsBtn':
-            showPage('settings');
+            uiSystem.showPage('settings');
             break;
         case 'toolboxBtn':
-            toggleToolbox();
+            uiSystem.toggleToolbox();
             break;
         default:
-            showPage('landing');
+            uiSystem.showPage('landing');
             break;
-    }
-}
-
-function toggleToolbox() {
-    const toolboxBtn = document.getElementById('toolboxBtn');
-    const formsSubsection = document.querySelector('.submenu');
-
-    toolboxBtn.classList.toggle('active');
-    formsSubsection.classList.toggle('expanded');
-}
-
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
-    const pageToShow = document.getElementById(`${pageId}-page`);
-    if (pageToShow) {
-        pageToShow.style.display = 'block';
-    } else {
-        console.error(`Page with id "${pageId}-page" not found`);
     }
 }

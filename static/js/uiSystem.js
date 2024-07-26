@@ -10,9 +10,6 @@ export class UISystem {
         this.menuToggle.addEventListener('click', () => this.toggleSidebar());
         document.getElementById('toolboxBtn').addEventListener('click', () => this.toggleToolbox());
         document.getElementById('formsBtn').addEventListener('click', (e) => this.toggleFormsSubsection(e));
-        document.querySelectorAll('.nav-item, .nav-subitem').forEach(item => {
-            item.addEventListener('click', (e) => this.handleNavItemClick(e));
-        });
         document.getElementById('hostMasonLogo').addEventListener('click', () => this.showPage('landing'));
     }
 
@@ -42,12 +39,22 @@ export class UISystem {
         formsBtn.classList.toggle('active');
     }
 
+    toggleToolbox() {
+        const toolboxBtn = document.getElementById('toolboxBtn');
+        const formsSubsection = document.querySelector('.submenu');
+    
+        toolboxBtn.classList.toggle('active');
+        formsSubsection.classList.toggle('expanded');
+    }
+
     showPage(pageId) {
         document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
         const page = document.getElementById(`${pageId}-page`);
         if (page) {
             page.style.display = 'block';
             document.title = `${pageId.charAt(0).toUpperCase() + pageId.slice(1)} - BlueColar Form Builder`;
+        } else {
+            console.error(`Page with id "${pageId}-page" not found`);
         }
     }
 }
