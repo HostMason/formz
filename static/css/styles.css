@@ -128,21 +128,28 @@ h1, h2 {
     font-weight: 600;
 }
 
-.panel-container {
+.main-content {
     display: flex;
-    flex-wrap: wrap;
     gap: 20px;
     justify-content: space-between;
 }
 
+.left-panel, .center-panel, .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .menu-panel {
-    flex: 1 1 calc(50% - 10px);
-    min-width: 300px;
     background-color: var(--surface-color);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+}
+
+.center-panel {
+    flex: 2;
 }
 
 .fields-grid {
