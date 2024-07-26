@@ -14,7 +14,6 @@ class App {
     async init() {
         await this.router.initializeRoutes();
         await this.uiManager.initializeUI();
-        await this.toolManager.initializeTools();
         this.attachEventListeners();
         this.handleInitialRoute();
     }
