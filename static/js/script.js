@@ -32,7 +32,7 @@ function initializeEventListeners() {
         button.addEventListener('click', addField);
     });
 
-    document.getElementById('previewFormBtn').addEventListener('click', previewForm);
+    document.getElementById('previewFormBtn').addEventListener('click', () => UIModule.previewForm(formFields));
     document.getElementById('submitPreviewFormBtn').addEventListener('click', UIModule.submitPreviewForm);
 
     const menuToggle = document.querySelector('.menu-toggle');

@@ -93,4 +93,18 @@ function closeModal() {
     document.getElementById('preview-modal').style.display = 'none';
 }
 
+function previewForm(formFields) {
+    const modal = document.getElementById('preview-modal');
+    const previewForm = document.getElementById('preview-form');
+    previewForm.innerHTML = '';
+
+    formFields.forEach(field => {
+        const clonedField = field.cloneNode(true);
+        clonedField.classList.remove('selected');
+        previewForm.appendChild(clonedField);
+    });
+
+    modal.style.display = 'block';
+}
+
 export { showMenuPanel, previewForm, submitPreviewForm, closeModal };
