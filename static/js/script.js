@@ -131,6 +131,18 @@ function openPreferences() {
     // You can create a modal or a new page for preferences
 }
 
+function openCustomFields() {
+    // Implement custom fields functionality
+    console.log('Open custom fields');
+    // You can create a modal or a new page for custom fields
+}
+
+function openTemplates() {
+    // Implement templates functionality
+    console.log('Open templates');
+    // You can create a modal or a new page for templates
+}
+
 function dragStart(e) {
     e.dataTransfer.setData('text/plain', e.target.getAttribute('data-field-type'));
     e.target.classList.add('dragging');
