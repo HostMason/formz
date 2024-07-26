@@ -1,3 +1,5 @@
+import { ToolManager } from './toolManager.js';
+
 export class UIManager {
     constructor() {
         this.sidebar = null;
