@@ -63,14 +63,19 @@ window.onload = function() {
     const sideMenu = document.querySelector('.side-menu');
     const container = document.querySelector('.container');
 
-    menuToggle.addEventListener('click', function() {
-        sideMenu.classList.toggle('open');
-        if (sideMenu.classList.contains('open')) {
-            container.style.marginLeft = '250px';
-        } else {
-            container.style.marginLeft = '50px';
-        }
-    });
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            console.log('Menu toggle clicked'); // Debug log
+            sideMenu.classList.toggle('open');
+            if (sideMenu.classList.contains('open')) {
+                container.style.marginLeft = '250px';
+            } else {
+                container.style.marginLeft = '50px';
+            }
+        });
+    } else {
+        console.error('Menu toggle element not found'); // Debug log
+    }
 
     document.querySelectorAll('.menu-option').forEach(option => {
         option.addEventListener('click', function() {
