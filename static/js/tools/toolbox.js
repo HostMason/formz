@@ -39,19 +39,37 @@ const toolbox = {
         toolboxContent.innerHTML = '';
         toolboxContent.style.opacity = '0';
 
-        setTimeout(() => {
-            switch (tool) {
-                case 'formBuilder':
-                    new FormBuilder().initialize();
-                    break;
-                case 'dataAnalyzer':
-                    new DataAnalyzer().initialize();
-                    break;
-                case 'reportGenerator':
-                    new ReportGenerator().initialize();
-                    break;
+        setTimeout(async () => {
+            try {
+                let module;
+                switch (tool) {
+                    case 'formBuilder':
+                        module = await import('../tools/formBuilder.js');
+                        break;
+                    case 'dataAnalyzer':
+                        module = await import('../dataAnalyzer.js');
+                        break;
+                    case 'reportGenerator':
+                        module = await import('../reportGenerator.js');
+                        break;
+                    default:
+                        throw new Error(`Unknown tool: ${tool}`);
+                }
+
+                if (module.default && typeof module.default.init === 'function') {
+                    module.default.init();
+                } else if (module[tool.charAt(0).toUpperCase() + tool.slice(1)] && typeof module[tool.charAt(0).toUpperCase() + tool.slice(1)].prototype.initialize === 'function') {
+                    new module[tool.charAt(0).toUpperCase() + tool.slice(1)]().initialize();
+                } else {
+                    throw new Error(`Module ${tool} does not have a valid initialization method`);
+                }
+
+                toolboxContent.style.opacity = '1';
+            } catch (error) {
+                console.error(`Error loading tool ${tool}:`, error);
+                toolboxContent.innerHTML = `<p>Error loading ${tool}. Please try again later.</p>`;
+                toolboxContent.style.opacity = '1';
             }
-            toolboxContent.style.opacity = '1';
         }, 300);
     }
 };
