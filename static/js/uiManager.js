@@ -26,12 +26,12 @@ export class UIManager {
     initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
-        const forms = new Tool('forms', 'Forms', 'fas fa-file-alt', () => this.showPage('forms'));
-        forms.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
-        forms.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
-        forms.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
-        forms.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
-        forms.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
+        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
+        formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
+        formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
+        formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
+        formBuilder.addSubTool(new Tool('formTemplates', 'Form Templates', 'fas fa-copy', () => this.showPage('formTemplates')));
+        formBuilder.addSubTool(new Tool('formSettings', 'Form Settings', 'fas fa-cog', () => this.showPage('formSettings')));
 
         toolbox.addSubTool(formBuilder);
 

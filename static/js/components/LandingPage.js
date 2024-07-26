@@ -15,6 +15,8 @@ export default class LandingPage extends Component {
                             <li>Customize field properties</li>
                             <li>Preview and test your forms</li>
                             <li>Save and load forms</li>
+                            <li>Manage form templates</li>
+                            <li>Configure form settings</li>
                         </ul>
                     </li>
                 </ul>
