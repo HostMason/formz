@@ -35,20 +35,18 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', toggleSidebar);
 
     document.querySelectorAll('.nav-section-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const sectionId = e.currentTarget.id.replace('Btn', 'Section');
-            toggleSection(sectionId);
-        });
+        btn.addEventListener('click', toggleSection);
     });
 
-    document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
-    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
-    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
-    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
-    document.getElementById('customFieldsBtn').addEventListener('click', openCustomFields);
-    document.getElementById('templatesBtn').addEventListener('click', openTemplates);
-    document.getElementById('preferencesBtn').addEventListener('click', openPreferences);
-    document.getElementById('helpBtn').addEventListener('click', openHelp);
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', handleNavItemClick);
+    });
+
+    document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
+    document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
+    document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
+    document.getElementById('fieldOptionsText').addEventListener('input', (e) => updateFieldProperty('options', e.target.value));
+    document.getElementById('addOptionBtn').addEventListener('click', FieldModule.addSelectOption);
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
@@ -189,10 +187,45 @@ function updateFormFields(loadedFields) {
     updateHierarchyView();
 }
 
-function toggleSection(sectionId) {
+function toggleSection(e) {
+    const sectionId = e.currentTarget.id.replace('Btn', 'Section');
     const section = document.getElementById(sectionId);
-    const content = section.querySelector('.nav-section-content');
-    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+    document.querySelectorAll('.nav-section-content').forEach(content => {
+        if (content.id !== sectionId) {
+            content.classList.remove('expanded');
+        }
+    });
+    section.classList.toggle('expanded');
+}
+
+function handleNavItemClick(e) {
+    const action = e.currentTarget.id;
+    switch (action) {
+        case 'formBuilderBtn':
+            showFormBuilder();
+            break;
+        case 'createFormBtn':
+            createNewForm();
+            break;
+        case 'loadFormBtn':
+            loadForm();
+            break;
+        case 'saveFormBtn':
+            saveForm();
+            break;
+        case 'customFieldsBtn':
+            openCustomFields();
+            break;
+        case 'templatesBtn':
+            openTemplates();
+            break;
+        case 'preferencesBtn':
+            openPreferences();
+            break;
+        case 'helpBtn':
+            openHelp();
+            break;
+    }
 }
 
 function updatePageTitle(title) {

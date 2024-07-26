@@ -177,13 +177,16 @@ body {
 }
 
 .nav-section-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    display: none;
+    transition: all 0.3s ease;
 }
 
 .nav-section-content.expanded {
-    max-height: 500px;
+    display: block;
+}
+
+.sidebar.collapsed .nav-section-content {
+    display: none;
 }
 
 .nav-item i {
