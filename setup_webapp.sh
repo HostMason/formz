@@ -20,7 +20,7 @@ Description=Flask Web Application
 [Service]
 User=$USER
 WorkingDirectory=$(pwd)
-ExecStart=/usr/bin/python3 app/app.py
+ExecStart=/usr/bin/python3 app.py
 Restart=always
 
 [Install]
@@ -32,7 +32,7 @@ WantedBy=multi-user.target" | sudo tee $SERVICE_FILE
 # Function to configure firewall
 configure_firewall() {
     echo "Configuring firewall..."
-    sudo ufw allow $1
+    sudo ufw allow 5000
     echo "Firewall configured to allow traffic on port $1."
 }
 
