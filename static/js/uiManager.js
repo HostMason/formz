@@ -26,7 +26,12 @@ export class UIManager {
     initializeTools() {
         const toolbox = new Tool('toolbox', 'Toolbox', 'fas fa-toolbox', () => this.toggleToolbox());
         
-        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => this.showPage('formBuilder'));
+        const formBuilder = new Tool('formBuilder', 'Form Builder', 'fas fa-file-alt', () => {
+            if (this.sidebar.classList.contains('collapsed')) {
+                this.toggleSidebar();
+            }
+            this.showPage('formBuilder');
+        });
         formBuilder.addSubTool(new Tool('createForm', 'Create Form', 'fas fa-plus', () => this.showPage('createForm')));
         formBuilder.addSubTool(new Tool('editForm', 'Edit Form', 'fas fa-edit', () => this.showPage('editForm')));
         formBuilder.addSubTool(new Tool('viewForms', 'View Forms', 'fas fa-list', () => this.showPage('viewForms')));
@@ -186,7 +191,7 @@ export class UIManager {
     }
 
     showLandingPage() {
-        this.showPage('formBuilder');
+        this.showPage('landing');
     }
 
     showPage(pageId) {
