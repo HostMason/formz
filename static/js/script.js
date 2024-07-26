@@ -350,7 +350,7 @@ function handleNavItemClick(e) {
             showPage('settings');
             break;
         default:
-            // Do nothing for other buttons, let UISystem handle them
+            showPage('landing');
             break;
     }
 }
