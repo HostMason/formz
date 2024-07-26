@@ -43,7 +43,6 @@ function initializeEventListeners() {
         e.stopPropagation();
         toggleFormsSubsection(e);
     });
-    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
     document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
@@ -137,8 +136,8 @@ function openPreferences() {
 
 function openHelp() {
     document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('form-builder').style.display = 'none';
-    document.getElementById('helpPage').style.display = 'block';
+    document.getElementById('form-builder').style.display = 'block';
+    document.querySelector('.main-content').innerHTML = document.getElementById('helpPage').innerHTML;
     updatePageTitle('Help');
 }
 
@@ -304,10 +303,8 @@ function handleNavItemClick(e) {
     switch (action) {
         case 'formsBtn':
             toggleFormsSubsection(e);
+            showFormBuilder();
             return;
-        case 'createFormBtn':
-            createNewForm();
-            break;
         case 'loadFormBtn':
             loadForm();
             break;
@@ -334,20 +331,11 @@ function handleNavItemClick(e) {
             break;
     }
     hideAllPages();
-    switch (action) {
-        case 'createFormBtn':
-        case 'loadFormBtn':
-        case 'saveFormBtn':
-        case 'deleteFormBtn':
-        case 'customFieldsBtn':
-        case 'templatesBtn':
-            document.getElementById('form-builder').style.display = 'block';
-            break;
-        case 'helpBtn':
-            document.getElementById('helpPage').style.display = 'block';
-            break;
-        default:
-            document.getElementById('landing-page').style.display = 'block';
+    if (action === 'helpBtn') {
+        document.getElementById('form-builder').style.display = 'block';
+        document.querySelector('.main-content').innerHTML = document.getElementById('helpPage').innerHTML;
+    } else {
+        document.getElementById('form-builder').style.display = 'block';
     }
     // Close the toolbox after clicking a nav item, except for 'formsBtn'
     if (action !== 'formsBtn') {
