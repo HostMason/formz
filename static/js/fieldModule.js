@@ -33,73 +33,7 @@ function createSelectField() {
     return fieldElement;
 }
 
-function selectField(field) {
-    selectedField = field;
-    const fieldDetails = document.getElementById('field-details');
-    fieldDetails.innerHTML = '';
-
-    const createFieldDetail = (labelText, inputType, value, onchangeFunc) => {
-        const label = document.createElement('label');
-        label.textContent = labelText;
-        const input = document.createElement('input');
-        input.type = inputType;
-        input.value = value;
-        input.onchange = (e) => onchangeFunc(e.target.value);
-        const wrapper = document.createElement('div');
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        return wrapper;
-    };
-
-    if (field.querySelector('input, textarea, select')) {
-        const element = field.querySelector('input, textarea, select');
-        fieldDetails.appendChild(createFieldDetail('Label:', 'text', field.querySelector('label')?.innerText || '', updateFieldLabel));
-        fieldDetails.appendChild(createFieldDetail('Placeholder:', 'text', element.placeholder || '', updateFieldPlaceholder));
-        
-        const requiredWrapper = document.createElement('div');
-        const requiredLabel = document.createElement('label');
-        requiredLabel.textContent = 'Required:';
-        const requiredCheckbox = document.createElement('input');
-        requiredCheckbox.type = 'checkbox';
-        requiredCheckbox.checked = element.required;
-        requiredCheckbox.onchange = (e) => updateFieldRequired(e.target.checked);
-        requiredWrapper.appendChild(requiredLabel);
-        requiredWrapper.appendChild(requiredCheckbox);
-        fieldDetails.appendChild(requiredWrapper);
-
-        if (element.tagName === 'SELECT') {
-            const optionsLabel = document.createElement('label');
-            optionsLabel.textContent = 'Options:';
-            const optionsTextarea = document.createElement('textarea');
-            optionsTextarea.value = Array.from(element.options).map(option => option.text).join('\n');
-            optionsTextarea.onchange = (e) => updateSelectOptions(e.target.value);
-            fieldDetails.appendChild(optionsLabel);
-            fieldDetails.appendChild(optionsTextarea);
-
-            const addOptionWrapper = document.createElement('div');
-            addOptionWrapper.appendChild(createFieldDetail('Add Option:', 'text', '', () => {}));
-            const addButton = document.createElement('button');
-            addButton.textContent = 'Add Option';
-            addButton.onclick = addSelectOption;
-            addOptionWrapper.appendChild(addButton);
-            fieldDetails.appendChild(addOptionWrapper);
-        }
-    } else if (field.tagName === 'BUTTON') {
-        fieldDetails.appendChild(createFieldDetail('Button Text:', 'text', field.innerText, (value) => updateFieldValue(value, true)));
-    }
-
-    // Add style modification section
-    const styleSection = document.createElement('div');
-    styleSection.innerHTML = '<h3>Style Modifications</h3>';
-    styleSection.appendChild(createFieldDetail('Font Size:', 'number', getComputedStyle(field).fontSize.replace('px', ''), (value) => updateFieldStyle('fontSize', value + 'px')));
-    styleSection.appendChild(createFieldDetail('Font Color:', 'color', rgbToHex(getComputedStyle(field).color), (value) => updateFieldStyle('color', value)));
-    styleSection.appendChild(createFieldDetail('Background Color:', 'color', rgbToHex(getComputedStyle(field).backgroundColor), (value) => updateFieldStyle('backgroundColor', value)));
-    styleSection.appendChild(createFieldDetail('Border Color:', 'color', rgbToHex(getComputedStyle(field).borderColor), (value) => updateFieldStyle('borderColor', value)));
-    styleSection.appendChild(createFieldDetail('Border Width:', 'number', getComputedStyle(field).borderWidth.replace('px', ''), (value) => updateFieldStyle('borderWidth', value + 'px')));
-    styleSection.appendChild(createFieldDetail('Border Radius:', 'number', getComputedStyle(field).borderRadius.replace('px', ''), (value) => updateFieldStyle('borderRadius', value + 'px')));
-    styleSection.appendChild(createFieldDetail('Padding:', 'number', getComputedStyle(field).padding.replace('px', ''), (value) => updateFieldStyle('padding', value + 'px')));
-    fieldDetails.appendChild(styleSection);
-}
+// Remove the selectField function as it's no longer needed
 
 function updateFieldStyle(property, value) {
     if (selectedField) {
