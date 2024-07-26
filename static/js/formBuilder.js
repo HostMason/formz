@@ -1,8 +1,18 @@
 export class FormBuilder {
     constructor() {
+        this.formFields = null;
+        this.fieldTypes = null;
+    }
+
+    initialize() {
         this.formFields = document.getElementById('preview-content');
         this.fieldTypes = document.querySelectorAll('.field-type-button');
-        this.initializeEventListeners();
+        
+        if (this.formFields && this.fieldTypes.length > 0) {
+            this.initializeEventListeners();
+        } else {
+            console.error('Form fields container or field types not found');
+        }
     }
 
     initializeEventListeners() {
@@ -11,12 +21,8 @@ export class FormBuilder {
             fieldType.addEventListener('dragend', this.dragEnd.bind(this));
         });
 
-        if (this.formFields) {
-            this.formFields.addEventListener('dragover', this.dragOver.bind(this));
-            this.formFields.addEventListener('drop', this.drop.bind(this));
-        } else {
-            console.error('Form fields container not found');
-        }
+        this.formFields.addEventListener('dragover', this.dragOver.bind(this));
+        this.formFields.addEventListener('drop', this.drop.bind(this));
     }
 
     dragStart(e) {
