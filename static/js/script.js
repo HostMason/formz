@@ -2,6 +2,7 @@ import { moduleManager } from './moduleManager.js';
 import * as FormModule from './formModule.js';
 import * as FieldModule from './fieldModule.js';
 import * as UIModule from './uiModule.js';
+import { pages, showPage } from './pageSystem.js';
 
 let formFields = [];
 let selectedField = null;
@@ -43,14 +44,11 @@ function initializeEventListeners() {
         e.stopPropagation();
         toggleFormsSubsection(e);
     });
-    document.getElementById('formBuilderBtn').addEventListener('click', showFormBuilder);
-    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
-    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
-    document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
-    document.getElementById('customFieldsBtn').addEventListener('click', openCustomFields);
-    document.getElementById('templatesBtn').addEventListener('click', openTemplates);
-    document.getElementById('helpBtn').addEventListener('click', openHelp);
-    document.getElementById('settingsBtn').addEventListener('click', openSettings);
+
+    // Add event listeners for sidebar buttons
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', handleNavItemClick);
+    });
 
     // Initialize sidebar state
     const sidebar = document.querySelector('.sidebar');
@@ -60,22 +58,11 @@ function initializeEventListeners() {
         mainContent.classList.add('expanded');
     }
 
-    // Initialize form builder view
-    showFormBuilder();
-
-    // Add event listeners for sidebar buttons
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', handleNavItemClick);
-    });
+    // Initialize landing page view
+    showPage('landing');
 
     // Update menu toggle icon initially
     updateMenuToggleIcon();
-
-    document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
-    document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
-    document.getElementById('fieldRequired').addEventListener('change', (e) => updateFieldProperty('required', e.target.checked));
-    document.getElementById('fieldOptionsText').addEventListener('input', (e) => updateFieldProperty('options', e.target.value));
-    document.getElementById('addOptionBtn').addEventListener('click', FieldModule.addSelectOption);
 
     document.getElementById('fieldLabel').addEventListener('input', (e) => updateFieldProperty('label', e.target.value));
     document.getElementById('fieldPlaceholder').addEventListener('input', (e) => updateFieldProperty('placeholder', e.target.value));
@@ -298,46 +285,40 @@ function toggleFormsSubsection(event) {
 
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
-    hideAllPages();
 
     switch (action) {
         case 'formsBtn':
             toggleFormsSubsection(e);
-            showFormBuilder();
             break;
         case 'formBuilderBtn':
-            showFormBuilder();
-            document.getElementById('form-builder').style.display = 'block';
+            showPage('formBuilder');
             break;
         case 'loadFormBtn':
             loadForm();
-            showFormBuilder();
+            showPage('formBuilder');
             break;
         case 'saveFormBtn':
             saveForm();
-            showFormBuilder();
+            showPage('formBuilder');
             break;
         case 'deleteFormBtn':
             deleteForm();
-            showFormBuilder();
+            showPage('formBuilder');
             break;
         case 'customFieldsBtn':
-            openCustomFields();
-            showFormBuilder();
+            showPage('customFields');
             break;
         case 'templatesBtn':
-            openTemplates();
-            showFormBuilder();
+            showPage('templates');
             break;
-        case 'preferencesBtn':
-            openPreferences();
-            showFormBuilder();
+        case 'settingsBtn':
+            showPage('settings');
             break;
         case 'helpBtn':
-            openHelp();
+            showPage('help');
             break;
         default:
-            showFormBuilder();
+            showPage('landing');
             break;
     }
 
