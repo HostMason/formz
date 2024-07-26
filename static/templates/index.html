@@ -18,9 +18,28 @@
                 <h1 class="company-name">BlueColar</h1>
             </div>
             <nav class="sidebar-nav">
-                <h2>Toolbox</h2>
-                <button class="nav-item" data-target="field-types"><i class="fas fa-list-ul"></i> Form Fields</button>
-                <button class="nav-item" data-target="field-properties"><i class="fas fa-cog"></i> Field Properties</button>
+                <div class="nav-section">
+                    <h2><i class="fas fa-toolbox"></i> Toolbox</h2>
+                    <ul>
+                        <li><button class="nav-item" data-target="field-types"><i class="fas fa-list-ul"></i> Form Fields</button></li>
+                        <li><button class="nav-item" data-target="field-properties"><i class="fas fa-cog"></i> Field Properties</button></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <h2><i class="fas fa-file-alt"></i> Forms</h2>
+                    <ul>
+                        <li><button class="nav-item" id="createFormBtn"><i class="fas fa-plus"></i> Create New</button></li>
+                        <li><button class="nav-item" id="loadFormBtn"><i class="fas fa-folder-open"></i> Load Form</button></li>
+                        <li><button class="nav-item" id="saveFormBtn"><i class="fas fa-save"></i> Save Form</button></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <h2><i class="fas fa-cogs"></i> Settings</h2>
+                    <ul>
+                        <li><button class="nav-item" id="settingsBtn"><i class="fas fa-sliders-h"></i> Preferences</button></li>
+                        <li><button class="nav-item" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button></li>
+                    </ul>
+                </div>
             </nav>
         </aside>
         <main class="main-content">
