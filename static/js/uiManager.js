@@ -3,6 +3,7 @@ export class UIManager {
         this.sidebar = null;
         this.mainContent = null;
         this.menuToggle = null;
+        this.toolManager = new ToolManager();
     }
 
     initializeUI() {
@@ -11,6 +12,7 @@ export class UIManager {
         this.mainContent = document.querySelector('.main-content');
         this.menuToggle = document.querySelector('.menu-toggle');
         this.attachEventListeners();
+        this.renderNavigation();
     }
 
     renderBasicStructure() {
@@ -49,10 +51,10 @@ export class UIManager {
         icon.classList.toggle('fa-arrow-left');
     }
 
-    renderNavigation(tools) {
+    renderNavigation() {
         const navList = document.querySelector('.nav-list');
         navList.innerHTML = '';
-        tools.forEach(tool => {
+        this.toolManager.getAllTools().forEach(tool => {
             const li = document.createElement('li');
             li.className = 'nav-item';
             li.innerHTML = `
@@ -62,5 +64,19 @@ export class UIManager {
             `;
             navList.appendChild(li);
         });
+        this.addEventListenersToButtons(navList);
+    }
+
+    addEventListenersToButtons(element) {
+        element.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleNavItemClick(e));
+        });
+    }
+
+    handleNavItemClick(e) {
+        e.preventDefault();
+        const route = e.currentTarget.getAttribute('data-route');
+        // Here you would typically use your router to navigate
+        console.log(`Navigating to: ${route}`);
     }
 }
