@@ -1,6 +1,6 @@
-import * as FormModule from './static/js/formModule.js';
-import * as FieldModule from './static/js/fieldModule.js';
-import * as UIModule from './static/js/uiModule.js';
+import * as FormModule from './formModule.js';
+import * as FieldModule from './fieldModule.js';
+import * as UIModule from './uiModule.js';
 
 let formFields = [];
 
