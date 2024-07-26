@@ -336,6 +336,10 @@ function handleNavItemClick(e) {
     } else {
         showFormBuilder();
     }
+    // Always show form builder when 'formsBtn' is clicked
+    if (action === 'formsBtn') {
+        showFormBuilder();
+    }
     // Close the toolbox after clicking a nav item, except for 'formsBtn'
     if (action !== 'formsBtn') {
         const toolboxSection = document.getElementById('toolboxSection');
