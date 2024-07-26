@@ -9,7 +9,7 @@ class App {
     constructor() {
         this.router = new Router();
         this.toolManager = new ToolManager();
-        this.uiManager = new UIManager(this.router, this.toolManager);
+        this.uiManager = new UIManager();
         this.themeManager = new ThemeManager();
         this.authManager = new AuthManager();
         this.apiClient = new APIClient();
@@ -20,19 +20,17 @@ class App {
             await this.authManager.init();
             await this.router.initializeRoutes();
             await this.toolManager.initializeTools();
-            await this.uiManager.initializeUI();
+            this.uiManager.initializeUI(this.router, this.toolManager, this.themeManager, this.authManager);
             this.attachEventListeners();
             this.handleInitialRoute();
         } catch (error) {
             console.error('Error initializing app:', error);
-            // Handle initialization error (e.g., show error message to user)
+            this.uiManager.showErrorMessage('Failed to initialize the application. Please try again later.');
         }
     }
 
     attachEventListeners() {
         window.addEventListener('popstate', this.handleRouteChange.bind(this));
-        document.getElementById('toggleTheme')?.addEventListener('click', () => this.themeManager.toggleTheme());
-        document.getElementById('logoutBtn')?.addEventListener('click', () => this.authManager.logout());
     }
 
     handleInitialRoute() {

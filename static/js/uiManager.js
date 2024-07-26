@@ -1,30 +1,31 @@
-import { ThemeManager } from './themeManager.js';
-
 export class UIManager {
-    constructor(router, toolManager) {
-        this.router = router;
-        this.toolManager = toolManager;
-        this.themeManager = new ThemeManager();
+    constructor() {
         this.elements = {};
     }
 
-    async initializeUI() {
+    initializeUI(router, toolManager, themeManager, authManager) {
+        this.router = router;
+        this.toolManager = toolManager;
+        this.themeManager = themeManager;
+        this.authManager = authManager;
+
         this.renderBasicStructure();
         this.cacheElements();
         this.attachEventListeners();
         this.renderNavigation();
-        this.router.handleNavigation(this.showPage.bind(this));
-        await this.showPage('landing');
-        this.updateMenuToggleIcon();
+        this.updateUIForAuthState();
+        this.router.setPageRenderer(this.renderPage.bind(this));
     }
 
     cacheElements() {
         this.elements = {
+            app: document.getElementById('app'),
             sidebar: document.querySelector('.sidebar'),
             mainContent: document.querySelector('.main-content'),
             menuToggle: document.querySelector('.menu-toggle'),
             navList: document.querySelector('.nav-list'),
-            authButtons: document.querySelector('.auth-buttons')
+            authButtons: document.querySelector('.auth-buttons'),
+            themeToggle: document.getElementById('themeToggle')
         };
     }
 
@@ -35,21 +36,19 @@ export class UIManager {
                     <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
                     <nav class="main-nav">
                         <ul>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/pricing">Pricing</a></li>
-                            <li><a href="/features">Features</a></li>
-                            <li><a href="/contact">Contact</a></li>
+                            <li><a href="/" data-link>Home</a></li>
+                            <li><a href="/pricing" data-link>Pricing</a></li>
+                            <li><a href="/features" data-link>Features</a></li>
+                            <li><a href="/contact" data-link>Contact</a></li>
                         </ul>
                     </nav>
-                    <div class="auth-buttons">
-                        <button id="loginBtn">Login</button>
-                        <button id="registerBtn">Register</button>
-                    </div>
+                    <div class="auth-buttons"></div>
+                    <button id="themeToggle">Toggle Theme</button>
                 </header>
                 <div class="app-body">
                     <aside class="sidebar">
                         <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-bars"></i>
                         </button>
                         <nav class="sidebar-nav">
                             <ul class="nav-list"></ul>
@@ -62,62 +61,37 @@ export class UIManager {
                 </footer>
             </div>
         `;
-        
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/static/css/main.css';
-        document.head.appendChild(link);
     }
 
     attachEventListeners() {
         this.elements.menuToggle.addEventListener('click', this.toggleSidebar.bind(this));
-        document.getElementById('hostMasonLogo').addEventListener('click', () => this.router.navigateTo('/'));
-        document.getElementById('loginBtn').addEventListener('click', () => this.router.navigateTo('/login'));
-        document.getElementById('registerBtn').addEventListener('click', () => this.router.navigateTo('/register'));
+        this.elements.themeToggle.addEventListener('click', this.themeManager.toggleTheme.bind(this.themeManager));
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-link]')) {
+                e.preventDefault();
+                this.router.navigateTo(e.target.href);
+            }
+        });
     }
 
     renderNavigation() {
         this.elements.navList.innerHTML = '';
-        if (window.app.authManager.isAuthenticated()) {
+        if (this.authManager.isAuthenticated()) {
             this.toolManager.getAllTools().forEach(tool => {
                 this.elements.navList.appendChild(this.createNavItem(tool));
             });
         }
-        this.addEventListenersToButtons();
     }
 
     createNavItem(tool) {
         const li = document.createElement('li');
         li.className = 'nav-item';
         li.innerHTML = `
-            <button class="nav-btn" id="${tool.id}Btn" data-tool-id="${tool.id}">
+            <a href="/${tool.id}" class="nav-link" data-link>
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
-            </button>
+            </a>
         `;
         return li;
-    }
-
-    addEventListenersToButtons() {
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', this.handleNavItemClick.bind(this));
-        });
-    }
-
-    handleNavItemClick(e) {
-        const toolId = e.currentTarget.getAttribute('data-tool-id');
-        const tool = this.toolManager.getTool(toolId);
-        if (tool) {
-            this.router.navigateTo(`/${toolId}`);
-            this.showPage(toolId);
-            this.highlightActiveButton(e.currentTarget);
-        } else {
-            console.error(`Tool not found: ${toolId}`);
-        }
-    }
-
-    highlightActiveButton(button) {
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
     }
 
     toggleSidebar() {
@@ -127,20 +101,20 @@ export class UIManager {
 
     updateMenuToggleIcon() {
         const icon = this.elements.menuToggle.querySelector('i');
-        icon.classList.toggle('fa-arrow-right', this.elements.sidebar.classList.contains('collapsed'));
-        icon.classList.toggle('fa-arrow-left', !this.elements.sidebar.classList.contains('collapsed'));
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
     }
 
-    async showPage(pageId) {
+    async renderPage(pageId) {
         try {
-            const html = await this.fetchPageContent(pageId);
-            this.elements.mainContent.innerHTML = html;
+            const pageContent = await this.fetchPageContent(pageId);
+            this.elements.mainContent.innerHTML = pageContent;
             await this.loadAndInitializePageScript(pageId);
             this.updateActiveNavItem(pageId);
             this.updatePageTitle(pageId);
         } catch (error) {
-            console.error(`Error loading page: ${pageId}`, error);
-            this.showErrorPage(pageId);
+            console.error(`Error rendering page: ${pageId}`, error);
+            this.showErrorMessage('Failed to load the page. Please try again later.');
         }
     }
 
@@ -195,34 +169,35 @@ export class UIManager {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    showErrorPage(pageId) {
-        this.elements.mainContent.innerHTML = `
-            <h1>Error 404: Page Not Found</h1>
-            <p>The requested page "${pageId}" could not be found.</p>
-        `;
-    }
-
     updateActiveNavItem(pageId) {
-        document.querySelectorAll('.nav-btn').forEach(item => {
-            item.classList.toggle('active', item.id === `${pageId}Btn`);
+        document.querySelectorAll('.nav-link').forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === `/${pageId}`);
         });
     }
 
     updateUIForAuthState() {
-        if (window.app.authManager.isAuthenticated()) {
+        if (this.authManager.isAuthenticated()) {
             this.elements.authButtons.innerHTML = `
-                <span>Welcome, ${window.app.authManager.user.name}</span>
+                <span>Welcome, ${this.authManager.user.name}</span>
                 <button id="logoutBtn">Logout</button>
             `;
             this.elements.sidebar.style.display = 'block';
-            this.renderNavigation();
+            document.getElementById('logoutBtn').addEventListener('click', this.authManager.logout.bind(this.authManager));
         } else {
             this.elements.authButtons.innerHTML = `
-                <button id="loginBtn">Login</button>
-                <button id="registerBtn">Register</button>
+                <a href="/login" class="auth-link" data-link>Login</a>
+                <a href="/register" class="auth-link" data-link>Register</a>
             `;
             this.elements.sidebar.style.display = 'none';
         }
-        this.attachEventListeners();
+        this.renderNavigation();
+    }
+
+    showErrorMessage(message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        errorElement.textContent = message;
+        this.elements.mainContent.prepend(errorElement);
+        setTimeout(() => errorElement.remove(), 5000);
     }
 }
