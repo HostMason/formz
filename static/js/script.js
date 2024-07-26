@@ -39,7 +39,10 @@ function initializeEventListeners() {
     menuToggle.addEventListener('click', toggleSidebar);
 
     document.getElementById('toolboxBtn').addEventListener('click', toggleToolbox);
-    document.getElementById('formsBtn').addEventListener('click', toggleFormsSubsection);
+    document.getElementById('formsBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFormsSubsection(e);
+    });
     document.getElementById('createFormBtn').addEventListener('click', createNewForm);
     document.getElementById('loadFormBtn').addEventListener('click', loadForm);
     document.getElementById('saveFormBtn').addEventListener('click', saveForm);
@@ -274,15 +277,25 @@ function toggleSection(e) {
 
 function toggleToolbox() {
     const toolboxSection = document.getElementById('toolboxSection');
-    toolboxSection.classList.toggle('expanded');
     const toolboxBtn = document.getElementById('toolboxBtn');
-    toolboxBtn.classList.toggle('active');
+    const formsSubsection = document.getElementById('formsSubsection');
+
+    if (toolboxSection.classList.contains('expanded')) {
+        toolboxSection.classList.remove('expanded');
+        toolboxBtn.classList.remove('active');
+        formsSubsection.classList.remove('expanded');
+    } else {
+        toolboxSection.classList.add('expanded');
+        toolboxBtn.classList.add('active');
+        formsSubsection.classList.add('expanded');
+    }
 }
 
-function toggleFormsSubsection() {
+function toggleFormsSubsection(event) {
+    event.stopPropagation();
     const formsSubsection = document.getElementById('formsSubsection');
-    formsSubsection.classList.toggle('expanded');
     const formsBtn = document.getElementById('formsBtn');
+    formsSubsection.classList.toggle('expanded');
     formsBtn.classList.toggle('active');
 }
 
@@ -290,8 +303,8 @@ function handleNavItemClick(e) {
     const action = e.currentTarget.id;
     switch (action) {
         case 'formsBtn':
-            showFormBuilder();
-            break;
+            toggleFormsSubsection(e);
+            return;
         case 'createFormBtn':
             createNewForm();
             break;
@@ -316,14 +329,18 @@ function handleNavItemClick(e) {
         case 'helpBtn':
             openHelp();
             break;
+        default:
+            showFormBuilder();
+            break;
     }
     hideAllPages();
     switch (action) {
-        case 'formsBtn':
         case 'createFormBtn':
         case 'loadFormBtn':
         case 'saveFormBtn':
         case 'deleteFormBtn':
+        case 'customFieldsBtn':
+        case 'templatesBtn':
             document.getElementById('form-builder').style.display = 'block';
             break;
         case 'helpBtn':
@@ -332,11 +349,13 @@ function handleNavItemClick(e) {
         default:
             document.getElementById('landing-page').style.display = 'block';
     }
-    // Close the toolbox after clicking a nav item
-    const toolboxSection = document.getElementById('toolboxSection');
-    toolboxSection.classList.remove('expanded');
-    const toolboxBtn = document.getElementById('toolboxBtn');
-    toolboxBtn.classList.remove('active');
+    // Close the toolbox after clicking a nav item, except for 'formsBtn'
+    if (action !== 'formsBtn') {
+        const toolboxSection = document.getElementById('toolboxSection');
+        toolboxSection.classList.remove('expanded');
+        const toolboxBtn = document.getElementById('toolboxBtn');
+        toolboxBtn.classList.remove('active');
+    }
 }
 
 function updatePageTitle(title) {
