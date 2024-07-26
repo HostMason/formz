@@ -30,40 +30,60 @@ export class UIManager {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = `
             <div class="app-container">
-                <aside class="sidebar">
-                    <div class="sidebar-header">
+                <header class="app-header">
+                    <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
+                    <nav class="main-nav">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
+                            <li><a href="/features">Features</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                    <div class="auth-buttons">
+                        <button id="loginBtn">Login</button>
+                        <button id="registerBtn">Register</button>
+                    </div>
+                </header>
+                <div class="app-body">
+                    <aside class="sidebar">
                         <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
                             <i class="fas fa-arrow-right"></i>
                         </button>
-                        <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
-                    </div>
-                    <nav class="sidebar-nav">
-                        <ul class="nav-list"></ul>
-                    </nav>
-                </aside>
-                <main class="main-content"></main>
+                        <nav class="sidebar-nav">
+                            <ul class="nav-list"></ul>
+                        </nav>
+                    </aside>
+                    <main class="main-content"></main>
+                </div>
+                <footer class="app-footer">
+                    <p>&copy; 2023 HostMason. All rights reserved.</p>
+                </footer>
             </div>
         `;
         
-        // Add the new CSS file
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/static/css/toolbox.css';
+        link.href = '/static/css/main.css';
         document.head.appendChild(link);
     }
 
     attachEventListeners() {
         this.menuToggle.addEventListener('click', () => this.toggleSidebar());
-        document.getElementById('hostMasonLogo').addEventListener('click', () => this.showLandingPage());
+        document.getElementById('hostMasonLogo').addEventListener('click', () => this.router.navigateTo('/'));
+        document.getElementById('loginBtn').addEventListener('click', () => this.router.navigateTo('/login'));
+        document.getElementById('registerBtn').addEventListener('click', () => this.router.navigateTo('/register'));
     }
 
     renderNavigation() {
         const navList = document.querySelector('.nav-list');
         navList.innerHTML = '';
 
-        this.toolManager.getAllTools().forEach(tool => {
-            navList.appendChild(this.createNavItem(tool));
-        });
+        if (window.app.authManager.isAuthenticated()) {
+            this.toolManager.getAllTools().forEach(tool => {
+                navList.appendChild(this.createNavItem(tool));
+            });
+        }
 
         this.addEventListenersToButtons();
     }
@@ -121,10 +141,6 @@ export class UIManager {
         }
     }
 
-    showLandingPage() {
-        this.showPage('landing');
-    }
-
     async showPage(pageId) {
         try {
             const html = await this.fetchPageContent(pageId);
@@ -141,9 +157,15 @@ export class UIManager {
     updatePageTitle(pageId) {
         const pageTitles = {
             'landing': 'Welcome',
-            'toolbox': 'Toolbox',
+            'dashboard': 'Dashboard',
+            'formBuilder': 'Form Builder',
+            'dataAnalyzer': 'Data Analyzer',
+            'reportGenerator': 'Report Generator',
             'help': 'Help',
-            'settings': 'Settings'
+            'settings': 'Settings',
+            'login': 'Login',
+            'register': 'Register',
+            'forgotPassword': 'Forgot Password'
         };
         document.title = `${pageTitles[pageId] || 'Page Not Found'} - HostMason`;
     }
@@ -171,7 +193,7 @@ export class UIManager {
     }
 
     async loadAndInitializePageScript(pageId) {
-        const scriptPath = `/static/js/tools/${pageId}.js`;
+        const scriptPath = `/static/js/pages/${pageId}.js`;
         try {
             const module = await import(scriptPath);
             if (module.default && typeof module.default.init === 'function') {
@@ -206,5 +228,27 @@ export class UIManager {
         document.querySelectorAll('.nav-btn').forEach(item => {
             item.classList.toggle('active', item.id === `${pageId}Btn`);
         });
+    }
+
+    updateUIForAuthState() {
+        const authButtons = document.querySelector('.auth-buttons');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (window.app.authManager.isAuthenticated()) {
+            authButtons.innerHTML = `
+                <span>Welcome, ${window.app.authManager.user.name}</span>
+                <button id="logoutBtn">Logout</button>
+            `;
+            sidebar.style.display = 'block';
+            this.renderNavigation();
+        } else {
+            authButtons.innerHTML = `
+                <button id="loginBtn">Login</button>
+                <button id="registerBtn">Register</button>
+            `;
+            sidebar.style.display = 'none';
+        }
+        
+        this.attachEventListeners();
     }
 }

@@ -2,6 +2,8 @@ import { UIManager } from './uiManager.js';
 import { ToolManager } from './toolManager.js';
 import { Router } from './router.js';
 import { ThemeManager } from './themeManager.js';
+import { AuthManager } from './authManager.js';
+import { APIClient } from './apiClient.js';
 
 class App {
     constructor() {
@@ -9,9 +11,12 @@ class App {
         this.toolManager = new ToolManager();
         this.uiManager = new UIManager(this.router, this.toolManager);
         this.themeManager = new ThemeManager();
+        this.authManager = new AuthManager();
+        this.apiClient = new APIClient();
     }
 
     async init() {
+        await this.authManager.init();
         await this.router.initializeRoutes();
         await this.toolManager.initializeTools();
         await this.uiManager.initializeUI();
@@ -23,6 +28,9 @@ class App {
         window.addEventListener('popstate', this.handleRouteChange.bind(this));
         document.getElementById('toggleTheme')?.addEventListener('click', () => {
             this.themeManager.toggleTheme();
+        });
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            this.authManager.logout();
         });
     }
 
@@ -38,6 +46,6 @@ class App {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const app = new App();
-    await app.init();
+    window.app = new App();
+    await window.app.init();
 });
