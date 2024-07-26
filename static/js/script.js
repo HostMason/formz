@@ -38,19 +38,8 @@ function initializeEventListeners() {
     const menuToggle = document.querySelector('.menu-toggle');
     menuToggle.addEventListener('click', toggleSidebar);
 
-    document.querySelectorAll('.nav-section-btn').forEach(btn => {
-        btn.addEventListener('click', toggleSection);
-    });
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', handleNavItemClick);
-    });
-
-    // Add event listeners for form actions
-    document.getElementById('createFormBtn').addEventListener('click', createNewForm);
-    document.getElementById('loadFormBtn').addEventListener('click', loadForm);
-    document.getElementById('saveFormBtn').addEventListener('click', saveForm);
-    document.getElementById('deleteFormBtn').addEventListener('click', deleteForm);
+    document.getElementById('toolboxBtn').addEventListener('click', toggleToolbox);
+    document.getElementById('formsBtn').addEventListener('click', showFormBuilder);
 
     // Initialize sidebar state
     const sidebar = document.querySelector('.sidebar');
@@ -252,36 +241,15 @@ function toggleSection(e) {
     section.classList.toggle('expanded');
 }
 
+function toggleToolbox() {
+    const toolboxSection = document.getElementById('toolboxSection');
+    toolboxSection.classList.toggle('expanded');
+}
+
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
-    switch (action) {
-        case 'formBuilderBtn':
-            showFormBuilder();
-            break;
-        case 'createFormBtn':
-            createNewForm();
-            break;
-        case 'loadFormBtn':
-            loadForm();
-            break;
-        case 'saveFormBtn':
-            saveForm();
-            break;
-        case 'deleteFormBtn':
-            deleteForm();
-            break;
-        case 'customFieldsBtn':
-            openCustomFields();
-            break;
-        case 'templatesBtn':
-            openTemplates();
-            break;
-        case 'preferencesBtn':
-            openPreferences();
-            break;
-        case 'helpBtn':
-            openHelp();
-            break;
+    if (action === 'formsBtn') {
+        showFormBuilder();
     }
     // Close the sidebar after clicking a nav item on mobile
     if (window.innerWidth <= 768) {
