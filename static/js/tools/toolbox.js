@@ -12,8 +12,7 @@ const toolbox = {
     renderToolboxContent() {
         const toolboxContent = `
             <div id="toolbox-container">
-                <h1>Toolbox</h1>
-                <div id="toolbox-tabs">
+                <div id="toolbox-tabs" class="blue-bar">
                     <button class="tab-button active" data-tool="formBuilder">Form Builder</button>
                     <button class="tab-button" data-tool="dataAnalyzer">Data Analyzer</button>
                     <button class="tab-button" data-tool="reportGenerator">Report Generator</button>

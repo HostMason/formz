@@ -56,6 +56,12 @@ export class UIManager {
                 <main class="main-content"></main>
             </div>
         `;
+        
+        // Add the new CSS file
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/static/css/toolbox.css';
+        document.head.appendChild(link);
     }
 
     attachEventListeners() {
