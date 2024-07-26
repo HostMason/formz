@@ -22,44 +22,54 @@
     </div>
     <div class="container">
         <h1 class="page-title">Quote Form Creator</h1>
-        <div class="flex-container">
-            <div id="form-options" class="menu-panel">
-                <h2>Form Options</h2>
+        <div id="form-options" class="menu-panel">
+            <h2>Form Options</h2>
+            <div class="button-group">
                 <button onclick="previewForm()">Preview Form</button>
                 <button onclick="saveForm()">Save Form</button>
-                <select id="form-list"></select>
                 <button onclick="loadForm()">Load Form</button>
                 <button onclick="deleteForm()">Delete Form</button>
             </div>
-            <div id="fields" class="menu-panel">
-                <h2>Fields</h2>
-                <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
-                <div id="number-input" class="draggable" draggable="true" ondragstart="drag(event)">Number Input</div>
-                <div id="email-input" class="draggable" draggable="true" ondragstart="drag(event)">Email Input</div>
-                <div id="textarea" class="draggable" draggable="true" ondragstart="drag(event)">Textarea</div>
-                <div id="button" class="draggable" draggable="true" ondragstart="drag(event)">Button</div>
-                <div id="radio-button" class="draggable" draggable="true" ondragstart="drag(event)">Radio Button</div>
-                <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
-                <div id="select-dropdown" class="draggable" draggable="true" ondragstart="drag(event)">Select Dropdown</div>
-            </div>
-            <div id="field-view" class="menu-panel">
-                <h2>Field Properties</h2>
-                <label for="fieldLabel">Label:</label>
-                <input type="text" id="fieldLabel" onchange="updateFieldLabel(this.value)">
-                <label for="fieldPlaceholder">Placeholder:</label>
-                <input type="text" id="fieldPlaceholder" onchange="updateFieldPlaceholder(this.value)">
-                <label for="fieldRequired">Required:</label>
-                <input type="checkbox" id="fieldRequired" onchange="updateFieldRequired(this.checked)">
-                <div id="fieldOptions" style="display: none;">
-                    <label for="fieldOptions">Options:</label>
-                    <textarea id="fieldOptionsText" onchange="updateSelectOptions(this.value)"></textarea>
-                    <input type="text" id="newOption" placeholder="New option">
-                    <button onclick="addSelectOption()">Add Option</button>
+            <select id="form-list"></select>
+        </div>
+        <div class="flex-container">
+            <div class="left-panel">
+                <div id="fields" class="menu-panel">
+                    <h2>Fields</h2>
+                    <div class="fields-grid">
+                        <div id="text-input" class="draggable" draggable="true" ondragstart="drag(event)">Text Input</div>
+                        <div id="number-input" class="draggable" draggable="true" ondragstart="drag(event)">Number Input</div>
+                        <div id="email-input" class="draggable" draggable="true" ondragstart="drag(event)">Email Input</div>
+                        <div id="textarea" class="draggable" draggable="true" ondragstart="drag(event)">Textarea</div>
+                        <div id="button" class="draggable" draggable="true" ondragstart="drag(event)">Button</div>
+                        <div id="radio-button" class="draggable" draggable="true" ondragstart="drag(event)">Radio Button</div>
+                        <div id="checkbox" class="draggable" draggable="true" ondragstart="drag(event)">Checkbox</div>
+                        <div id="select-dropdown" class="draggable" draggable="true" ondragstart="drag(event)">Select Dropdown</div>
+                    </div>
+                </div>
+                <div id="field-view" class="menu-panel">
+                    <h2>Field Properties</h2>
+                    <div class="field-properties">
+                        <label for="fieldLabel">Label:</label>
+                        <input type="text" id="fieldLabel" onchange="updateFieldLabel(this.value)">
+                        <label for="fieldPlaceholder">Placeholder:</label>
+                        <input type="text" id="fieldPlaceholder" onchange="updateFieldPlaceholder(this.value)">
+                        <label for="fieldRequired">Required:</label>
+                        <input type="checkbox" id="fieldRequired" onchange="updateFieldRequired(this.checked)">
+                        <div id="fieldOptions" style="display: none;">
+                            <label for="fieldOptions">Options:</label>
+                            <textarea id="fieldOptionsText" onchange="updateSelectOptions(this.value)"></textarea>
+                            <input type="text" id="newOption" placeholder="New option">
+                            <button onclick="addSelectOption()">Add Option</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h2>Form View</h2>
-                <p>Drag and drop fields here</p>
+            <div class="right-panel">
+                <div id="form-view" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <h2>Form View</h2>
+                    <p>Drag and drop fields here</p>
+                </div>
             </div>
         </div>
     </div>

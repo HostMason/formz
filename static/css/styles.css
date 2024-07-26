@@ -109,12 +109,44 @@ h1, h2 {
 
 .flex-container {
     display: flex;
+    gap: 30px;
+}
+
+.left-panel {
+    flex: 1;
+    display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
+.right-panel {
+    flex: 1;
+}
+
+.fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.draggable {
+    padding: 15px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 8px;
+    cursor: move;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-align: center;
+}
+
+.draggable:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .drop-area {
-    width: 100%;
     border: 2px dashed #6c757d;
     padding: 30px;
     text-align: center;
@@ -129,21 +161,11 @@ h1, h2 {
     background-color: #f8f9fa;
 }
 
-.draggable {
-    padding: 15px;
-    margin: 8px 0;
-    background-color: #3498db;
-    color: white;
-    border-radius: 8px;
-    cursor: move;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.draggable:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 button {
@@ -154,10 +176,11 @@ button {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin: 8px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    flex: 1;
+    min-width: 120px;
 }
 
 button:hover {
@@ -166,9 +189,20 @@ button:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.field-view input, .field-view textarea, .field-view select {
+.field-properties {
+    display: grid;
+    gap: 15px;
+}
+
+.field-properties label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.field-properties input[type="text"],
+.field-properties input[type="checkbox"],
+.field-properties textarea {
     width: 100%;
-    margin-bottom: 15px;
     padding: 12px;
     border: 1px solid #ced4da;
     border-radius: 8px;
@@ -176,16 +210,10 @@ button:hover {
     box-sizing: border-box;
 }
 
-.field-view input:focus, .field-view textarea:focus, .field-view select:focus {
+.field-properties input[type="text"]:focus,
+.field-properties textarea:focus {
     border-color: #3498db;
     outline: none;
-}
-
-.field-view label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
 }
 
 .form-field {
@@ -208,7 +236,9 @@ button:hover {
     color: #2c3e50;
 }
 
-.form-field input, .form-field textarea, .form-field select {
+.form-field input,
+.form-field textarea,
+.form-field select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ced4da;
@@ -217,9 +247,22 @@ button:hover {
     box-sizing: border-box;
 }
 
-.form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
     border-color: #3498db;
     outline: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .flex-container {
+        flex-direction: column;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -228,12 +271,8 @@ button:hover {
         padding: 15px;
     }
 
-    .flex-container {
-        flex-direction: column;
-    }
-
-    .drop-area, .field-view {
-        min-width: 100%;
+    .fields-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
     .side-menu.open {
@@ -279,6 +318,10 @@ button:hover {
 
     .company-name {
         opacity: 1;
+    }
+
+    .fields-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
     }
 }
 
