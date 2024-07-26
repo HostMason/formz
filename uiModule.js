@@ -1,14 +1,3 @@
-function toggleMenu() {
-    const sideMenu = document.querySelector('.side-menu');
-    const container = document.querySelector('.container');
-    sideMenu.classList.toggle('open');
-    if (sideMenu.classList.contains('open')) {
-        container.style.marginLeft = '250px';
-    } else {
-        container.style.marginLeft = '50px';
-    }
-}
-
 function showMenuPanel(panelId) {
     document.querySelectorAll('.menu-panel').forEach(panel => {
         panel.style.display = 'none';
@@ -40,4 +29,4 @@ function closeModal() {
     document.getElementById('preview-modal').style.display = 'none';
 }
 
-export { toggleMenu, showMenuPanel, previewForm, submitPreviewForm, closeModal };
+export { showMenuPanel, previewForm, submitPreviewForm, closeModal };

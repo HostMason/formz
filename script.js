@@ -59,7 +59,19 @@ window.onload = function() {
     FormModule.loadSavedForms();
 
     // Side menu functionality
-    document.querySelector('.menu-toggle').addEventListener('click', UIModule.toggleMenu);
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sideMenu = document.querySelector('.side-menu');
+    const container = document.querySelector('.container');
+
+    menuToggle.addEventListener('click', function() {
+        sideMenu.classList.toggle('open');
+        if (sideMenu.classList.contains('open')) {
+            container.style.marginLeft = '250px';
+        } else {
+            container.style.marginLeft = '50px';
+        }
+    });
+
     document.querySelectorAll('.menu-option').forEach(option => {
         option.addEventListener('click', function() {
             const target = this.getAttribute('data-target');
