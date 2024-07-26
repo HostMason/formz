@@ -279,14 +279,16 @@ function toggleToolbox() {
     const toolboxBtn = document.getElementById('toolboxBtn');
     const formsSubsection = document.getElementById('formsSubsection');
 
+    toolboxSection.classList.toggle('expanded');
+    toolboxBtn.classList.toggle('active');
+
+    // Always collapse the forms subsection when toggling the toolbox
+    formsSubsection.classList.remove('expanded');
+    document.getElementById('formsBtn').classList.remove('active');
+
+    // If the toolbox is being expanded, make sure the form builder is shown
     if (toolboxSection.classList.contains('expanded')) {
-        toolboxSection.classList.remove('expanded');
-        toolboxBtn.classList.remove('active');
-        formsSubsection.classList.remove('expanded');
-    } else {
-        toolboxSection.classList.add('expanded');
-        toolboxBtn.classList.add('active');
-        formsSubsection.classList.add('expanded');
+        showFormBuilder();
     }
 }
 
@@ -300,53 +302,54 @@ function toggleFormsSubsection(event) {
 
 function handleNavItemClick(e) {
     const action = e.currentTarget.id;
+    hideAllPages();
+
     switch (action) {
         case 'formsBtn':
             toggleFormsSubsection(e);
             showFormBuilder();
-            return;
+            break;
         case 'loadFormBtn':
             loadForm();
+            showFormBuilder();
             break;
         case 'saveFormBtn':
             saveForm();
+            showFormBuilder();
             break;
         case 'deleteFormBtn':
             deleteForm();
+            showFormBuilder();
             break;
         case 'customFieldsBtn':
             openCustomFields();
+            showFormBuilder();
             break;
         case 'templatesBtn':
             openTemplates();
+            showFormBuilder();
             break;
         case 'preferencesBtn':
             openPreferences();
+            showFormBuilder();
             break;
         case 'helpBtn':
             openHelp();
             break;
         default:
+            showFormBuilder();
             break;
     }
-    hideAllPages();
-    if (action === 'helpBtn') {
-        document.getElementById('form-builder').style.display = 'block';
-        document.querySelector('.main-content').innerHTML = document.getElementById('helpPage').innerHTML;
-    } else {
-        showFormBuilder();
-    }
-    // Always show form builder when 'formsBtn' is clicked
-    if (action === 'formsBtn') {
-        showFormBuilder();
-    }
-    // Close the toolbox after clicking a nav item, except for 'formsBtn'
-    if (action !== 'formsBtn') {
-        const toolboxSection = document.getElementById('toolboxSection');
-        toolboxSection.classList.remove('expanded');
-        const toolboxBtn = document.getElementById('toolboxBtn');
-        toolboxBtn.classList.remove('active');
-    }
+
+    // Highlight the active menu item
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+
+    // Always expand the toolbox when a menu item is clicked
+    const toolboxSection = document.getElementById('toolboxSection');
+    const toolboxBtn = document.getElementById('toolboxBtn');
+    toolboxSection.classList.add('expanded');
+    toolboxBtn.classList.add('active');
 }
 
 function updatePageTitle(title) {
