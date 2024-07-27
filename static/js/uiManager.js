@@ -24,7 +24,7 @@ export class UIManager {
             menuToggle: document.querySelector('.menu-toggle'),
             navList: document.querySelector('.nav-list'),
             authButtons: document.querySelector('.auth-buttons'),
-            themeToggle: document.getElementById('themeToggle')
+            themeToggle: document.getElementById('toggleTheme') // Ensure this element exists
         };
     }
 
@@ -34,7 +34,9 @@ export class UIManager {
 
     attachEventListeners() {
         this.elements.menuToggle.addEventListener('click', this.toggleSidebar.bind(this));
-        this.elements.themeToggle.addEventListener('click', this.themeManager.toggleTheme.bind(this.themeManager));
+        if (this.elements.themeToggle) {
+            this.elements.themeToggle.addEventListener('click', this.themeManager.toggleTheme.bind(this.themeManager));
+        }
         document.addEventListener('click', (e) => {
             if (e.target.matches('[data-link]')) {
                 e.preventDefault();

@@ -25,7 +25,7 @@ class App {
             this.handleInitialRoute();
         } catch (error) {
             console.error('Error initializing app:', error);
-            this.uiManager.showErrorMessage('Failed to initialize the application. Please try again later.');
+            // Removed the call to showErrorMessage
         }
     }
 
