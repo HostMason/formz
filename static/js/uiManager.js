@@ -155,7 +155,7 @@ export class UIManager {
 
     async loadAndInitializePageScript(pageId) {
         try {
-            const module = await import(`/static/js/pages/${pageId}.js`);
+            const module = await import(`/static/js/components/${pageId.charAt(0).toUpperCase() + pageId.slice(1)}.js`);
             if (module.default && typeof module.default.init === 'function') {
                 await module.default.init();
             }
