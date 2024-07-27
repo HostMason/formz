@@ -26,6 +26,10 @@ export class UIManager {
             authButtons: document.querySelector('.auth-buttons') || document.createElement('div'), // Ensure this element exists
             themeToggle: document.getElementById('toggleTheme') // Ensure this element exists
         };
+        // Append authButtons to the app if it doesn't exist
+        if (!document.querySelector('.auth-buttons')) {
+            this.elements.app.appendChild(this.elements.authButtons);
+        }
     }
 
     renderBasicStructure() {
