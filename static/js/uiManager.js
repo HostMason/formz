@@ -33,14 +33,6 @@ export class UIManager {
             <div class="app-container">
                 <header class="app-header">
                     <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
-                    <nav class="main-nav">
-                        <ul>
-                            <li><a href="/" data-link>Home</a></li>
-                            <li><a href="/pricing" data-link>Pricing</a></li>
-                            <li><a href="/features" data-link>Features</a></li>
-                            <li><a href="/contact" data-link>Contact</a></li>
-                        </ul>
-                    </nav>
                     <div class="auth-buttons"></div>
                     <button id="themeToggle">Toggle Theme</button>
                 </header>
@@ -86,9 +78,9 @@ export class UIManager {
         const li = document.createElement('li');
         li.className = 'nav-item';
         li.innerHTML = `
-            <a href="/${tool.id}" class="nav-link" data-link>
+            <button class="nav-btn" id="${tool.id}Btn">
                 <i class="${tool.icon}"></i> <span>${tool.name}</span>
-            </a>
+            </button>
         `;
         return li;
     }
@@ -104,99 +96,19 @@ export class UIManager {
         icon.classList.toggle('fa-times');
     }
 
-    async renderPage(pageId) {
-        try {
-            const pageContent = await this.fetchPageContent(pageId);
-            this.elements.mainContent.innerHTML = pageContent;
-            await this.loadAndInitializePageScript(pageId);
-            this.updateActiveNavItem(pageId);
-            this.updatePageTitle(pageId);
-        } catch (error) {
-            console.error(`Error rendering page: ${pageId}`, error);
-            this.showErrorMessage('Failed to load the page. Please try again later.');
-        }
-    }
-
-    updatePageTitle(pageId) {
-        const pageTitles = {
-            'landing': 'Welcome',
-            'dashboard': 'Dashboard',
-            'formBuilder': 'Form Builder',
-            'dataAnalyzer': 'Data Analyzer',
-            'reportGenerator': 'Report Generator',
-            'help': 'Help',
-            'settings': 'Settings',
-            'login': 'Login',
-            'register': 'Register',
-            'forgotPassword': 'Forgot Password'
-        };
-        document.title = `${pageTitles[pageId] || 'Page Not Found'} - HostMason`;
-    }
-
-    async fetchPageContent(pageId) {
-        try {
-            const response = await fetch(`/static/templates/${pageId}.html`);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return await response.text();
-        } catch (error) {
-            console.warn(`Failed to fetch template for ${pageId}:`, error);
-            return this.getDefaultPageContent(pageId);
-        }
-    }
-
-    getDefaultPageContent(pageId) {
-        return `
-            <div id="${pageId}-container">
-                <h1>${this.capitalizeFirstLetter(pageId)}</h1>
-                <p>Welcome to the ${pageId} page. This is default content.</p>
-            </div>
-        `;
-    }
-
-    async loadAndInitializePageScript(pageId) {
-        try {
-            const module = await import(`/static/js/components/${pageId.charAt(0).toUpperCase() + pageId.slice(1)}.js`);
-            if (module.default && typeof module.default.init === 'function') {
-                await module.default.init();
-            }
-        } catch (error) {
-            console.warn(`Failed to load or execute script for ${pageId}:`, error);
-        }
-    }
-
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    updateActiveNavItem(pageId) {
-        document.querySelectorAll('.nav-link').forEach(item => {
-            item.classList.toggle('active', item.getAttribute('href') === `/${pageId}`);
-        });
-    }
-
     updateUIForAuthState() {
         if (this.authManager.isAuthenticated()) {
             this.elements.authButtons.innerHTML = `
                 <span>Welcome, ${this.authManager.user.name}</span>
                 <button id="logoutBtn">Logout</button>
             `;
-            this.elements.sidebar.style.display = 'block';
             document.getElementById('logoutBtn').addEventListener('click', this.authManager.logout.bind(this.authManager));
         } else {
             this.elements.authButtons.innerHTML = `
                 <a href="/login" class="auth-link" data-link>Login</a>
                 <a href="/register" class="auth-link" data-link>Register</a>
             `;
-            this.elements.sidebar.style.display = 'none';
         }
         this.renderNavigation();
-    }
-
-    showErrorMessage(message) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        this.elements.mainContent.prepend(errorElement);
-        setTimeout(() => errorElement.remove(), 5000);
     }
 }

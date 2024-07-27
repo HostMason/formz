@@ -43,36 +43,16 @@ class Toolbox extends Tool {
     }
 
     switchTab(toolId) {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => button.classList.remove('active'));
-        document.querySelector(`[data-tool="${toolId}"]`).classList.add('active');
-
         const toolboxContent = document.getElementById('toolbox-content');
         toolboxContent.innerHTML = '';
-        toolboxContent.style.opacity = '0';
-
-        setTimeout(() => {
-            try {
-                const tool = window.app.toolManager.getTool(toolId);
-                if (tool) {
-                    tool.init();
-                    toolboxContent.innerHTML = tool.render();
-                    tool.attachEventListeners();
-                } else {
-                    throw new Error(`Tool ${toolId} not found`);
-                }
-
-                toolboxContent.style.opacity = '1';
-            } catch (error) {
-                console.error(`Error loading tool ${toolId}:`, error);
-                toolboxContent.innerHTML = `<p>Error loading ${toolId}. Please try again later.</p>`;
-                toolboxContent.style.opacity = '1';
-            }
-        }, 300);
-    }
-
-    render() {
-        return this.renderToolboxContent();
+        const tool = window.app.toolManager.getTool(toolId);
+        if (tool) {
+            tool.init();
+            toolboxContent.innerHTML = tool.render();
+            tool.attachEventListeners();
+        } else {
+            console.error(`Tool ${toolId} not found`);
+        }
     }
 }
 
