@@ -21,6 +21,12 @@ export class Router {
         this.addRoute('/settings', 'settings');
     }
 
+    async renderPage(pageId) {
+        const pageContent = await this.fetchPageContent(pageId);
+        document.querySelector('.main-content').innerHTML = pageContent;
+        this.updatePageTitle(pageId);
+    }
+
     navigateTo(path) {
         const route = this.routes.get(path);
         if (!route) {
@@ -45,5 +51,29 @@ export class Router {
             const pageId = this.navigateTo(path);
             callback(pageId);
         });
+    }
+
+    async fetchPageContent(pageId) {
+        try {
+            const response = await fetch(`/static/templates/${pageId}.html`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.text();
+        } catch (error) {
+            console.warn(`Failed to fetch template for ${pageId}:`, error);
+            return this.getDefaultPageContent(pageId);
+        }
+    }
+
+    getDefaultPageContent(pageId) {
+        return `
+            <div id="${pageId}-container">
+                <h1>${this.capitalizeFirstLetter(pageId)}</h1>
+                <p>Welcome to the ${pageId} page. This is default content.</p>
+            </div>
+        `;
+    }
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 }
