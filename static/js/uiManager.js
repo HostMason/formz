@@ -23,7 +23,7 @@ export class UIManager {
             mainContent: document.querySelector('.main-content'),
             menuToggle: document.querySelector('.menu-toggle'),
             navList: document.querySelector('.nav-list'),
-            authButtons: document.querySelector('.auth-buttons'),
+            authButtons: document.querySelector('.auth-buttons') || document.createElement('div'), // Ensure this element exists
             themeToggle: document.getElementById('toggleTheme') // Ensure this element exists
         };
     }
