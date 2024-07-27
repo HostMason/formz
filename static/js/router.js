@@ -76,4 +76,20 @@ export class Router {
     capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    updatePageTitle(pageId) {
+        const pageTitles = {
+            'landing': 'Welcome',
+            'dashboard': 'Dashboard',
+            'formBuilder': 'Form Builder',
+            'dataAnalyzer': 'Data Analyzer',
+            'reportGenerator': 'Report Generator',
+            'help': 'Help',
+            'settings': 'Settings',
+            'login': 'Login',
+            'register': 'Register',
+            'forgotPassword': 'Forgot Password'
+        };
+        document.title = `${pageTitles[pageId] || 'Page Not Found'} - HostMason`;
+    }
 }
