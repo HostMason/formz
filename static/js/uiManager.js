@@ -13,7 +13,6 @@ export class UIManager {
         this.cacheElements();
         this.attachEventListeners();
         this.renderNavigation();
-        this.router.setPageRenderer(this.renderPage.bind(this));
         this.updateUIForAuthState();
     }
 
