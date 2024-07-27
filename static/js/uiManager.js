@@ -29,29 +29,7 @@ export class UIManager {
     }
 
     renderBasicStructure() {
-        document.getElementById('app').innerHTML = `
-            <div class="app-container">
-                <header class="app-header">
-                    <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
-                    <div class="auth-buttons"></div>
-                    <button id="themeToggle">Toggle Theme</button>
-                </header>
-                <div class="app-body">
-                    <aside class="sidebar">
-                        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <nav class="sidebar-nav">
-                            <ul class="nav-list"></ul>
-                        </nav>
-                    </aside>
-                    <main class="main-content"></main>
-                </div>
-                <footer class="app-footer">
-                    <p>&copy; 2023 HostMason. All rights reserved.</p>
-                </footer>
-            </div>
-        `;
+        // The structure is now defined in the index.html file
     }
 
     attachEventListeners() {

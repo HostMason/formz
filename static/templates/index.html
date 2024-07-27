@@ -12,14 +12,14 @@
 </head>
 <body>
     <div id="app">
+        <header class="app-header">
+            <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
         <div class="app-container">
             <aside class="sidebar">
-                <div class="sidebar-header">
-                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                    <h1 class="company-name" id="hostMasonLogo">HostMason</h1>
-                </div>
                 <nav class="sidebar-nav">
                     <ul class="nav-list"></ul>
                 </nav>
@@ -28,6 +28,9 @@
                 <!-- The page content will be dynamically inserted here -->
             </main>
         </div>
+        <footer class="app-footer">
+            <p>&copy; 2023 HostMason. All rights reserved.</p>
+        </footer>
     </div>
 </body>
 </html>
